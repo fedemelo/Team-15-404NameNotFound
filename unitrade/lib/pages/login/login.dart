@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unitrade/pages/login/register.dart';
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -56,7 +57,7 @@ class Login extends StatelessWidget {
                   TextField(
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      labelText: 'example@gmail.com|',
+                      labelText: 'example@gmail.com',
                       labelStyle: GoogleFonts.urbanist(
                         fontSize: 16,
                         color: AppColors.primaryDark,
@@ -66,10 +67,6 @@ class Login extends StatelessWidget {
                         borderSide: BorderSide(
                           color: AppColors.primaryDark,
                         ),
-                      ),
-                      prefix: const Icon(
-                        Icons.mail,
-                        color: AppColors.primary900,
                       ),
                     ),
                   ),
@@ -110,7 +107,7 @@ class Login extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      width:double.infinity,
+                      width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
@@ -133,15 +130,25 @@ class Login extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center, // Center the text
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("New to the app?"),
-                        SizedBox(width: 5), // Space between the texts
-                        Text(
-                          "Create Account",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        const Text("New to the app?"),
+                        const SizedBox(width: 5),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Register()),
+                            );
+                          },
+                          child: const Text(
+                            "Create Account",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryDark),
+                          ),
                         ),
                       ],
                     ),
