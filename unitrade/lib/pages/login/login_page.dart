@@ -58,7 +58,7 @@ class LoginPage extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/home');
+                        // Navigator.pushNamed(context, '/home');
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary900,

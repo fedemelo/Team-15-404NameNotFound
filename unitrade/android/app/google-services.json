@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "529504077370",
+    "project_id": "unitrade-f956e",
+    "storage_bucket": "unitrade-f956e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529504077370:android:c0d225009aabdf1f68d703",
+        "android_client_info": {
+          "package_name": "com.example.unitrade"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHDLCdGyHZSqj4XrIV2fWpqcCCjPT2sgQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
