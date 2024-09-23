@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/pages/login/login.dart';
 import 'package:unitrade/pages/login/register.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

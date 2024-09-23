@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:unitrade/pages/login/login_page.dart';
+import 'package:unitrade/pages/login/welcome_page.dart';
 import 'package:unitrade/pages/mock_home.dart';
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
@@ -26,11 +26,12 @@ class _LoadingViewState extends State<LoadingView> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const MockHome()),
+            // MaterialPageRoute(builder: (context) => const MockHome()),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
+            MaterialPageRoute(builder: (context) => const WelcomePage()),
           );
         }
       });
