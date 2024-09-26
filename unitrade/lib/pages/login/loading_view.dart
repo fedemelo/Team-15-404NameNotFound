@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:unitrade/firebase_options.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,20 +19,26 @@ class _LoadingViewState extends State<LoadingView> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
-      FirebaseAuth.instance.authStateChanges().listen((user) {
-        if (user != null) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MockHome()),
-            // MaterialPageRoute(builder: (context) => const MockHome()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const WelcomePage()),
-          );
-        }
-      });
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const WelcomePage()),
+      );
+
+
+      // FirebaseAuth.instance.authStateChanges().listen((user) {
+      //   if (user != null) {
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => const MockHome()),
+      //       // MaterialPageRoute(builder: (context) => const MockHome()),
+      //     );
+      //   } else {
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => const WelcomePage()),
+      //     );
+      //   }
+      // });
     });
   }
 

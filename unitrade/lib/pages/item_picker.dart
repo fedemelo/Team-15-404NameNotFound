@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,6 +30,30 @@ class _ItemPickerState extends State<ItemPicker> {
     'SPORTS',
     'MUSICAL INSTRUMENTS',
   ];
+
+  Future<void> _submit() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .update({
+        'categories': selectedCategories,
+      });
+
+      if (!mounted) return;
+      // // Redirect user
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ItemPicker()),
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +137,7 @@ class _ItemPickerState extends State<ItemPicker> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // TODO: Navigate
+                    _submit();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary900,

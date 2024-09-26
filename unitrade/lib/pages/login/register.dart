@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login.dart';
+import 'package:unitrade/pages/item_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -18,8 +20,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _form = GlobalKey<FormState>();
 
-  // TODO: No tengo ni idea de que hacer con el nombre
-  var _enteredName = ''; 
+  var _enteredName = '';
   var _enteredEmail = '';
   var _enteredPassword = '';
 
@@ -31,12 +32,38 @@ class _RegisterState extends State<Register> {
     _form.currentState!.save();
 
     try {
+                
       final userCredentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredEmail, password: _enteredPassword);
-      print(userCredentials);
+
+      // Create user in Firebase Storage
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredentials.user!.uid)
+          .set({
+        'uid': userCredentials.user!.uid,
+        'email': _enteredEmail,
+        'name': _enteredName,
+      }).onError((e, _) => print("Error writing document: $e"));
+
+      if (!mounted) return;
+      // // Redirect user
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const ItemPicker()),
+      );
+
     } on FirebaseAuthException catch (error) {
+      // Handle Firebase authentication errors
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message ?? 'Authentication failed')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(error.message ?? 'Authentication failed')),
+      );
+    } catch (error) {
+      // Catch any other errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('An unexpected error occurred')),
+      );
     }
   }
 
@@ -57,8 +84,6 @@ class _RegisterState extends State<Register> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
-                      
                       // TITLE
                       const SizedBox(height: 80),
                       Text(
@@ -150,6 +175,11 @@ class _RegisterState extends State<Register> {
                           if (!regex.hasMatch(value)) {
                             return 'Please enter a valid email address';
                           }
+                          // Check if password contains @uniandes.edu.co
+                          if (!RegExp(r'^[a-zA-Z0-9._%+-]+@uniandes.edu.co$')
+                              .hasMatch(value)) {
+                            return 'Invalid email, email MUST be uniandes email';
+                          }
                           return null;
                         },
                         onSaved: (value) {
@@ -212,7 +242,6 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 const SizedBox(height: 10),
-
 
                 // CREATE BUTTON AND LOGIN OPTION
                 Container(
