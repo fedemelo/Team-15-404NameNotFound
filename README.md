@@ -12,7 +12,7 @@ Access to other repositories and documentation regarding the project can be foun
 
 ## Running the application
 
-To run the application, follow these steps:
+The proyect uses Android API 34, which is required to run the application. It is recommended to use the Pixel 8 emulator. To run the application, follow these steps:
 
 1. Clone the repository.
 
@@ -23,5 +23,3 @@ To run the application, follow these steps:
 4. Install the dependencies with `flutter pub get`.
 
 5. Run the application with `flutter run`.
-
-6. The proyect uses Android API 34, which is required to run the application. It is recommended to use the Pixel 8 emulator.

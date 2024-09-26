@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unitrade/pages/upload/lease.dart';
+import 'package:unitrade/pages/upload/sale.dart';
+import 'package:unitrade/app_colors.dart';
 
 class Upload extends StatelessWidget {
   const Upload({super.key});
@@ -25,7 +28,7 @@ class Upload extends StatelessWidget {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(28.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -37,7 +40,7 @@ class Upload extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 22),
             Text(
               'Choose how you want to manage your product. You can either sell it outright or offer it for rent.',
               style: GoogleFonts.urbanist(
@@ -51,11 +54,16 @@ class Upload extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // Handle "Sell" button action
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Sale(),
+                      ),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        WidgetStateProperty.all<Color>(const Color(0xFF1D4E89)),
+                        WidgetStateProperty.all<Color>(AppColors.primary900),
                     padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                       const EdgeInsets.symmetric(horizontal: 26, vertical: 18),
                     ),
@@ -78,13 +86,19 @@ class Upload extends StatelessWidget {
                     ],
                   ),
                 ),
+                const SizedBox(width: 25),
                 ElevatedButton(
                   onPressed: () {
-                    // Handle "List for Rent" button action
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Lease(),
+                      ),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor:
-                        WidgetStateProperty.all<Color>(const Color(0xFF1D4E89)),
+                        WidgetStateProperty.all<Color>(AppColors.primary900),
                     padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
                       const EdgeInsets.symmetric(horizontal: 26, vertical: 18),
                     ),
@@ -93,7 +107,7 @@ class Upload extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.replay_circle_filled_outlined),
+                      const Icon(Icons.shuffle_outlined),
                       const SizedBox(width: 14),
                       Text(
                         'LIST FOR RENT',
