@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unitrade/pages/home/home.dart';
 import 'package:unitrade/pages/login/register.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,7 +13,7 @@ class Login extends StatefulWidget {
   @override
   State<Login> createState() {
     return _LoginState();
-    }
+  }
 }
 
 class _LoginState extends State<Login> {
@@ -21,7 +22,7 @@ class _LoginState extends State<Login> {
   var _enteredEmail = '';
   var _enteredPassword = '';
 
-    void _submit() async {
+  void _submit() async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
@@ -33,10 +34,19 @@ class _LoginState extends State<Login> {
         email: _enteredEmail,
         password: _enteredPassword,
       );
+
+      if (!mounted) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      );
+
       print(userCredentials);
     } on FirebaseAuthException catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message ?? 'Login failed')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? 'Login failed')));
     }
   }
 
@@ -56,8 +66,6 @@ class _LoginState extends State<Login> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                            
-                            
                     // TITLE
                     const SizedBox(height: 80),
                     Text(
@@ -67,10 +75,9 @@ class _LoginState extends State<Login> {
                           color: AppColors.primaryDark,
                           fontWeight: FontWeight.w700),
                     ),
-                            
+
                     const SizedBox(height: 20),
-                            
-                            
+
                     // DESCRIPTION
                     Text(
                       'Please sign up to your UniTrade account',
@@ -82,8 +89,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                     const SizedBox(height: 60),
-                            
-                            
+
                     // EMAIL INPUT
                     Text(
                       'Email',
@@ -115,7 +121,7 @@ class _LoginState extends State<Login> {
                         String emailPattern =
                             r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
                         RegExp regex = RegExp(emailPattern);
-          
+
                         if (!regex.hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
@@ -126,8 +132,7 @@ class _LoginState extends State<Login> {
                       },
                     ),
                     const SizedBox(height: 20),
-                            
-                            
+
                     // PASSWORD INPUT
                     Text(
                       'Password',
@@ -161,8 +166,7 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-          
-          
+
               // LOGIN BUTTON AND CREATE ACCOUNT TEXT AT BOTTOM
               Container(
                 margin: const EdgeInsets.only(bottom: 60),
