@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Sale extends StatefulWidget {
   const Sale({super.key});
@@ -13,16 +15,21 @@ class Sale extends StatefulWidget {
 }
 
 class _SaleState extends State<Sale> {
+  // Form data
   final _form = GlobalKey<FormState>();
-
   String _name = '';
   String _description = '';
   String _price = '';
   String _condition = '';
 
+  // Image data
   final ImagePicker _picker = ImagePicker();
   File? _selectedImage;
 
+  // Firebase storage
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  // Image picker function
   Future<void> _pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -32,6 +39,7 @@ class _SaleState extends State<Sale> {
     }
   }
 
+  // Take photo function
   Future<void> _takePhoto() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
     if (image != null) {
@@ -41,6 +49,7 @@ class _SaleState extends State<Sale> {
     }
   }
 
+  // Show picker dialog
   void _showPickerDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -71,15 +80,38 @@ class _SaleState extends State<Sale> {
     );
   }
 
-  void _submit() {
+  // Utility function to generate random string
+  String randomString(int length) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random.secure();
+    final result =
+        List.generate(length, (index) => chars[random.nextInt(chars.length)])
+            .join();
+    return result;
+  }
+
+  // Upload product & image to Firebase
+  Future<void> _submit() async {
     // TODO
+    // First - Validate form
     if (kDebugMode) {
       print('Name: $_name');
       print('Description: $_description');
       print('Price: $_price');
       print('Condition: $_condition');
       print('Form: ${_form.currentState}');
-      print('Image: $_selectedImage');
+    }
+
+    // Second - Upload image to Firebase Storage
+    if (_selectedImage == null) return;
+    try {
+      final String fileName =
+          'products/${randomString(10)}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await _storage.ref(fileName).putFile(_selectedImage!);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
