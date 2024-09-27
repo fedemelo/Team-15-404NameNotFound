@@ -35,13 +35,15 @@ class NavBar extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.notifications, color: AppColors.contrast900),
+            icon: const Icon(Icons.notifications_none_outlined,
+                color: AppColors.contrast900),
             onPressed: () {
               // Notifications logic
             },
           ),
           IconButton(
-            icon: const Icon(Icons.person, color: AppColors.contrast900),
+            icon:
+                const Icon(Icons.person_outline, color: AppColors.contrast900),
             onPressed: () {
               // Profile logic
             },
