@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unitrade/pages/login/login.dart';
+import 'package:unitrade/pages/login/register.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,12 @@ class LoginPage extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigator.pushNamed(context, '/home');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Login(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary900,
@@ -83,7 +90,12 @@ class LoginPage extends StatelessWidget {
                     margin: const EdgeInsets.symmetric(horizontal: 20),
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/home');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Register(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         side: const BorderSide(
