@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:unitrade/app_colors.dart';
-import 'package:unitrade/pages/login/login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:unitrade/pages/login/welcome_page.dart';
+import 'package:unitrade/pages/mock_home.dart';
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
 
@@ -18,10 +21,24 @@ class _LoadingViewState extends State<LoadingView> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-            builder: (context) =>
-                const LoginPage()),
+        MaterialPageRoute(builder: (context) => const WelcomePage()),
       );
+
+
+      // FirebaseAuth.instance.authStateChanges().listen((user) {
+      //   if (user != null) {
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => const MockHome()),
+      //       // MaterialPageRoute(builder: (context) => const MockHome()),
+      //     );
+      //   } else {
+      //     Navigator.pushReplacement(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => const WelcomePage()),
+      //     );
+      //   }
+      // });
     });
   }
 
