@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class Sale extends StatefulWidget {
   const Sale({super.key});
@@ -80,16 +80,6 @@ class _SaleState extends State<Sale> {
     );
   }
 
-  // Utility function to generate random string
-  String randomString(int length) {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    final random = Random.secure();
-    final result =
-        List.generate(length, (index) => chars[random.nextInt(chars.length)])
-            .join();
-    return result;
-  }
-
   // Upload product & image to Firebase
   Future<void> _submit() async {
     // TODO
@@ -105,8 +95,8 @@ class _SaleState extends State<Sale> {
     // Second - Upload image to Firebase Storage
     if (_selectedImage == null) return;
     try {
-      final String fileName =
-          'products/${randomString(10)}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      const uuid = Uuid();
+      final String fileName = 'images/${uuid.v4()}.jpg';
       await _storage.ref(fileName).putFile(_selectedImage!);
     } catch (e) {
       if (kDebugMode) {
