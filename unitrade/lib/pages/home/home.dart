@@ -3,7 +3,6 @@ import 'package:unitrade/pages/home/category_list.dart';
 import 'package:unitrade/pages/home/mock_data.dart';
 import 'package:unitrade/pages/home/nav_bar.dart';
 import 'package:unitrade/pages/home/custom_search_bar.dart';
-import 'package:unitrade/pages/home/product_card.dart';
 import 'package:unitrade/pages/home/product_list.dart';
 
 import 'package:unitrade/app_colors.dart';
@@ -21,6 +20,8 @@ class _HomeState extends State<Home> {
 
   var selectedCategory = 'For You';
 
+  var searchValue = '';
+
   final categoryElementList = MockData.categoryElementList;
 
   final productElementList = MockData.productList;
@@ -32,8 +33,11 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void searchValue(String value) {
+  void updateSearch(String value) {
     print('Search value: $value');
+    setState(() {
+      searchValue = value;
+    });
   }
 
   @override
@@ -50,7 +54,7 @@ class _HomeState extends State<Home> {
                 ),
 
                 CustomSearchBar(
-                  searchValue,
+                  updateSearch,
                 ),
 
                 const SizedBox(

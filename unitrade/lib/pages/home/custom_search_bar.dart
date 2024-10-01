@@ -45,7 +45,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     fontWeight: FontWeight.w600),
                 border: InputBorder.none,
               ),
-              onChanged: widget.onChange,
+              onSubmitted: widget.onChange,
             ),
           ),
           SizedBox(width: 8),
