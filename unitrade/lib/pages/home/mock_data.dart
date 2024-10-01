@@ -11,6 +11,11 @@ class MockData {
     'Category 6',
     'Category 7',
   ];
+
+  static const userCategories = [
+    'Category 1',
+    'Category 2',
+  ];
   
   static final productList = [
     Product(
@@ -88,7 +93,7 @@ class MockData {
       rating: 1.5,
       reviews: 70,
       inStock: true,
-      categories: ['Category 6', 'Category 1'],
+      categories: ['Category 6', 'Category 7'],
     ),
     Product(
       id: '8',

@@ -7,7 +7,12 @@ class CustomSearchBar extends StatefulWidget {
 
   final void Function(String) onChange;
 
-  const CustomSearchBar(void Function(String) this.onChange,{super.key});
+  final void Function() onClickFilter;
+
+  const CustomSearchBar(
+    void Function(String) this.onChange,
+    void Function() this.onClickFilter,
+  );
 
   @override
   _CustomSearchBarState createState() => _CustomSearchBarState();
@@ -50,9 +55,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           ),
           SizedBox(width: 8),
           GestureDetector(
-            onTap: () {
-              print('Filter icon pressed');
-            },
+            onTap: widget.onClickFilter,
             child: Icon(Icons.tune, color: AppColors.primary900),
           ),
         ],
