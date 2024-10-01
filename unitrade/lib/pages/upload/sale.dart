@@ -5,7 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:unitrade/pages/home/home.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Sale extends StatefulWidget {
   const Sale({super.key});
@@ -28,6 +31,10 @@ class _SaleState extends State<Sale> {
 
   // Firebase storage
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  // Current user
+  final _user = FirebaseAuth.instance.currentUser;
 
   // Image picker function
   Future<void> _pickImage() async {
@@ -80,6 +87,16 @@ class _SaleState extends State<Sale> {
     );
   }
 
+  // Show success message
+  void _showSuccessMessage() {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Product uploaded successfully'),
+      ),
+    );
+  }
+
   // Upload product & image to Firebase
   void _submit() async {
     _form.currentState!.save();
@@ -91,24 +108,59 @@ class _SaleState extends State<Sale> {
       print('Price: $_price');
       print('Condition: $_condition');
       print('Form: ${_form.currentState}');
+      print('User email: ${_user!.email}');
     }
 
     final isValid = _form.currentState!.validate();
     if (!isValid) {
+      if (kDebugMode) {
+        print('Form is not valid');
+      }
       return;
     }
 
     // Second - Upload image to Firebase Storage
-    if (_selectedImage == null) return;
+    String _imageUrl = '';
     try {
-      const uuid = Uuid();
-      final String fileName = 'images/${uuid.v4()}.jpg';
-      await _storage.ref(fileName).putFile(_selectedImage!);
+      if (_selectedImage != null) {
+        const uuid = Uuid();
+        final String fileName = 'images/${uuid.v4()}.jpg';
+        await _storage.ref(fileName).putFile(_selectedImage!);
+        _imageUrl = await _storage.ref(fileName).getDownloadURL();
+      }
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
+
+    // Third - Upload product data to Firestore
+    var data = {
+      'user_id': _user!.uid,
+      'type': 'sale',
+      'name': _name,
+      'description': _description,
+      'price': _price,
+      'condition': _condition,
+      'categories': ['TEXTBOOKS', 'CHARGERS'],
+    };
+    if (_imageUrl.isNotEmpty) {
+      data['image_url'] = _imageUrl;
+    }
+
+    final id = const Uuid().v4();
+    await _firestore.collection('products').doc(id).set(data);
+
+    // Fourth - Show success message
+    _showSuccessMessage();
+
+    // Five - Navigate back to home
+    if (!mounted) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const Home(),
+      ),
+    );
   }
 
   @override
