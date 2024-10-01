@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +25,7 @@ class _SaleState extends State<Sale> {
   var _description = '';
   var _price = '';
   var _condition = '';
+  var _imageUrl = '';
 
   // Image data
   final ImagePicker _picker = ImagePicker();
@@ -120,7 +122,6 @@ class _SaleState extends State<Sale> {
     }
 
     // Second - Upload image to Firebase Storage
-    String _imageUrl = '';
     try {
       if (_selectedImage != null) {
         const uuid = Uuid();
@@ -287,6 +288,10 @@ class _SaleState extends State<Sale> {
                   onSaved: (value) {
                     _price = value!;
                   },
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                 ),
                 const SizedBox(height: 28),
 
@@ -323,41 +328,77 @@ class _SaleState extends State<Sale> {
                 Center(
                   child: Column(
                     children: [
-                      // SELECT IMAGE BUTTON
-                      GestureDetector(
-                        onTap: () {
-                          _showPickerDialog(context);
-                        },
-                        child: Container(
-                          width: 600,
-                          padding: const EdgeInsets.all(40),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 237, 236, 236),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.image_search_rounded,
-                                size: 48,
-                                color: Colors.black,
-                              ),
-                              const SizedBox(height: 10),
-                              Text(
-                                'Select image',
-                                style: GoogleFonts.urbanist(
-                                  textStyle: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
+                      // SELECT IMAGE ZONE & IMAGE PREVIEW
+                      _selectedImage == null
+                          // Show select image zone
+                          ? GestureDetector(
+                              onTap: () {
+                                _showPickerDialog(context);
+                              },
+                              child: Container(
+                                width: 600,
+                                padding: const EdgeInsets.all(40),
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 237, 236, 236),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.image_search_rounded,
+                                      size: 48,
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Select image',
+                                      style: GoogleFonts.urbanist(
+                                        textStyle: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            )
+                          // Show image preview
+                          : Stack(
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  child: Image.file(
+                                    File(_selectedImage!.path),
+                                    width: 160,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 10,
+                                  top: 10,
+                                  child: GestureDetector(
+                                    onTap: () => setState(() {
+                                      _selectedImage = null;
+                                    }),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.6),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
                       const SizedBox(height: 48),
 
                       // UPLOAD BUTTON
