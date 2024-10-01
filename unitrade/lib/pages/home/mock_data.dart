@@ -1,0 +1,108 @@
+import 'package:unitrade/pages/home/product.dart';
+
+class MockData {
+  static const categoryElementList = [
+    'For You',
+    'Category 1',
+    'Category 2',
+    'Category 3',
+    'Category 4',
+    'Category 5',
+    'Category 6',
+    'Category 7',
+  ];
+  
+  static final productList = [
+    Product(
+      id: '1',
+      name: 'Product 1',
+      description: 'Description 1',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 100.0,
+      rating: 4.5,
+      reviews: 10,
+      inStock: true,
+      categories: ['Category 1', 'Category 2'],
+    ),
+    Product(
+      id: '2',
+      name: 'Product 2',
+      description: 'Description 2',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 200.0,
+      rating: 4.0,
+      reviews: 20,
+      inStock: false,
+      categories: ['Category 1', 'Category 3'],
+    ),
+    Product(
+      id: '3',
+      name: 'Product 3',
+      description: 'Description 3',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 300.0,
+      rating: 3.5,
+      reviews: 30,
+      inStock: true,
+      categories: ['Category 2', 'Category 4'],
+    ),
+    Product(
+      id: '4',
+      name: 'Product 4',
+      description: 'Description 4',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 400.0,
+      rating: 3.0,
+      reviews: 40,
+      inStock: false,
+      categories: ['Category 3', 'Category 5'],
+    ),
+    Product(
+      id: '5',
+      name: 'Product 5',
+      description: 'Description 5',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 500.0,
+      rating: 2.5,
+      reviews: 50,
+      inStock: true,
+      categories: ['Category 4', 'Category 6'],
+    ),
+    Product(
+      id: '6',
+      name: 'Product 6',
+      description: 'Description 6',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 600.0,
+      rating: 2.0,
+      reviews: 60,
+      inStock: false,
+      categories: ['Category 5', 'Category 7'],
+    ),
+    Product(
+      id: '7',
+      name: 'Product 7',
+      description: 'Description 7',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 700.0,
+      rating: 1.5,
+      reviews: 70,
+      inStock: true,
+      categories: ['Category 6', 'Category 1'],
+    ),
+    Product(
+      id: '8',
+      name: 'Product 8',
+      description: 'Description 8',
+      imageUrl: 'https://picsum.photos/200/300',
+      price: 800.0,
+      rating: 1.0,
+      reviews: 80,
+      inStock: false,
+      categories: ['Category 7', 'Category 2'],
+    ),
+
+  ];
+
+
+}

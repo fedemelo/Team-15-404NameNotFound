@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/pages/home/category_list.dart';
+import 'package:unitrade/pages/home/mock_data.dart';
 import 'package:unitrade/pages/home/nav_bar.dart';
 import 'package:unitrade/pages/home/custom_search_bar.dart';
+import 'package:unitrade/pages/home/product_card.dart';
+import 'package:unitrade/pages/home/product_list.dart';
 
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-const categoryElementList = [
-  'For You',
-  'Category 1',
-  'Category 2',
-  'Category 3',
-  'Category 4',
-  'Category 5',
-];
 
 
 class Home extends StatefulWidget {
@@ -26,6 +20,10 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   var selectedCategory = 'For You';
+
+  final categoryElementList = MockData.categoryElementList;
+
+  final productElementList = MockData.productList;
 
   void clickCategory(String category) {
     print('Category: $category');
@@ -89,7 +87,13 @@ class _HomeState extends State<Home> {
                       fontWeight: FontWeight.w600),
                 ),
 
+                const SizedBox(
+                  height: 20,
+                ),
 
+                ProductList(
+                  products: productElementList,
+                ),
 
 
 
