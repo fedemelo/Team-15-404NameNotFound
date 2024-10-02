@@ -19,7 +19,7 @@ class _ProductListState extends State<ProductList> {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.68,
+        childAspectRatio: 0.65,
       ),
       itemCount: widget.products.length,
       itemBuilder: (context, index) {
