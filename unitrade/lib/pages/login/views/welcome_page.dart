@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unitrade/pages/login/login.dart';
-import 'package:unitrade/pages/login/register.dart';
+import 'package:unitrade/pages/login/views/login_view.dart';
+import 'package:unitrade/pages/login/views/register_view.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -63,7 +63,7 @@ class WelcomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Login(),
+                            builder: (context) => const LoginView(),
                           ),
                         );
                       },
@@ -93,7 +93,7 @@ class WelcomePage extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Register(),
+                            builder: (context) => const RegisterView(),
                           ),
                         );
                       },
