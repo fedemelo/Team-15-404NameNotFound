@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unitrade/pages/login/welcome_page.dart';
+import 'package:unitrade/pages/login/views/welcome_page.dart';
 
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
