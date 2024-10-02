@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/pages/upload/upload.dart';
-import 'package:unitrade/app_colors.dart';
+import 'package:unitrade/utils/app_colors.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});

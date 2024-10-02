@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:unitrade/app_colors.dart';
+import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomSearchBar extends StatefulWidget {
-
   final void Function(String) onChange;
 
   final void Function() onClickFilter;
@@ -27,8 +26,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
-        border:
-        Border.all(color: AppColors.primary900, width: 1.5),
+        border: Border.all(color: AppColors.primary900, width: 1.5),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

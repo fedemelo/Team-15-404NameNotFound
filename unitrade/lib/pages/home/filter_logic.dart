@@ -1,9 +1,7 @@
 import 'package:unitrade/pages/home/filter.dart';
 import 'package:unitrade/pages/home/product.dart';
-import 'package:unitrade/pages/home/mock_data.dart';
 
 class FilterLogic {
-
   static List<Product> filterProducts({
     required List<Product> allProducts,
     required String selectedCategory,
@@ -12,16 +10,17 @@ class FilterLogic {
     required List<String> userCategories,
   }) {
     return allProducts.where((product) {
-
       // Filtrar por categoría si hay una seleccionada
       if (selectedCategory == 'For You') {
-        bool matchesUserCategories = product.categories.any((category) => userCategories.contains(category));
+        bool matchesUserCategories = product.categories
+            .any((category) => userCategories.contains(category));
         if (!matchesUserCategories) {
           return false;
         }
       } else {
         // Filtrar por categoría si hay una seleccionada y no es "For You"
-        if (selectedCategory != '' && !product.categories.contains(selectedCategory)) {
+        if (selectedCategory != '' &&
+            !product.categories.contains(selectedCategory)) {
           return false;
         }
       }

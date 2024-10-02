@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/pages/upload/lease.dart';
 import 'package:unitrade/pages/upload/sale.dart';
-import 'package:unitrade/app_colors.dart';
+import 'package:unitrade/utils/app_colors.dart';
 
 class Upload extends StatelessWidget {
   const Upload({super.key});

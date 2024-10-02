@@ -9,9 +9,8 @@ import 'package:unitrade/pages/home/filter.dart';
 import 'package:unitrade/pages/home/filter_widget.dart';
 import 'package:unitrade/pages/home/filter_logic.dart';
 
-import 'package:unitrade/app_colors.dart';
+import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -21,7 +20,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   var selectedCategory = 'For You';
 
   var searchValue = '';
@@ -102,16 +100,13 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 20,
                 ),
-
                 CustomSearchBar(
                   updateSearch,
                   _showFilterWidget,
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
-
                 Text(
                   'Categories',
                   style: GoogleFonts.urbanist(
@@ -119,21 +114,17 @@ class _HomeState extends State<Home> {
                       color: AppColors.primary900,
                       fontWeight: FontWeight.w600),
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
-
                 CategoryList(
                   categories: categoryElementList,
                   selectedCategory: selectedCategory,
                   onClick: clickCategory,
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
-
                 Text(
                   selectedCategory,
                   style: GoogleFonts.urbanist(
@@ -141,17 +132,12 @@ class _HomeState extends State<Home> {
                       color: AppColors.primary900,
                       fontWeight: FontWeight.w600),
                 ),
-
                 const SizedBox(
                   height: 20,
                 ),
-
                 ProductList(
                   products: filteredProducts,
                 ),
-
-
-
               ],
             ),
           ),
@@ -161,4 +147,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
