@@ -21,14 +21,19 @@ class _LoadingViewState extends State<LoadingView> {
         MaterialPageRoute(builder: (context) => const WelcomePage()),
       );
 
-      // FirebaseAuth.instance.authStateChanges().listen((user) {
+      // Listen to the auth state
+      // TODO: Uncomment this code when the auth state is implemented
+      // FirebaseAuth.instance.authStateChanges().listen((User? user) {
       //   if (user != null) {
+      //     // User is logged in, redirect to Home page
+      //     print("USER LOGGED IN~~~~~~~~~~~~~~~~~~~~~~");
       //     Navigator.pushReplacement(
       //       context,
-      //       MaterialPageRoute(builder: (context) => const MockHome()),
-      //       // MaterialPageRoute(builder: (context) => const MockHome()),
+      //       MaterialPageRoute(builder: (context) => const Home()),
       //     );
       //   } else {
+      //     // User is not logged in, redirect to Welcome page
+      //     print("USER NOT LOGGED IN~~~~~~~~~~~~~~~~~~~~~~");
       //     Navigator.pushReplacement(
       //       context,
       //       MaterialPageRoute(builder: (context) => const WelcomePage()),

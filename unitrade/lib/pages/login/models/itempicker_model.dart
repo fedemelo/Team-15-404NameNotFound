@@ -4,14 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ItemPickerModel {
   // Fetch categories from Firebase
   Future<List<String>> fetchCategories() async {
-      print("CATEGORIES~~~~~~~~~~~~~~~~~~~~~");
     final categoriesDoc = await FirebaseFirestore.instance
         .collection('categories')
         .doc('all')
         .get();
 
-      print("CATEGORIES~~~~~~~~~~~~~~~~~~~~~");
-      print(categoriesDoc);
     if (categoriesDoc.exists) {
       List<dynamic> categories = categoriesDoc.data()?['names'] ?? [];
       return categories.map((category) => category.toString()).toList();

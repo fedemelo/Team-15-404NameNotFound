@@ -20,7 +20,6 @@ class ItemPickerViewModel extends ChangeNotifier {
       isLoading = true;
       errorMessage = null;
       notifyListeners();
-      print("FETCHING CATEGORIES~~~~~~~~~~~~~~~~~~~~~");
       _categories = await _itemPickerModel.fetchCategories();
 
       isLoading = false;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
 
-  // TODO: Make this a singleton
-  final FirebaseAuth _firebase = FirebaseAuth.instance;
+  final FirebaseAuth _firebase = FirebaseService.instance.auth;
 
   String _email = '';
   String _password = '';
