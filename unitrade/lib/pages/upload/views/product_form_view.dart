@@ -3,15 +3,88 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:unitrade/utils/app_colors.dart';
-import '../viewmodels/sale_viewmodel.dart';
+import '../viewmodels/product_form_viewmodel.dart';
 
-class SaleView extends StatelessWidget {
-  const SaleView({super.key});
+class ProductFormView extends StatelessWidget {
+  final String type;
+
+  const ProductFormView({super.key, required this.type});
+
+  // Method to get the title based on form type
+  String _getTitle() {
+    return type == 'sale' ? 'Sale' : 'Lease';
+  }
+
+  // Method to check if form type is lease
+  bool _isLeaseForm() {
+    return type == 'lease';
+  }
+
+  // Dialog to pick image from gallery or camera
+  void showPickerDialog(BuildContext context, ProductFormViewModel viewModel) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  viewModel.pickImage();
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  viewModel.takePhoto();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Decorator to build input fields
+  Widget _buildTextInput({
+    required String label,
+    required String? Function(String?) validator,
+    required void Function(String?) onSaved,
+    TextInputType keyboardType = TextInputType.text,
+    List<TextInputFormatter>? inputFormatters,
+  }) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: GoogleFonts.urbanist(
+          fontSize: 16,
+          color: const Color(0xFF6F6F6F),
+          fontWeight: FontWeight.w400,
+        ),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 178, 178, 178)),
+        ),
+        errorStyle: GoogleFonts.urbanist(),
+      ),
+      style: GoogleFonts.urbanist(),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: validator,
+      onSaved: onSaved,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SaleViewModel(),
+      create: (_) => ProductFormViewModel(type: type),
       child: Scaffold(
         appBar: AppBar(
           elevation: 1.0,
@@ -30,7 +103,7 @@ class SaleView extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: Consumer<SaleViewModel>(
+        body: Consumer<ProductFormViewModel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
               child: Padding(
@@ -42,7 +115,7 @@ class SaleView extends StatelessWidget {
                     children: [
                       const SizedBox(height: 16),
                       Text(
-                        'Sale',
+                        _getTitle(),
                         style: GoogleFonts.urbanist(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -51,22 +124,8 @@ class SaleView extends StatelessWidget {
                       const SizedBox(height: 16),
 
                       // NAME INPUT
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Name',
-                          labelStyle: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: const Color(0xFF6F6F6F),
-                            fontWeight: FontWeight.w400,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 178, 178, 178)),
-                          ),
-                          errorStyle: GoogleFonts.urbanist(),
-                        ),
-                        style: GoogleFonts.urbanist(),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      _buildTextInput(
+                        label: 'Name',
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                                 ? 'Please enter a name for the product'
@@ -76,22 +135,8 @@ class SaleView extends StatelessWidget {
                       const SizedBox(height: 28),
 
                       // DESCRIPTION INPUT
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Description',
-                          labelStyle: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: const Color(0xFF6F6F6F),
-                            fontWeight: FontWeight.w400,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 178, 178, 178)),
-                          ),
-                          errorStyle: GoogleFonts.urbanist(),
-                        ),
-                        style: GoogleFonts.urbanist(),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      _buildTextInput(
+                        label: 'Description',
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                                 ? 'Please enter a description for the product'
@@ -101,22 +146,8 @@ class SaleView extends StatelessWidget {
                       const SizedBox(height: 28),
 
                       // PRICE INPUT
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Price',
-                          labelStyle: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: const Color(0xFF6F6F6F),
-                            fontWeight: FontWeight.w400,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 178, 178, 178)),
-                          ),
-                          errorStyle: GoogleFonts.urbanist(),
-                        ),
-                        style: GoogleFonts.urbanist(),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                      _buildTextInput(
+                        label: 'Price',
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                                 ? 'Please enter a price for the product'
@@ -129,23 +160,25 @@ class SaleView extends StatelessWidget {
                       ),
                       const SizedBox(height: 28),
 
-                      // CONDITION INPUT
-                      TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Condition',
-                          labelStyle: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: const Color(0xFF6F6F6F),
-                            fontWeight: FontWeight.w400,
-                          ),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Color.fromARGB(255, 178, 178, 178)),
-                          ),
-                          errorStyle: GoogleFonts.urbanist(),
+                      // RENTAL PERIOD (Lease form only)
+                      if (_isLeaseForm())
+                        Column(
+                          children: [
+                            _buildTextInput(
+                              label: 'Rental Period',
+                              validator: (value) => value == null ||
+                                      value.trim().isEmpty
+                                  ? 'Please enter the rental period for the product'
+                                  : null,
+                              onSaved: viewModel.onRentalPeriodSaved,
+                            ),
+                            const SizedBox(height: 28),
+                          ],
                         ),
-                        style: GoogleFonts.urbanist(),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                      // CONDITION INPUT
+                      _buildTextInput(
+                        label: 'Condition',
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                                 ? 'Please enter the condition of the product'
@@ -273,34 +306,4 @@ class SaleView extends StatelessWidget {
       ),
     );
   }
-}
-
-void showPickerDialog(BuildContext context, SaleViewModel viewModel) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext bc) {
-      return SafeArea(
-        child: Wrap(
-          children: <Widget>[
-            ListTile(
-              leading: const Icon(Icons.photo_library),
-              title: const Text('Photo Library'),
-              onTap: () {
-                viewModel.pickImage();
-                Navigator.of(context).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.photo_camera),
-              title: const Text('Camera'),
-              onTap: () {
-                viewModel.takePhoto();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    },
-  );
 }

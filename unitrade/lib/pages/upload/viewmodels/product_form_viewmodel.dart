@@ -6,15 +6,21 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unitrade/pages/home/home.dart';
+import 'package:unitrade/pages/upload/models/lease_model.dart';
 import 'package:unitrade/pages/upload/models/sale_model.dart';
 import 'package:uuid/uuid.dart';
 
-class SaleViewModel with ChangeNotifier {
+class ProductFormViewModel with ChangeNotifier {
+  // Form type
+  final String type;
+  ProductFormViewModel({required this.type});
+
   // Form data
   final formKey = GlobalKey<FormState>();
   String _name = '';
   String _description = '';
   String _price = '';
+  String _rentalPeriod = '';
   String _condition = '';
   String _imageUrl = '';
 
@@ -65,6 +71,10 @@ class SaleViewModel with ChangeNotifier {
     _condition = value ?? '';
   }
 
+  void onRentalPeriodSaved(String? value) {
+    _rentalPeriod = value ?? '';
+  }
+
   // Submit the form
   Future<void> submit(BuildContext context) async {
     // First - Validate the form
@@ -80,20 +90,35 @@ class SaleViewModel with ChangeNotifier {
         _imageUrl = await _storage.ref(fileName).getDownloadURL();
       }
 
-      // Third - Create a new SaleModel instance and upload it to Firestore
-      final sale = SaleModel(
-        userId: _user!.uid,
-        type: 'sale',
-        name: _name,
-        description: _description,
-        price: _price,
-        condition: _condition,
-        categories: ['TEXTBOOKS', 'CHARGERS'],
-        imageUrl: _imageUrl,
-      );
+      // Third - Create a new product instance and upload it to Firestore
+      final dynamic product;
+      if (type == 'sale') {
+        product = SaleModel(
+          userId: _user!.uid,
+          type: type,
+          name: _name,
+          description: _description,
+          price: _price,
+          condition: _condition,
+          categories: ['TEXTBOOKS', 'CHARGERS'],
+          imageUrl: _imageUrl,
+        );
+      } else {
+        product = LeaseModel(
+          userId: _user!.uid,
+          type: type,
+          name: _name,
+          description: _description,
+          price: _price,
+          rentalPeriod: _rentalPeriod,
+          condition: _condition,
+          categories: ['TEXTBOOKS', 'CHARGERS'],
+          imageUrl: _imageUrl,
+        );
+      }
 
       final id = const Uuid().v4();
-      await _firestore.collection('products').doc(id).set(sale.toMap());
+      await _firestore.collection('products').doc(id).set(product.toMap());
 
       // Fourth - Show a success message
       if (!context.mounted) return;
