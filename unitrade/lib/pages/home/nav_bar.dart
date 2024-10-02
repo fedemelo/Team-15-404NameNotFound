@@ -1,10 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:unitrade/pages/upload/upload.dart';
 import 'package:unitrade/utils/app_colors.dart';
-
-final _firebase = Firebase.initializeApp();
 
 class NavBar extends StatelessWidget {
   const NavBar({super.key});
@@ -17,9 +13,9 @@ class NavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            icon: const Icon(Icons.home_outlined, color: Color.fromARGB(255, 112, 70, 27)),
+            icon: const Icon(Icons.home_outlined, color: AppColors.contrast900),
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              // Home logic
             },
           ),
           IconButton(
