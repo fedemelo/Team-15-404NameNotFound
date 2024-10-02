@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/pages/home/home.dart';
 import 'package:unitrade/pages/upload/models/sale_model.dart';
 import 'package:uuid/uuid.dart';
 
@@ -64,6 +65,7 @@ class SaleViewModel with ChangeNotifier {
     _condition = value ?? '';
   }
 
+  // Submit the form
   Future<void> submit(BuildContext context) async {
     // First - Validate the form
     if (!formKey.currentState!.validate()) return;
@@ -94,12 +96,18 @@ class SaleViewModel with ChangeNotifier {
       await _firestore.collection('products').doc(id).set(sale.toMap());
 
       // Fourth - Show a success message
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Product uploaded successfully')),
       );
 
       // Fifth - Navigate to the home page
-      Navigator.of(context).pushReplacementNamed('/home');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ),
+      );
     } catch (e) {
       if (kDebugMode) {
         print(e);

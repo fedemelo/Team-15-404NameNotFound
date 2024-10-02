@@ -28,7 +28,7 @@ class SaleModel {
       'price': price,
       'condition': condition,
       'categories': categories,
-      if (imageUrl != null) 'image_url': imageUrl,
+      if (imageUrl != null && imageUrl!.isNotEmpty) 'image_url': imageUrl,
     };
   }
 }

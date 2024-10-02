@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:unitrade/utils/app_colors.dart';
 import '../viewmodels/sale_viewmodel.dart';
 
 class SaleView extends StatelessWidget {
@@ -159,7 +160,8 @@ class SaleView extends StatelessWidget {
                           children: [
                             viewModel.selectedImage == null
                                 ? GestureDetector(
-                                    onTap: () => viewModel.pickImage(),
+                                    onTap: () =>
+                                        showPickerDialog(context, viewModel),
                                     child: Container(
                                       width: 600,
                                       padding: const EdgeInsets.all(40),
@@ -230,7 +232,7 @@ class SaleView extends StatelessWidget {
                               onPressed: () => viewModel.submit(context),
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                  Theme.of(context).primaryColor,
+                                  AppColors.primary900,
                                 ),
                                 padding:
                                     WidgetStateProperty.all<EdgeInsetsGeometry>(
@@ -271,4 +273,34 @@ class SaleView extends StatelessWidget {
       ),
     );
   }
+}
+
+void showPickerDialog(BuildContext context, SaleViewModel viewModel) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext bc) {
+      return SafeArea(
+        child: Wrap(
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Photo Library'),
+              onTap: () {
+                viewModel.pickImage();
+                Navigator.of(context).pop();
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_camera),
+              title: const Text('Camera'),
+              onTap: () {
+                viewModel.takePhoto();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    },
+  );
 }
