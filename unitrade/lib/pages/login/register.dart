@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'login.dart';
-import 'package:unitrade/pages/item_picker.dart';
+import 'package:unitrade/pages/login/item_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -32,7 +32,6 @@ class _RegisterState extends State<Register> {
     _form.currentState!.save();
 
     try {
-                
       final userCredentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredEmail, password: _enteredPassword);
 
@@ -52,7 +51,6 @@ class _RegisterState extends State<Register> {
         context,
         MaterialPageRoute(builder: (context) => const ItemPicker()),
       );
-
     } on FirebaseAuthException catch (error) {
       // Handle Firebase authentication errors
       ScaffoldMessenger.of(context).clearSnackBars();

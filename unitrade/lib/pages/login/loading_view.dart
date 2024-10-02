@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:unitrade/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:unitrade/pages/login/welcome_page.dart';
-import 'package:unitrade/pages/mock_home.dart';
+
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
 
@@ -23,7 +20,6 @@ class _LoadingViewState extends State<LoadingView> {
         context,
         MaterialPageRoute(builder: (context) => const WelcomePage()),
       );
-
 
       // FirebaseAuth.instance.authStateChanges().listen((user) {
       //   if (user != null) {
@@ -53,7 +49,8 @@ class _LoadingViewState extends State<LoadingView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Image(
-                image: AssetImage('lib/assets/images/unitrade_logo_loadapp.png'),
+                image:
+                    AssetImage('lib/assets/images/unitrade_logo_loadapp.png'),
               ),
               Text(
                 'UniTrade',
