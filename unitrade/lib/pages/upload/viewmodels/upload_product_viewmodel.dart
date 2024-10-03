@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:unitrade/pages/home/home.dart';
+import 'package:unitrade/pages/home/view/home_page.dart';
 import 'package:unitrade/pages/upload/models/lease_strategy.dart';
 import 'package:unitrade/pages/upload/models/upload_product_strategy.dart';
 import 'package:unitrade/pages/upload/models/sale_strategy.dart';
@@ -124,7 +124,7 @@ class UploadProductViewModel with ChangeNotifier {
       // Sixth - Navigate to the home screen
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const Home(),
+          builder: (context) => const HomePage(),
         ),
       );
     } catch (e) {

@@ -3,21 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CustomSearchBar extends StatefulWidget {
+class CustomSearchBarView extends StatelessWidget {
   final void Function(String) onChange;
 
   final void Function() onClickFilter;
 
-  const CustomSearchBar(
-    void Function(String) this.onChange,
-    void Function() this.onClickFilter,
-  );
+  const CustomSearchBarView({
+    required this.onChange,
+    required this.onClickFilter,
+  });
 
-  @override
-  _CustomSearchBarState createState() => _CustomSearchBarState();
-}
-
-class _CustomSearchBarState extends State<CustomSearchBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,12 +43,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     fontWeight: FontWeight.w600),
                 border: InputBorder.none,
               ),
-              onSubmitted: widget.onChange,
+              onSubmitted: onChange,
             ),
           ),
           SizedBox(width: 8),
           GestureDetector(
-            onTap: widget.onClickFilter,
+            onTap: onClickFilter,
             child: Icon(Icons.tune, color: AppColors.primary900),
           ),
         ],

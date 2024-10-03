@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class CategoryItem extends StatefulWidget {
+class CategoryItemView extends StatelessWidget {
   final IconData icon;
   final String title;
   final int itemCount;
   final bool selected;
   final void Function(String) onTap;
 
-  CategoryItem({
+  CategoryItemView({
     required this.icon,
     required this.title,
     required this.itemCount,
@@ -18,15 +18,10 @@ class CategoryItem extends StatefulWidget {
   });
 
   @override
-  _CategoryItemState createState() => _CategoryItemState();
-}
-
-class _CategoryItemState extends State<CategoryItem> {
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        widget.onTap(widget.title);
+        onTap(title);
       },
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -35,17 +30,17 @@ class _CategoryItemState extends State<CategoryItem> {
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: widget.selected ? Colors.orange : AppColors.primary900,
+              color: selected ? Colors.orange : AppColors.primary900,
             ),
             child: Icon(
-              widget.icon,
+              icon,
               size: 32.0,
               color: Colors.white,
             ),
           ),
           SizedBox(height: 8.0),
           Text(
-            widget.title,
+            title,
             style: GoogleFonts.urbanist(
               fontSize: 14,
               color: AppColors.primary900,
@@ -54,7 +49,7 @@ class _CategoryItemState extends State<CategoryItem> {
           ),
           SizedBox(height: 4.0),
           Text(
-            '${widget.itemCount} Items',
+            '${itemCount} Items',
             style: GoogleFonts.urbanist(
               fontSize: 11,
               color: AppColors.primary900,
