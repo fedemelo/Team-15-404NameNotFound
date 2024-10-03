@@ -69,7 +69,7 @@ class LoginView extends StatelessWidget {
                               textCapitalization: TextCapitalization.none,
                               textInputAction: TextInputAction.next,
                               decoration: InputDecoration(
-                                labelText: 'example@gmail.com',
+                                hintText: 'example@gmail.com',
                                 labelStyle: GoogleFonts.urbanist(
                                   fontSize: 16,
                                   color: AppColors.primaryDark,
@@ -93,7 +93,7 @@ class LoginView extends StatelessWidget {
                               obscureText: true,
                               onChanged: loginViewModel.setPassword,
                               decoration: InputDecoration(
-                                labelText: 'password1234',
+                                hintText: 'password1234',
                                 labelStyle: GoogleFonts.urbanist(
                                   fontSize: 16,
                                   color: AppColors.primaryDark,
