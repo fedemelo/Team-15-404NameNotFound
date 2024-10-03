@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:unitrade/pages/home/home.dart';
+import 'package:unitrade/pages/home/view/home_page.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -159,7 +159,7 @@ class _SaleState extends State<Sale> {
     if (!mounted) return;
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const Home(),
+        builder: (context) => const HomePage(),
       ),
     );
   }
