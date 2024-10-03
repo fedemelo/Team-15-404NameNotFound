@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:unitrade/pages/home/category_list.dart';
+import 'package:unitrade/pages/home/view/category_list_view.dart';
 import 'package:unitrade/pages/home/mock_data.dart';
-import 'package:unitrade/pages/home/nav_bar.dart';
-import 'package:unitrade/pages/home/custom_search_bar.dart';
+import 'package:unitrade/pages/home/view/nav_bar_view.dart';
+import 'package:unitrade/pages/home/view/custom_search_bar_view.dart';
 import 'package:unitrade/pages/home/models/product_model.dart';
-import 'package:unitrade/pages/home/product_list.dart';
+import 'package:unitrade/pages/home/view/product_list_view.dart';
 import 'package:unitrade/pages/home/models/filter_model.dart';
 import 'package:unitrade/pages/home/filter_widget.dart';
 import 'package:unitrade/pages/home/viewmodels/filter_viewmodel.dart';
@@ -100,9 +100,9 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 20,
                 ),
-                CustomSearchBar(
-                  updateSearch,
-                  _showFilterWidget,
+                CustomSearchBarView(
+                  onChange: updateSearch,
+                  onClickFilter: _showFilterWidget,
                 ),
                 const SizedBox(
                   height: 20,
@@ -117,7 +117,7 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 20,
                 ),
-                CategoryList(
+                CategoryListView(
                   categories: categoryElementList,
                   selectedCategory: selectedCategory,
                   onClick: clickCategory,
@@ -135,7 +135,7 @@ class _HomeState extends State<Home> {
                 const SizedBox(
                   height: 20,
                 ),
-                ProductList(
+                ProductListView(
                   products: filteredProducts,
                 ),
               ],
@@ -143,7 +143,7 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      bottomNavigationBar: const NavBar(),
+      bottomNavigationBar: const NavBarView(),
     );
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:unitrade/pages/upload/upload.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
-class NavBar extends StatelessWidget {
-  const NavBar({super.key});
+class NavBarView extends StatelessWidget {
+  const NavBarView({super.key});
 
   @override
   Widget build(BuildContext context) {

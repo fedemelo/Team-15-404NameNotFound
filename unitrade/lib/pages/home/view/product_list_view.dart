@@ -2,16 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:unitrade/pages/home/models/product_model.dart';
 import 'package:unitrade/pages/home/product_card.dart';
 
-class ProductList extends StatefulWidget {
+class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
 
-  ProductList({required this.products});
+  ProductListView({required this.products});
 
-  @override
-  _ProductListState createState() => _ProductListState();
-}
-
-class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
@@ -21,9 +16,9 @@ class _ProductListState extends State<ProductList> {
         crossAxisCount: 2,
         childAspectRatio: 0.65,
       ),
-      itemCount: widget.products.length,
+      itemCount: products.length,
       itemBuilder: (context, index) {
-        final product = widget.products[index];
+        final product = products[index];
         return ProductCard(
           product: product,
         );
