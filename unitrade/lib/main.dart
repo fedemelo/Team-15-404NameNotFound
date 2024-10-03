@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:unitrade/pages/login/loading_view.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:unitrade/screens/login/views/loading_view.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'utils/firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -16,9 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoadingView(),
+      theme: ThemeData(
+        textTheme: GoogleFonts.urbanistTextTheme(
+          Theme.of(context).textTheme,
+        ),
+      ),
+      home: const LoadingView(),
     );
   }
 }
