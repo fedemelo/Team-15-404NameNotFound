@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unitrade/pages/upload/lease.dart';
-import 'package:unitrade/pages/upload/sale.dart';
+import 'package:unitrade/pages/upload/views/upload_product_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
-class Upload extends StatelessWidget {
-  const Upload({super.key});
+class UploadPathView extends StatelessWidget {
+  const UploadPathView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +56,8 @@ class Upload extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Sale(),
-                      ),
+                          builder: (context) =>
+                              const UploadProductView(type: 'sale')),
                     );
                   },
                   style: ButtonStyle(
@@ -92,8 +91,8 @@ class Upload extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const Lease(),
-                      ),
+                          builder: (context) =>
+                              const UploadProductView(type: 'lease')),
                     );
                   },
                   style: ButtonStyle(

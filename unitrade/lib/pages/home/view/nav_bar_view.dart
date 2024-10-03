@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unitrade/pages/upload/upload.dart';
+import 'package:unitrade/pages/upload/views/upload_path_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
 class NavBarView extends StatelessWidget {
@@ -30,7 +30,7 @@ class NavBarView extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const Upload()),
+                MaterialPageRoute(builder: (context) => const UploadPathView()),
               );
             },
           ),
