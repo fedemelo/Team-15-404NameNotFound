@@ -5,16 +5,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unitrade/pages/home/home.dart';
 import 'package:unitrade/pages/upload/models/lease_strategy.dart';
-import 'package:unitrade/pages/upload/models/product_strategy.dart';
+import 'package:unitrade/pages/upload/models/upload_product_strategy.dart';
 import 'package:unitrade/pages/upload/models/sale_strategy.dart';
 
-class ProductFormViewModel with ChangeNotifier {
+class UploadProductViewModel with ChangeNotifier {
   // Form type
   final String type;
-  ProductFormViewModel({required this.type});
+  UploadProductViewModel({required this.type});
 
   // Strategy
-  late final ProductStrategy _strategy;
+  late final UploadProductStrategy _strategy;
 
   // Form data
   final formKey = GlobalKey<FormState>();

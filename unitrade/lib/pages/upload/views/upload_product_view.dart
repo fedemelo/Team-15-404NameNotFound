@@ -3,12 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:unitrade/utils/app_colors.dart';
-import '../viewmodels/product_form_viewmodel.dart';
+import '../viewmodels/upload_product_viewmodel.dart';
 
-class ProductFormView extends StatelessWidget {
+class UploadProductView extends StatelessWidget {
   final String type;
 
-  const ProductFormView({super.key, required this.type});
+  const UploadProductView({super.key, required this.type});
 
   // Method to get the title based on form type
   String _getTitle() {
@@ -21,7 +21,8 @@ class ProductFormView extends StatelessWidget {
   }
 
   // Dialog to pick image from gallery or camera
-  void showPickerDialog(BuildContext context, ProductFormViewModel viewModel) {
+  void showPickerDialog(
+      BuildContext context, UploadProductViewModel viewModel) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext bc) {
@@ -84,7 +85,7 @@ class ProductFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ProductFormViewModel(type: type),
+      create: (_) => UploadProductViewModel(type: type),
       child: Scaffold(
         appBar: AppBar(
           elevation: 1.0,
@@ -103,7 +104,7 @@ class ProductFormView extends StatelessWidget {
           ),
           centerTitle: true,
         ),
-        body: Consumer<ProductFormViewModel>(
+        body: Consumer<UploadProductViewModel>(
           builder: (context, viewModel, child) {
             return SingleChildScrollView(
               child: Padding(

@@ -1,14 +1,14 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:unitrade/pages/upload/models/product_strategy.dart';
+import 'package:unitrade/pages/upload/models/upload_product_strategy.dart';
 import 'package:uuid/uuid.dart';
 
 // Firebase services
 final FirebaseStorage _storage = FirebaseStorage.instance;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-class SaleStrategy implements ProductStrategy {
+class SaleStrategy implements UploadProductStrategy {
   // Form data
   final String userId;
   final String type;
