@@ -69,7 +69,7 @@ class RegisterView extends StatelessWidget {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           decoration: InputDecoration(
-                            labelText: 'John Smith',
+                            hintText: 'John Smith',
                             labelStyle: GoogleFonts.urbanist(
                               fontSize: 16,
                               color: AppColors.primaryDark,
@@ -96,7 +96,7 @@ class RegisterView extends StatelessWidget {
                           autocorrect: false,
                           textCapitalization: TextCapitalization.none,
                           decoration: InputDecoration(
-                            labelText: 'example@gmail.com',
+                            hintText: 'example@gmail.com',
                             labelStyle: GoogleFonts.urbanist(
                               fontSize: 16,
                               color: AppColors.primaryDark,
@@ -121,7 +121,7 @@ class RegisterView extends StatelessWidget {
                           obscureText: true,
                           onChanged: registerViewModel.setPassword,
                           decoration: InputDecoration(
-                            labelText: 'password1234',
+                            hintText: 'password1234',
                             labelStyle: GoogleFonts.urbanist(
                               fontSize: 16,
                               color: AppColors.primaryDark,
