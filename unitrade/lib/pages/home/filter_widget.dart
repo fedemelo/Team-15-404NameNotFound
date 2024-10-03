@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:unitrade/pages/home/filter.dart';
+import 'package:unitrade/pages/home/models/filter_model.dart';
 
 class FilterWidget extends StatefulWidget {
-  final Filters actualFilters;
-  final Function(Filters) onUpdateFilters;
+  final FilterModel actualFilters;
+  final Function(FilterModel) onUpdateFilters;
 
   FilterWidget({
     required this.actualFilters,
@@ -39,7 +39,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   }
 
   void _applyFilters() {
-    Filters updatedFilters = Filters(
+    FilterModel updatedFilters = FilterModel(
       minPrice: double.tryParse(_minPriceController.text),
       maxPrice: double.tryParse(_maxPriceController.text),
       minRate: double.tryParse(_minRateController.text),
@@ -56,7 +56,7 @@ class _FilterWidgetState extends State<FilterWidget> {
     _minRateController.clear();
     _maxRateController.clear();
 
-    widget.onUpdateFilters(Filters());
+    widget.onUpdateFilters(FilterModel());
   }
 
   @override

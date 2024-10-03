@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:unitrade/pages/home/product.dart';
+import 'package:unitrade/pages/home/models/product_model.dart';
 
 class ProductCard extends StatefulWidget {
-  final Product product;
+  final ProductModel product;
 
   ProductCard({
     required this.product,

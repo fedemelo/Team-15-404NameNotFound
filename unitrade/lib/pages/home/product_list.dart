@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:unitrade/pages/home/product.dart';
+import 'package:unitrade/pages/home/models/product_model.dart';
 import 'package:unitrade/pages/home/product_card.dart';
 
 class ProductList extends StatefulWidget {
-  final List<Product> products;
+  final List<ProductModel> products;
 
   ProductList({required this.products});
 

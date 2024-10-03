@@ -3,11 +3,11 @@ import 'package:unitrade/pages/home/category_list.dart';
 import 'package:unitrade/pages/home/mock_data.dart';
 import 'package:unitrade/pages/home/nav_bar.dart';
 import 'package:unitrade/pages/home/custom_search_bar.dart';
-import 'package:unitrade/pages/home/product.dart';
+import 'package:unitrade/pages/home/models/product_model.dart';
 import 'package:unitrade/pages/home/product_list.dart';
-import 'package:unitrade/pages/home/filter.dart';
+import 'package:unitrade/pages/home/models/filter_model.dart';
 import 'package:unitrade/pages/home/filter_widget.dart';
-import 'package:unitrade/pages/home/filter_logic.dart';
+import 'package:unitrade/pages/home/viewmodels/filter_viewmodel.dart';
 
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,17 +24,17 @@ class _HomeState extends State<Home> {
 
   var searchValue = '';
 
-  Filters filters = Filters();
+  FilterModel filters = FilterModel();
 
   final categoryElementList = MockData.categoryElementList;
 
   final productElementList = MockData.productList;
 
-  List<Product> filteredProducts = [];
+  List<ProductModel> filteredProducts = [];
 
   void _filterProducts() {
     setState(() {
-      filteredProducts = FilterLogic.filterProducts(
+      filteredProducts = FilterViewModel.filterProducts(
         allProducts: productElementList,
         selectedCategory: selectedCategory,
         searchQuery: searchValue,
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void updateFilters(Filters newFilters) {
+  void updateFilters(FilterModel newFilters) {
     print('Filters: $newFilters');
     setState(() {
       filters = newFilters;
