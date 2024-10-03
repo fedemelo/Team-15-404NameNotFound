@@ -2,18 +2,19 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unitrade/pages/home/home.dart';
-import 'package:unitrade/pages/upload/models/lease_model.dart';
-import 'package:unitrade/pages/upload/models/sale_model.dart';
-import 'package:uuid/uuid.dart';
+import 'package:unitrade/pages/upload/models/lease_strategy.dart';
+import 'package:unitrade/pages/upload/models/product_strategy.dart';
+import 'package:unitrade/pages/upload/models/sale_strategy.dart';
 
 class ProductFormViewModel with ChangeNotifier {
   // Form type
   final String type;
   ProductFormViewModel({required this.type});
+
+  // Strategy
+  late final ProductStrategy _strategy;
 
   // Form data
   final formKey = GlobalKey<FormState>();
@@ -22,7 +23,6 @@ class ProductFormViewModel with ChangeNotifier {
   String _price = '';
   String _rentalPeriod = '';
   String _condition = '';
-  String _imageUrl = '';
 
   // Image data
   File? _selectedImage;
@@ -30,8 +30,6 @@ class ProductFormViewModel with ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
 
   // Firebase services
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _user = FirebaseAuth.instance.currentUser;
 
   Future<void> pickImage() async {
@@ -82,18 +80,9 @@ class ProductFormViewModel with ChangeNotifier {
     formKey.currentState!.save();
 
     try {
-      // Second - If the user has selected an image, upload it to Firebase Storage
-      if (_selectedImage != null) {
-        const uuid = Uuid();
-        final String fileName = 'images/${uuid.v4()}.jpg';
-        await _storage.ref(fileName).putFile(_selectedImage!);
-        _imageUrl = await _storage.ref(fileName).getDownloadURL();
-      }
-
-      // Third - Create a new product instance and upload it to Firestore
-      final dynamic product;
+      // Second - Determine the strategy based on the product type
       if (type == 'sale') {
-        product = SaleModel(
+        _strategy = SaleStrategy(
           userId: _user!.uid,
           type: type,
           name: _name,
@@ -101,10 +90,10 @@ class ProductFormViewModel with ChangeNotifier {
           price: _price,
           condition: _condition,
           categories: ['TEXTBOOKS', 'CHARGERS'],
-          imageUrl: _imageUrl,
+          imageUrl: '',
         );
       } else {
-        product = LeaseModel(
+        _strategy = LeaseStrategy(
           userId: _user!.uid,
           type: type,
           name: _name,
@@ -113,21 +102,26 @@ class ProductFormViewModel with ChangeNotifier {
           rentalPeriod: _rentalPeriod,
           condition: _condition,
           categories: ['TEXTBOOKS', 'CHARGERS'],
-          imageUrl: _imageUrl,
+          imageUrl: '',
         );
       }
 
-      final id = const Uuid().v4();
-      await _firestore.collection('products').doc(id).set(product.toMap());
+      // Third - If the user has selected an image, upload it to Firebase Storage via the strategy
+      if (_selectedImage != null) {
+        await _strategy.saveImage(_selectedImage!);
+      }
 
-      // Fourth - Show a success message
+      // Fourth - Save the product data to Firestore via the strategy
+      await _strategy.saveProductData();
+
+      // Fifth - Show a success message
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Product uploaded successfully')),
       );
 
-      // Fifth - Navigate to the home page
+      // Sixth - Navigate to the home screen
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const Home(),
