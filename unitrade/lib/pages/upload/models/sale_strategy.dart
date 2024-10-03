@@ -40,7 +40,7 @@ class SaleStrategy implements UploadProductStrategy {
   }
 
   @override
-  Future<void> saveProductData() async {
+  Future<void> saveProduct() async {
     final id = const Uuid().v4();
     await _firestore.collection('products').doc(id).set(toMap());
   }

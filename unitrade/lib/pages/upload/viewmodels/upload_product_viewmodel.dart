@@ -112,7 +112,7 @@ class UploadProductViewModel with ChangeNotifier {
       }
 
       // Fourth - Save the product data to Firestore via the strategy
-      await _strategy.saveProductData();
+      await _strategy.saveProduct();
 
       // Fifth - Show a success message
       if (!context.mounted) return;
