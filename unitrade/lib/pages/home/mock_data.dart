@@ -1,4 +1,4 @@
-import 'package:unitrade/pages/home/product.dart';
+import 'package:unitrade/pages/home/models/product_model.dart';
 
 class MockData {
   static const categoryElementList = [
@@ -16,9 +16,9 @@ class MockData {
     'Category 1',
     'Category 2',
   ];
-  
+
   static final productList = [
-    Product(
+    ProductModel(
       id: '1',
       name: 'Product 1',
       description: 'Description 1',
@@ -29,7 +29,7 @@ class MockData {
       inStock: true,
       categories: ['Category 1', 'Category 2'],
     ),
-    Product(
+    ProductModel(
       id: '2',
       name: 'Product 2',
       description: 'Description 2',
@@ -40,7 +40,7 @@ class MockData {
       inStock: false,
       categories: ['Category 1', 'Category 3'],
     ),
-    Product(
+    ProductModel(
       id: '3',
       name: 'Product 3',
       description: 'Description 3',
@@ -51,7 +51,7 @@ class MockData {
       inStock: true,
       categories: ['Category 2', 'Category 4'],
     ),
-    Product(
+    ProductModel(
       id: '4',
       name: 'Product 4',
       description: 'Description 4',
@@ -62,7 +62,7 @@ class MockData {
       inStock: false,
       categories: ['Category 3', 'Category 5'],
     ),
-    Product(
+    ProductModel(
       id: '5',
       name: 'Product 5',
       description: 'Description 5',
@@ -73,7 +73,7 @@ class MockData {
       inStock: true,
       categories: ['Category 4', 'Category 6'],
     ),
-    Product(
+    ProductModel(
       id: '6',
       name: 'Product 6',
       description: 'Description 6',
@@ -84,7 +84,7 @@ class MockData {
       inStock: false,
       categories: ['Category 5', 'Category 7'],
     ),
-    Product(
+    ProductModel(
       id: '7',
       name: 'Product 7',
       description: 'Description 7',
@@ -95,7 +95,7 @@ class MockData {
       inStock: true,
       categories: ['Category 6', 'Category 7'],
     ),
-    Product(
+    ProductModel(
       id: '8',
       name: 'Product 8',
       description: 'Description 8',

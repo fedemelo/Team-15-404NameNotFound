@@ -1,12 +1,12 @@
-import 'package:unitrade/pages/home/filter.dart';
-import 'package:unitrade/pages/home/product.dart';
+import 'package:unitrade/pages/home/models/filter_model.dart';
+import 'package:unitrade/pages/home/models/product_model.dart';
 
-class FilterLogic {
-  static List<Product> filterProducts({
-    required List<Product> allProducts,
+class FilterViewModel {
+  static List<ProductModel> filterProducts({
+    required List<ProductModel> allProducts,
     required String selectedCategory,
     required String searchQuery,
-    required Filters filters,
+    required FilterModel filters,
     required List<String> userCategories,
   }) {
     return allProducts.where((product) {

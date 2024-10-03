@@ -1,10 +1,10 @@
-class Filters {
+class FilterModel {
   double? minPrice;
   double? maxPrice;
   double? minRate;
   double? maxRate;
 
-  Filters({
+  FilterModel({
     this.minPrice,
     this.maxPrice,
     this.minRate,
