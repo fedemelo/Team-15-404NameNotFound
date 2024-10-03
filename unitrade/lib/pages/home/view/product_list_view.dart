@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/pages/home/models/product_model.dart';
-import 'package:unitrade/pages/home/product_card.dart';
+import 'package:unitrade/pages/home/view/product_card_view.dart';
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
@@ -19,7 +19,7 @@ class ProductListView extends StatelessWidget {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return ProductCard(
+        return ProductCardView(
           product: product,
         );
       },

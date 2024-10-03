@@ -6,7 +6,7 @@ import 'package:unitrade/pages/home/view/custom_search_bar_view.dart';
 import 'package:unitrade/pages/home/models/product_model.dart';
 import 'package:unitrade/pages/home/view/product_list_view.dart';
 import 'package:unitrade/pages/home/models/filter_model.dart';
-import 'package:unitrade/pages/home/filter_widget.dart';
+import 'package:unitrade/pages/home/view/filter_section_view.dart';
 import 'package:unitrade/pages/home/viewmodels/filter_viewmodel.dart';
 
 import 'package:unitrade/utils/app_colors.dart';
@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return FilterWidget(
+        return FilterSectionView(
           actualFilters: filters,
           onUpdateFilters: updateFilters,
         );
