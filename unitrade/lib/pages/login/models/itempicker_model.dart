@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 
 class ItemPickerModel {
+
+  final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
+
   // Fetch categories from Firebase
   Future<List<String>> fetchCategories() async {
-    final categoriesDoc = await FirebaseFirestore.instance
+    final categoriesDoc = await _firestore
         .collection('categories')
         .doc('all')
         .get();
@@ -22,7 +26,7 @@ class ItemPickerModel {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
-    await FirebaseFirestore.instance
+    await _firestore
         .collection('users')
         .doc(user.uid)
         .update({
