@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/upload/models/lease_strategy.dart';
 import 'package:unitrade/screens/upload/models/upload_product_strategy.dart';
 import 'package:unitrade/screens/upload/models/sale_strategy.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 
 class UploadProductViewModel with ChangeNotifier {
   // Form type
@@ -30,7 +30,7 @@ class UploadProductViewModel with ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
 
   // Firebase services
-  final _user = FirebaseAuth.instance.currentUser;
+  final _user = FirebaseService.instance.auth.currentUser;
 
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
