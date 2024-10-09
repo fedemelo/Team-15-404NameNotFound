@@ -9,6 +9,7 @@ class UploadPathView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 1.0,
         leading: IconButton(
@@ -44,7 +45,7 @@ class UploadPathView extends StatelessWidget {
               'Choose how you want to manage your product. You can either sell it outright or offer it for rent.',
               style: GoogleFonts.urbanist(
                 fontSize: 18,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             const SizedBox(height: 36),

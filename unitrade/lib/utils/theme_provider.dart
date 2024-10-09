@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/utils/app_colors.dart';
@@ -18,9 +16,6 @@ class ThemeProvider extends ChangeNotifier {
   // TODO: Delete
   void _startTimer() {
     Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (kDebugMode) {
-        print('Timer');
-      }
       _themeData = _getThemeByTime();
       notifyListeners();
     });
@@ -35,8 +30,8 @@ class ThemeProvider extends ChangeNotifier {
     //   return darkTheme;
     // }
     // return lightTheme;
-    // return darkTheme;
-    return ThemeData();
+    return darkTheme;
+    // return ThemeData();
   }
 }
 
