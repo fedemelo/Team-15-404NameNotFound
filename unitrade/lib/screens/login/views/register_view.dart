@@ -16,7 +16,7 @@ class RegisterView extends StatelessWidget {
           builder: (context, registerViewModel, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          backgroundColor: AppColors.primaryNeutral,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: SafeArea(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -35,7 +35,10 @@ class RegisterView extends StatelessWidget {
                           'Create Account',
                           style: GoogleFonts.urbanist(
                               fontSize: 36,
-                              color: AppColors.primaryDark,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.color,
                               fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 20),
@@ -46,7 +49,7 @@ class RegisterView extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
                             fontSize: 16,
-                            color: AppColors.primaryDark,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -58,7 +61,7 @@ class RegisterView extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
                             fontSize: 16,
-                            color: AppColors.primaryDark,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -71,7 +74,8 @@ class RegisterView extends StatelessWidget {
                             hintText: 'John Smith',
                             labelStyle: GoogleFonts.urbanist(
                               fontSize: 16,
-                              color: AppColors.primaryDark,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -85,7 +89,10 @@ class RegisterView extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
                             fontSize: 16,
-                            color: AppColors.primaryDark,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.color,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -98,7 +105,8 @@ class RegisterView extends StatelessWidget {
                             hintText: 'example@gmail.com',
                             labelStyle: GoogleFonts.urbanist(
                               fontSize: 16,
-                              color: AppColors.primaryDark,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -112,7 +120,10 @@ class RegisterView extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: GoogleFonts.urbanist(
                             fontSize: 16,
-                            color: AppColors.primaryDark,
+                            color: Theme.of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.color,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -123,17 +134,19 @@ class RegisterView extends StatelessWidget {
                             hintText: 'password1234',
                             labelStyle: GoogleFonts.urbanist(
                               fontSize: 16,
-                              color: AppColors.primaryDark,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
                           validator: registerViewModel.validatePassword,
                         ),
+                        const SizedBox(height: 10),
                         Text(
                           'Your password must be 8 characters or more and it must contain at least 1 number and 1 special character',
                           textAlign: TextAlign.left,
                           style: GoogleFonts.urbanist(
-                            fontSize: 16,
+                            fontSize: 14,
                             color: AppColors.light400,
                           ),
                         ),
@@ -195,12 +208,13 @@ class RegisterView extends StatelessWidget {
                                       builder: (context) => const LoginView()),
                                 );
                               },
-                              child: const Text(
-                                "Log In",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.primaryDark),
-                              ),
+                              child: Text("Log In",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge
+                                          ?.color)),
                             ),
                           ],
                         ),

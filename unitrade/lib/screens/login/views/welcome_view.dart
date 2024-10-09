@@ -10,7 +10,7 @@ class WelcomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryNeutral,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -30,7 +30,7 @@ class WelcomeView extends StatelessWidget {
                 'Discover the \n best offers',
                 style: GoogleFonts.urbanist(
                     fontSize: 36,
-                    color: AppColors.primary900,
+                    color: Theme.of(context).textTheme.headlineLarge?.color,
                     fontWeight: FontWeight.w600),
               ),
               const SizedBox(
@@ -43,7 +43,7 @@ class WelcomeView extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.urbanist(
                   fontSize: 16,
-                  color: AppColors.primaryDark,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                   fontWeight: FontWeight.w400,
                 ),
               ),
