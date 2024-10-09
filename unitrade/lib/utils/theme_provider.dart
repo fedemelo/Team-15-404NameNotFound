@@ -1,37 +1,42 @@
-import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:light_sensor/light_sensor.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
   late ThemeData _themeData;
+  static const double _brightThreshold = 1000.0;
 
   ThemeProvider() {
-    _themeData = _getThemeByTime();
-    _startTimer();
+    _themeData = lightTheme;
+    _initializeLightSensor();
   }
 
   ThemeData get themeData => _themeData;
 
-  // TODO: Delete
-  void _startTimer() {
-    Timer.periodic(const Duration(seconds: 2), (timer) {
-      _themeData = _getThemeByTime();
-      notifyListeners();
-    });
+  void _initializeLightSensor() async {
+    bool hasSensor = await LightSensor.hasSensor();
+
+    if (hasSensor) {
+      LightSensor.luxStream().listen((lux) {
+        _updateThemeByLightLevel(lux);
+      });
+    } else {
+      if (kDebugMode) {
+        print("Device doesn't have a light sensor.");
+      }
+    }
   }
 
-  // TODO: Adjust
-  ThemeData _getThemeByTime() {
-    // final hour = DateTime.now().hour;
-    // if (hour < 6 || hour > 18) {
-    //   return lightTheme;
-    // } else {
-    //   return darkTheme;
-    // }
-    // return lightTheme;
-    return darkTheme;
-    // return ThemeData();
+  void _updateThemeByLightLevel(int lux) {
+    if (lux > _brightThreshold && _themeData != lightTheme) {
+      _themeData = lightTheme;
+      notifyListeners();
+    } else if (lux <= _brightThreshold && _themeData != darkTheme) {
+      _themeData = darkTheme;
+      notifyListeners();
+    }
   }
 }
 
