@@ -48,7 +48,8 @@ class HomeView extends StatelessWidget {
                         'Categories',
                         style: GoogleFonts.urbanist(
                           fontSize: 20,
-                          color: AppColors.primary900,
+                          color:
+                              Theme.of(context).textTheme.headlineLarge?.color,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -63,7 +64,8 @@ class HomeView extends StatelessWidget {
                         viewModel.selectedCategory,
                         style: GoogleFonts.urbanist(
                           fontSize: 20,
-                          color: AppColors.primary900,
+                          color:
+                              Theme.of(context).textTheme.headlineLarge?.color,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

@@ -77,7 +77,7 @@ class ProductCardView extends StatelessWidget {
                     product.name,
                     style: GoogleFonts.urbanist(
                       fontSize: 18,
-                      color: AppColors.primaryDark,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -89,7 +89,7 @@ class ProductCardView extends StatelessWidget {
                       Text(
                         product.rating.toString(),
                         style: GoogleFonts.urbanist(
-                          color: AppColors.primaryDark,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),
@@ -110,7 +110,7 @@ class ProductCardView extends StatelessWidget {
                     '\$${product.price}',
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
-                      color: AppColors.primaryDark,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
