@@ -6,7 +6,7 @@ import 'package:unitrade/utils/app_colors.dart';
 
 class ThemeProvider extends ChangeNotifier {
   late ThemeData _themeData;
-  static const double _brightThreshold = 1000.0;
+  static const double _brightThreshold = 100.0;
 
   ThemeProvider() {
     _themeData = lightTheme;
