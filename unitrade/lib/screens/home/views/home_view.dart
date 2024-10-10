@@ -6,7 +6,6 @@ import 'package:unitrade/screens/home/views/product_list_view.dart';
 import 'package:unitrade/screens/home/views/filter_section_view.dart';
 import 'package:unitrade/screens/home/viewmodels/home_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends StatelessWidget {

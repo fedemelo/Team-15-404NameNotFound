@@ -28,6 +28,7 @@ class UploadProductViewModel with ChangeNotifier {
   File? _selectedImage;
   File? get selectedImage => _selectedImage;
   final ImagePicker _picker = ImagePicker();
+  String _imageSource = '';
 
   // Firebase services
   final _user = FirebaseAuth.instance.currentUser;
@@ -36,6 +37,7 @@ class UploadProductViewModel with ChangeNotifier {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       _selectedImage = File(image.path);
+      _imageSource = 'gallery';
       notifyListeners();
     }
   }
@@ -44,12 +46,14 @@ class UploadProductViewModel with ChangeNotifier {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
     if (image != null) {
       _selectedImage = File(image.path);
+      _imageSource = 'camera';
       notifyListeners();
     }
   }
 
   void removeImage() {
     _selectedImage = null;
+    _imageSource = '';
     notifyListeners();
   }
 
@@ -91,6 +95,7 @@ class UploadProductViewModel with ChangeNotifier {
           condition: _condition,
           categories: ['TEXTBOOKS', 'CHARGERS'],
           imageUrl: '',
+          imageSource: '',
         );
       } else {
         _strategy = LeaseStrategy(
@@ -103,12 +108,13 @@ class UploadProductViewModel with ChangeNotifier {
           condition: _condition,
           categories: ['TEXTBOOKS', 'CHARGERS'],
           imageUrl: '',
+          imageSource: '',
         );
       }
 
       // Third - If the user has selected an image, upload it to Firebase Storage via the strategy
       if (_selectedImage != null) {
-        await _strategy.saveImage(_selectedImage!);
+        await _strategy.saveImage(_selectedImage!, _imageSource);
       }
 
       // Fourth - Save the product data to Firestore via the strategy
