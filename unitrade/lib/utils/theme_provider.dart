@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:light_sensor/light_sensor.dart';
@@ -7,17 +9,25 @@ import 'package:unitrade/utils/app_colors.dart';
 class ThemeProvider extends ChangeNotifier {
   late ThemeData _themeData;
   static const double _brightThreshold = 100.0;
+  Timer? _timer;
+  int _lastCheckedHour = -1;
 
   ThemeProvider() {
+    // Default theme
     _themeData = lightTheme;
-    _initializeLightSensor();
+
+    // Light sensor
+    // _initializeLightSensor();
+
+    // Time based theme
+    _initializeByTime();
+    _startListening();
   }
 
   ThemeData get themeData => _themeData;
 
   void _initializeLightSensor() async {
     bool hasSensor = await LightSensor.hasSensor();
-
     if (hasSensor) {
       LightSensor.luxStream().listen((lux) {
         _updateThemeByLightLevel(lux);
@@ -37,6 +47,26 @@ class ThemeProvider extends ChangeNotifier {
       _themeData = darkTheme;
       notifyListeners();
     }
+  }
+
+  void _initializeByTime() {
+    final hour = DateTime.now().hour;
+    final newTheme = (hour >= 6 && hour < 18) ? lightTheme : darkTheme;
+    if (newTheme != _themeData) {
+      _themeData = newTheme;
+      notifyListeners();
+    }
+  }
+
+  void _startListening() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
+      final now = DateTime.now();
+      if (now.hour != _lastCheckedHour) {
+        _lastCheckedHour = now.hour;
+        _initializeByTime();
+      }
+    });
   }
 }
 
