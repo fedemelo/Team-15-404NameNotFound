@@ -3,7 +3,6 @@ import 'package:unitrade/screens/home/views/category_list_view.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/screens/home/views/custom_search_bar_view.dart';
 import 'package:unitrade/screens/home/views/product_list_view.dart';
-import 'package:unitrade/screens/home/views/filter_section_view.dart';
 import 'package:unitrade/screens/home/viewmodels/home_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:unitrade/utils/app_colors.dart';
@@ -11,18 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
-
-  void _showFilterWidget(BuildContext context, HomeViewModel viewModel) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return FilterSectionView(
-          actualFilters: viewModel.filters,
-          onUpdateFilters: viewModel.updateFilters,
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +28,7 @@ class HomeView extends StatelessWidget {
                       CustomSearchBarView(
                         onChange: viewModel.updateSearch,
                         onClickFilter: () =>
-                            _showFilterWidget(context, viewModel),
+                            viewModel.showFilterWidget(context, viewModel),
                       ),
                       const SizedBox(height: 20),
                       Text(
@@ -60,7 +47,7 @@ class HomeView extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        viewModel.selectedCategory,
+                        viewModel.selectedCategory.isEmpty ? 'Search' : viewModel.selectedCategory,
                         style: GoogleFonts.urbanist(
                           fontSize: 20,
                           color: AppColors.primary900,
