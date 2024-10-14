@@ -28,6 +28,8 @@ class MockData {
       reviews: 10,
       inStock: true,
       categories: ['Category 1', 'Category 2'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '2',
@@ -39,6 +41,8 @@ class MockData {
       reviews: 20,
       inStock: false,
       categories: ['Category 1', 'Category 3'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '3',
@@ -50,6 +54,8 @@ class MockData {
       reviews: 30,
       inStock: true,
       categories: ['Category 2', 'Category 4'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '4',
@@ -61,6 +67,8 @@ class MockData {
       reviews: 40,
       inStock: false,
       categories: ['Category 3', 'Category 5'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '5',
@@ -72,6 +80,8 @@ class MockData {
       reviews: 50,
       inStock: true,
       categories: ['Category 4', 'Category 6'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '6',
@@ -83,6 +93,8 @@ class MockData {
       reviews: 60,
       inStock: false,
       categories: ['Category 5', 'Category 7'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '7',
@@ -94,6 +106,8 @@ class MockData {
       reviews: 70,
       inStock: true,
       categories: ['Category 6', 'Category 7'],
+      userId: "1",
+      type: "aaa",
     ),
     ProductModel(
       id: '8',
@@ -105,6 +119,8 @@ class MockData {
       reviews: 80,
       inStock: false,
       categories: ['Category 7', 'Category 2'],
+      userId: "1",
+      type: "aaa",
     ),
   ];
 }

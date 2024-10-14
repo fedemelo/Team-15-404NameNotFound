@@ -20,47 +20,51 @@ class HomeView extends StatelessWidget {
           return Scaffold(
             body: SafeArea(
               child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30, right: 30),
-                  child: ListView(
-                    children: [
-                      const SizedBox(height: 20),
-                      CustomSearchBarView(
-                        onChange: viewModel.updateSearch,
-                        onClickFilter: () =>
-                            viewModel.showFilterWidget(context, viewModel),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Categories',
-                        style: GoogleFonts.urbanist(
-                          fontSize: 20,
-                          color: AppColors.primary900,
-                          fontWeight: FontWeight.w600,
+                child: viewModel.finishedGets
+                    ? Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        child: ListView(
+                          children: [
+                            const SizedBox(height: 20),
+                            CustomSearchBarView(
+                              onChange: viewModel.updateSearch,
+                              onClickFilter: () => viewModel.showFilterWidget(
+                                  context, viewModel),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Categories',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 20,
+                                color: AppColors.primary900,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            CategoryListView(
+                              categories: viewModel.categoryElementList,
+                              selectedCategory: viewModel.selectedCategory,
+                              onClick: viewModel.clickCategory,
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              viewModel.selectedCategory.isEmpty
+                                  ? 'Search'
+                                  : viewModel.selectedCategory,
+                              style: GoogleFonts.urbanist(
+                                fontSize: 20,
+                                color: AppColors.primary900,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            ProductListView(
+                              products: viewModel.filteredProducts,
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      CategoryListView(
-                        categories: viewModel.categoryElementList,
-                        selectedCategory: viewModel.selectedCategory,
-                        onClick: viewModel.clickCategory,
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        viewModel.selectedCategory.isEmpty ? 'Search' : viewModel.selectedCategory,
-                        style: GoogleFonts.urbanist(
-                          fontSize: 20,
-                          color: AppColors.primary900,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ProductListView(
-                        products: viewModel.filteredProducts,
-                      ),
-                    ],
-                  ),
-                ),
+                      )
+                    : const CircularProgressIndicator(),
               ),
             ),
             bottomNavigationBar: const NavBarView(),
