@@ -64,7 +64,9 @@ class HomeView extends StatelessWidget {
                           ],
                         ),
                       )
-                    : const CircularProgressIndicator(),
+                    : const CircularProgressIndicator(
+                  color: AppColors.primary900,
+                ),
               ),
             ),
             bottomNavigationBar: const NavBarView(),
