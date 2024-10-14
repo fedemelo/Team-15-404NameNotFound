@@ -16,8 +16,6 @@ class NavBarView extends StatelessWidget {
             icon: const Icon(Icons.home_outlined, color: AppColors.contrast900),
             onPressed: () {
               // Home logic
-              final FirebaseService _firebaseService = FirebaseService.instance;
-              _firebaseService.auth.signOut();
             },
           ),
           IconButton(
