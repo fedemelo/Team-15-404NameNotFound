@@ -3,11 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirebaseService {
-  
   FirebaseService._privateConstructor();
 
   // Singleton instance
-  static final FirebaseService _instance = FirebaseService._privateConstructor();
+  static final FirebaseService _instance =
+      FirebaseService._privateConstructor();
 
   // Public accessor for the singleton instance
   static FirebaseService get instance => _instance;
@@ -17,8 +17,18 @@ class FirebaseService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  // Public getters 
+  // Public getters
   FirebaseAuth get auth => _firebaseAuth;
   FirebaseFirestore get firestore => _firebaseFirestore;
   FirebaseStorage get storage => _storage;
+
+  Future<void> getUser() async {
+    _firebaseAuth.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
+  }
 }

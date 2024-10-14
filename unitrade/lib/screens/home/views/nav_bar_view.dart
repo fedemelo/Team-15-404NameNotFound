@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/upload/views/upload_path_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 
 class NavBarView extends StatelessWidget {
-  const NavBarView({super.key});
-
+  const NavBarView({super.key});  
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
