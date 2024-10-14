@@ -15,7 +15,7 @@ class ItempickerView extends StatelessWidget {
       child: Consumer<ItemPickerViewModel>(
           builder: (context, itemPickerViewModel, child) {
         return Scaffold(
-          backgroundColor: AppColors.primaryNeutral,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           body: SafeArea(
             child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -29,7 +29,7 @@ class ItempickerView extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.urbanist(
                         fontSize: 36,
-                        color: AppColors.primary900,
+                        color: Theme.of(context).textTheme.headlineLarge?.color,
                         fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(
@@ -42,7 +42,7 @@ class ItempickerView extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
-                      color: AppColors.primaryDark,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -68,14 +68,21 @@ class ItempickerView extends StatelessWidget {
                             .selectedCategories
                             .contains(category);
                         return ChoiceChip(
-                          label: Text(category),
+                          label: Text(
+                            category,
+                            style: GoogleFonts.urbanist(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           selected: isSelected,
                           labelStyle: TextStyle(
                             color: isSelected
                                 ? AppColors.primaryNeutral
                                 : AppColors.primary900,
                           ),
-                          backgroundColor: AppColors.primaryNeutral,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
                           selectedColor: AppColors.primary900,
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(color: AppColors.primary900),

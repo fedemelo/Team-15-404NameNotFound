@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:unitrade/screens/login/viewmodels/welcome_view_model.dart';
-import 'package:unitrade/screens/login/views/login_view.dart';
-import 'package:unitrade/screens/login/views/register_view.dart';
+// import 'package:unitrade/screens/login/views/login_view.dart';
+// import 'package:unitrade/screens/login/views/register_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
 class WelcomeView extends StatelessWidget {
@@ -16,7 +16,7 @@ class WelcomeView extends StatelessWidget {
       child: Consumer<WelcomeViewModel>(
         builder: (context, welcomeViewModel, child) {
           return Scaffold(
-            backgroundColor: AppColors.primaryNeutral,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -36,7 +36,10 @@ class WelcomeView extends StatelessWidget {
                             'Discover the \n best offers',
                             style: GoogleFonts.urbanist(
                               fontSize: 36,
-                              color: AppColors.primary900,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .headlineLarge
+                                  ?.color,
                               fontWeight: FontWeight.w600,
                             ),
                             textAlign: TextAlign.center,
@@ -47,7 +50,8 @@ class WelcomeView extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.urbanist(
                               fontSize: 16,
-                              color: AppColors.primaryDark,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
                               fontWeight: FontWeight.w400,
                             ),
                           ),
@@ -133,7 +137,8 @@ class WelcomeView extends StatelessWidget {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton.icon(
-                        onPressed: () => welcomeViewModel.signInWithMicrosoft(context),
+                        onPressed: () =>
+                            welcomeViewModel.signInWithMicrosoft(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary900,
                           shape: RoundedRectangleBorder(
