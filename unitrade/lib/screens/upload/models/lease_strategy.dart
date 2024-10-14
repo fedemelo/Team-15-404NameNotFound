@@ -2,11 +2,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:unitrade/screens/upload/models/upload_product_strategy.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 import 'package:uuid/uuid.dart';
 
 // Firebase services
-final FirebaseStorage _storage = FirebaseStorage.instance;
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+final FirebaseStorage _storage = FirebaseService.instance.storage;
+final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
 
 class LeaseStrategy implements UploadProductStrategy {
   // Form data
