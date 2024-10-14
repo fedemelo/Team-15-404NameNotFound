@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/screens/upload/views/upload_product_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
@@ -9,15 +10,11 @@ class UploadPathView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const NavBarView(initialIndex: 2),
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 1.0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
+        automaticallyImplyLeading: false,
         title: Text(
           'Upload Product',
           style: GoogleFonts.urbanist(
@@ -73,7 +70,7 @@ class UploadPathView extends StatelessWidget {
                   child: Row(
                     children: [
                       const Icon(Icons.currency_exchange_sharp),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 12),
                       Text(
                         'SELL',
                         style: GoogleFonts.urbanist(
@@ -86,7 +83,7 @@ class UploadPathView extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 25),
+                const SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -108,7 +105,7 @@ class UploadPathView extends StatelessWidget {
                   child: Row(
                     children: [
                       const Icon(Icons.shuffle_outlined),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 12),
                       Text(
                         'LIST FOR RENT',
                         style: GoogleFonts.urbanist(

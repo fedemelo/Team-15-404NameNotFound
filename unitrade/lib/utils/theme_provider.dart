@@ -26,6 +26,7 @@ class ThemeProvider extends ChangeNotifier {
 
   ThemeData get themeData => _themeData;
 
+  // ignore: unused_element
   void _initializeLightSensor() async {
     bool hasSensor = await LightSensor.hasSensor();
     if (hasSensor) {
@@ -91,7 +92,7 @@ final ThemeData darkTheme = ThemeData(
           bodyLarge: const TextStyle(color: AppColors.primaryNeutral),
           bodySmall: const TextStyle(color: AppColors.light400),
           headlineSmall: const TextStyle(color: AppColors.primaryNeutral),
-          headlineLarge: const TextStyle(color: AppColors.contrast700),
+          headlineLarge: const TextStyle(color: AppColors.primary600),
         ),
   ),
 );
