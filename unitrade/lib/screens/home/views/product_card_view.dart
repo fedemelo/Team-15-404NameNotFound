@@ -31,19 +31,34 @@ class ProductCardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.0),
-                        child: Image.network(
-                          product.imageUrl,
-                          height: 150,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                        child: product.imageUrl.isNotEmpty
+                            ? Image.network(
+                                product.imageUrl,
+                                height: 150,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                height: 150,
+                                width: double.infinity,
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Text(
+                                    'No image',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ),
+                              ),
                       ),
                       Positioned(
                         top: 8,
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite();
+                            productViewModel.toggleFavorite(product);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
@@ -59,12 +74,11 @@ class ProductCardView extends StatelessWidget {
                               ],
                             ),
                             child: Icon(
-                              productViewModel.isFavorite
+                              product.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border,
-                              color: productViewModel.isFavorite
-                                  ? Colors.red
-                                  : Colors.grey,
+                              color:
+                                  product.isFavorite ? Colors.red : Colors.grey,
                               size: 20,
                             ),
                           ),
