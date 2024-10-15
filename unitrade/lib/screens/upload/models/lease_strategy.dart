@@ -19,6 +19,7 @@ class LeaseStrategy implements UploadProductStrategy {
   final String rentalPeriod;
   final String condition;
   final List<String> categories;
+  static const reviewCount = 0;
   String? imageUrl;
   String? imageSource;
 
@@ -62,6 +63,7 @@ class LeaseStrategy implements UploadProductStrategy {
       'rental_period': rentalPeriod,
       'condition': condition,
       'categories': categories,
+      'review_count': reviewCount,
       if (imageUrl != null && imageUrl!.isNotEmpty) 'image_url': imageUrl,
       if (imageSource != null && imageSource!.isNotEmpty)
         'image_source': imageSource,

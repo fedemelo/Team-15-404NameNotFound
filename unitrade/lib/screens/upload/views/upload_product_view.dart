@@ -96,9 +96,12 @@ class UploadProductView extends StatelessWidget {
         return newValue.copyWith(text: '');
       }
 
-      // Format the number with commas for thousands and add dollar sign
+      // Format the number with dots for thousands and add dollar sign
       final formatter = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
       String newText = formatter.format(int.parse(text));
+
+      // Replace commas with dots
+      newText = newText.replaceAll(',', '.');
 
       return TextEditingValue(
         text: newText,
@@ -174,7 +177,7 @@ class UploadProductView extends StatelessWidget {
 
                       // PRICE INPUT
                       _buildTextInput(
-                        label: 'Price',
+                        label: 'Price (COP)',
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                                 ? 'Please enter a price for the product'
