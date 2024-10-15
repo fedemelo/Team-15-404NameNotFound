@@ -200,12 +200,16 @@ class UploadProductView extends StatelessWidget {
                         Column(
                           children: [
                             _buildTextInput(
-                              label: 'Rental Period',
+                              label: 'Rental Period (days)',
                               validator: (value) => value == null ||
                                       value.trim().isEmpty
                                   ? 'Please enter the rental period for the product'
                                   : null,
                               onSaved: viewModel.onRentalPeriodSaved,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                             ),
                             const SizedBox(height: 28),
                           ],
