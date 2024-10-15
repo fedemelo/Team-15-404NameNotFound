@@ -9,7 +9,8 @@ class FilterViewModel {
     required FilterModel filters,
     required List<String> userCategories,
   }) {
-    return allProducts.where((product) {
+    // Primero filtramos los productos
+    List<ProductModel> filteredProducts = allProducts.where((product) {
       // Filtrar por categoría si hay una seleccionada
       if (selectedCategory == 'For You') {
         bool matchesUserCategories = product.categories
@@ -41,17 +42,26 @@ class FilterViewModel {
         return false;
       }
 
-      // Filtrar por calificación mínima
-      if (filters.minRate != null && product.rating < filters.minRate!) {
-        return false;
-      }
-
-      // Filtrar por calificación máxima
-      if (filters.maxRate != null && product.rating > filters.maxRate!) {
-        return false;
-      }
-
       return true;
     }).toList();
+
+    // Ahora ordenamos los productos basados en "sortBy" y "sortAscendant"
+    if (filters.sortBy == 'Price') {
+      // Ordenar por precio
+      filteredProducts.sort((a, b) {
+        return filters.sortAscendant
+            ? a.price.compareTo(b.price)
+            : b.price.compareTo(a.price);
+      });
+    } else if (filters.sortBy == 'Rating') {
+      // Ordenar por calificación (Rating)
+      filteredProducts.sort((a, b) {
+        return filters.sortAscendant
+            ? a.rating.compareTo(b.rating)
+            : b.rating.compareTo(a.rating);
+      });
+    }
+
+    return filteredProducts;
   }
 }

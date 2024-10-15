@@ -39,7 +39,7 @@ class CustomSearchBarView extends StatelessWidget {
                 hintText: 'What are you looking for?',
                 hintStyle: GoogleFonts.urbanist(
                     fontSize: 15,
-                    color: AppColors.primary900,
+                    color: AppColors.light400,
                     fontWeight: FontWeight.w600),
                 border: InputBorder.none,
               ),
