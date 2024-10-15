@@ -1,5 +1,6 @@
 import 'package:unitrade/screens/home/models/filter_model.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
+import 'package:unitrade/screens/home/category_data.dart';
 
 class FilterViewModel {
   static List<ProductModel> filterProducts({
@@ -9,8 +10,10 @@ class FilterViewModel {
     required FilterModel filters,
     required List<String> userCategories,
   }) {
+
     // Primero filtramos los productos
     List<ProductModel> filteredProducts = allProducts.where((product) {
+
       // Filtrar por categoría si hay una seleccionada
       if (selectedCategory == 'For You') {
         bool matchesUserCategories = product.categories
@@ -21,7 +24,7 @@ class FilterViewModel {
       } else {
         // Filtrar por categoría si hay una seleccionada y no es "For You"
         if (selectedCategory != '' &&
-            !product.categories.contains(selectedCategory)) {
+            !categorize(product.categories).contains(selectedCategory)) {
           return false;
         }
       }

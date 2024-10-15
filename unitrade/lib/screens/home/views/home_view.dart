@@ -46,7 +46,7 @@ class HomeView extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
                             CategoryListView(
-                              categories: viewModel.categoryElementList,
+                              categories: viewModel.categoryGroupList,
                               selectedCategory: viewModel.selectedCategory,
                               onClick: viewModel.clickCategory,
                             ),

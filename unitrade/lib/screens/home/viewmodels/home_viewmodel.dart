@@ -16,6 +16,7 @@ class HomeViewModel extends ChangeNotifier {
   bool selectedFilters = false;
 
   List<String> categoryElementList = [];
+  List<String> categoryGroupList = ['For You', 'Study', 'Tech', 'Creative', 'Others', 'Lab', 'Personal'];
   List<String> categoryUserList = [];
   List<ProductModel> productElementList = [];
 
