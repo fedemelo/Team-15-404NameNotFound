@@ -30,6 +30,7 @@ class HomeView extends StatelessWidget {
                               onChange: viewModel.updateSearch,
                               onClickFilter: () => viewModel.showFilterWidget(
                                   context, viewModel),
+                              changeFliters: viewModel.selectedFilters,
                             ),
                             const SizedBox(height: 20),
                             Text(

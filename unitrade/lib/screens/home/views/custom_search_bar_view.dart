@@ -8,9 +8,12 @@ class CustomSearchBarView extends StatelessWidget {
 
   final void Function() onClickFilter;
 
-  const CustomSearchBarView({
+  bool changeFliters;
+
+  CustomSearchBarView({
     required this.onChange,
     required this.onClickFilter,
+    required this.changeFliters
   });
 
   @override
@@ -49,7 +52,8 @@ class CustomSearchBarView extends StatelessWidget {
           SizedBox(width: 8),
           GestureDetector(
             onTap: onClickFilter,
-            child: Icon(Icons.tune, color: AppColors.primary900),
+            child: Icon(Icons.tune,
+                color: changeFliters ? AppColors.secondary900 : AppColors.primary900),
           ),
         ],
       ),

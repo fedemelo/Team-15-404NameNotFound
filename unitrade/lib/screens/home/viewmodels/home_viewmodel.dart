@@ -13,6 +13,7 @@ class HomeViewModel extends ChangeNotifier {
   FilterModel filters = FilterModel();
 
   bool finishedGets = false;
+  bool selectedFilters = false;
 
   List<String> categoryElementList = [];
   List<String> categoryUserList = [];
@@ -28,6 +29,11 @@ class HomeViewModel extends ChangeNotifier {
     _filterProducts();
   }
 
+  void updateFilterColor(bool filter){
+    selectedFilters = filter;
+    notifyListeners();
+  }
+
   void showFilterWidget(BuildContext context, HomeViewModel viewModel) {
     showModalBottomSheet(
       context: context,
@@ -35,6 +41,7 @@ class HomeViewModel extends ChangeNotifier {
         return FilterSectionView(
           actualFilters: viewModel.filters,
           onUpdateFilters: viewModel.updateFilters,
+          selectedFilters: updateFilterColor,
         );
       },
     );
@@ -104,7 +111,7 @@ class HomeViewModel extends ChangeNotifier {
       }));
 
     } else {
-      throw Exception("Categories not found");
+      categoryUserList = ["TEXTBOOKS", "ELECTRONICS"];
     }
   }
 

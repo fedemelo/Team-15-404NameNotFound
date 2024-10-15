@@ -8,10 +8,12 @@ import 'package:google_fonts/google_fonts.dart';
 class FilterSectionView extends StatelessWidget {
   final FilterModel actualFilters;
   final Function(FilterModel) onUpdateFilters;
+  Function(bool) selectedFilters;
 
   FilterSectionView({
     required this.actualFilters,
     required this.onUpdateFilters,
+    required this.selectedFilters,
   });
 
   @override
@@ -395,7 +397,7 @@ class FilterSectionView extends StatelessWidget {
                           onPressed: viewModel.invalidPriceRange || viewModel.missingPriceFields
                               ? null
                               : () {
-                            final updatedFilters = viewModel.applyFilters();
+                            final updatedFilters = viewModel.applyFilters(selectedFilters);
                             onUpdateFilters(updatedFilters);
                             Navigator.pop(context);
                           },

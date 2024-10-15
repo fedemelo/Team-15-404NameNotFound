@@ -26,7 +26,16 @@ class FilterSectionViewModel extends ChangeNotifier {
     maxPriceController.dispose();
   }
 
-  FilterModel applyFilters() {
+  FilterModel applyFilters(Function(bool) selectedFilters) {
+    if (minPriceController.text == "" &&
+    maxPriceController.text == "" &&
+    sortBy == '' &&
+    sortAscendant == true) {
+      selectedFilters(false);
+    } else {
+      selectedFilters(true);
+    }
+
     return FilterModel(
       minPrice: double.tryParse(minPriceController.text),
       maxPrice: double.tryParse(maxPriceController.text),
