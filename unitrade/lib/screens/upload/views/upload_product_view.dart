@@ -201,10 +201,15 @@ class UploadProductView extends StatelessWidget {
                           children: [
                             _buildTextInput(
                               label: 'Rental Period (days)',
-                              validator: (value) => value == null ||
-                                      value.trim().isEmpty
-                                  ? 'Please enter the rental period for the product'
-                                  : null,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter the rental period for the product';
+                                }
+                                if (int.parse(value) > 365) {
+                                  return 'The rental period cannot exceed a year';
+                                }
+                                return null;
+                              },
                               onSaved: viewModel.onRentalPeriodSaved,
                               keyboardType: TextInputType.number,
                               inputFormatters: [
