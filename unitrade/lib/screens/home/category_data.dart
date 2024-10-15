@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Categories {
   static const String textbooks = "Textbooks";
   static const String studyGuides = "Study_guides";
@@ -61,6 +63,16 @@ final Map<String, List<String>> productGroups = {
     Categories.chargers,
     Categories.laptopsTablets
   ]
+};
+
+final Map<String, IconData> categoryIcons = {
+  'For You': Icons.favorite,   // Ejemplo: Ícono para "For You"
+  'Study': Icons.book,         // Ejemplo: Ícono para "Study"
+  'Tech': Icons.computer,      // Ejemplo: Ícono para "Tech"
+  'Creative': Icons.palette,   // Ejemplo: Ícono para "Creative"
+  'Others': Icons.more_horiz,  // Ejemplo: Ícono para "Others"
+  'Lab': Icons.science,        // Ejemplo: Ícono para "Lab"
+  'Personal': Icons.person,    // Ejemplo: Ícono para "Personal"
 };
 
 // Función que recibe una lista de categorías y devuelve una lista de grupos

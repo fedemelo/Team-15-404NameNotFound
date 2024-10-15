@@ -76,7 +76,7 @@ class ProductCardView extends StatelessWidget {
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               color:
-                                  product.isFavorite ? Colors.red : Colors.grey,
+                                  AppColors.primary900,
                               size: 20,
                             ),
                           ),
