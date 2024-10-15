@@ -47,15 +47,6 @@ class CategoryItemView extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(height: 4.0),
-          Text(
-            '${itemCount} Items',
-            style: GoogleFonts.urbanist(
-              fontSize: 11,
-              color: AppColors.primary900,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
         ],
       ),
     );

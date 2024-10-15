@@ -43,13 +43,11 @@ class ProductCardView extends StatelessWidget {
                                 width: double.infinity,
                                 color: Colors.grey[300],
                                 child: const Center(
-                                  child: Text(
-                                    'No image',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
+                                  child: Icon(
+                                  Icons.image,
+                                  size: 40,
+                                  color: Colors.black54,
+                                ),
                                 ),
                               ),
                       ),
@@ -101,6 +99,7 @@ class ProductCardView extends StatelessWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4.0),
                       Text(
+                        product.rating == 0 ? "-":
                         product.rating.toString(),
                         style: GoogleFonts.urbanist(
                           color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -121,7 +120,7 @@ class ProductCardView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    '\$${product.price}',
+                    'COP \$ ${product.price}',
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -130,7 +129,7 @@ class ProductCardView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    product.inStock ? 'In stock' : 'Out of stock',
+                    product.type == "sale" ? 'For Sale' : 'For Rent',
                     style: const TextStyle(
                       color: AppColors.primary900,
                       fontSize: 11,
