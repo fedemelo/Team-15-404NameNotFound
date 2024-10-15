@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:intl/intl.dart';
 import '../viewmodels/upload_product_viewmodel.dart';
 
 class UploadProductView extends StatelessWidget {
@@ -83,6 +84,29 @@ class UploadProductView extends StatelessWidget {
     );
   }
 
+  // Price formatter to add commas and dollar sign
+  static TextInputFormatter priceFormatter() {
+    return TextInputFormatter.withFunction((oldValue, newValue) {
+      String text = newValue.text;
+
+      // Remove non-digit characters to clean input
+      text = text.replaceAll(RegExp(r'[^\d]'), '');
+
+      if (text.isEmpty) {
+        return newValue.copyWith(text: '');
+      }
+
+      // Format the number with commas for thousands and add dollar sign
+      final formatter = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
+      String newText = formatter.format(int.parse(text));
+
+      return TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -155,10 +179,15 @@ class UploadProductView extends StatelessWidget {
                             value == null || value.trim().isEmpty
                                 ? 'Please enter a price for the product'
                                 : null,
-                        onSaved: viewModel.onPriceSaved,
+                        onSaved: (newValue) {
+                          String rawValue =
+                              newValue!.replaceAll(RegExp(r'[^\d]'), '');
+                          viewModel.onPriceSaved(rawValue);
+                        },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
+                          priceFormatter(),
                         ],
                       ),
                       const SizedBox(height: 28),
