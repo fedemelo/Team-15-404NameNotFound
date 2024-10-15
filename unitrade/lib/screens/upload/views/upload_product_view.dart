@@ -177,7 +177,7 @@ class UploadProductView extends StatelessWidget {
 
                       // PRICE INPUT
                       _buildTextInput(
-                        label: 'Price',
+                        label: 'Price (COP)',
                         validator: (value) =>
                             value == null || value.trim().isEmpty
                                 ? 'Please enter a price for the product'
