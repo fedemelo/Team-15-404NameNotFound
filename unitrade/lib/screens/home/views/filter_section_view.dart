@@ -23,7 +23,7 @@ class FilterSectionView extends StatelessWidget {
       child: Consumer<FilterSectionViewModel>(
         builder: (context, viewModel, child) {
           return Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,7 +353,7 @@ class FilterSectionView extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 40),
 
                 // Botones de Reset y Apply
                 Row(
