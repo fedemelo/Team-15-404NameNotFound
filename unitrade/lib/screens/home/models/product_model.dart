@@ -8,17 +8,25 @@ class ProductModel {
   final int reviews;
   final bool inStock;
   final List<String> categories;
+  final String condition;
+  final String userId;
+  final String type;
 
-  // Constructor
+  bool isFavorite;
+
   ProductModel({
     required this.id,
     required this.name,
     required this.description,
-    required this.imageUrl,
     required this.price,
-    required this.rating,
-    required this.reviews,
-    required this.inStock,
     required this.categories,
+    required this.userId,
+    required this.type,
+    this.imageUrl = '',
+    this.rating = 0.0,
+    this.reviews = 0,
+    this.inStock = true,
+    this.condition = 'new',
+    this.isFavorite = false,
   });
 }

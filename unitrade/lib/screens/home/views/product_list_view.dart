@@ -14,7 +14,7 @@ class ProductListView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.65,
+        childAspectRatio: 0.60,
       ),
       itemCount: products.length,
       itemBuilder: (context, index) {
