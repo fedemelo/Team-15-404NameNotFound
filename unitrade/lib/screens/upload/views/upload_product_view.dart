@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import '../viewmodels/upload_product_viewmodel.dart';
 
@@ -87,6 +88,7 @@ class UploadProductView extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => UploadProductViewModel(type: type),
       child: Scaffold(
+        bottomNavigationBar: const NavBarView(initialIndex: 2),
         appBar: AppBar(
           elevation: 1.0,
           leading: IconButton(
@@ -216,7 +218,7 @@ class UploadProductView extends StatelessWidget {
                                           ),
                                           const SizedBox(height: 10),
                                           Text(
-                                            'Select image',
+                                            'Upload Image',
                                             style: GoogleFonts.urbanist(
                                               textStyle: const TextStyle(
                                                 fontSize: 16,

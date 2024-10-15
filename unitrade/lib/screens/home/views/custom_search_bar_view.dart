@@ -19,7 +19,7 @@ class CustomSearchBarView extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.primary900, width: 1.5),
       ),

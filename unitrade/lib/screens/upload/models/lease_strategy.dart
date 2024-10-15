@@ -20,6 +20,7 @@ class LeaseStrategy implements UploadProductStrategy {
   final String condition;
   final List<String> categories;
   String? imageUrl;
+  String? imageSource;
 
   LeaseStrategy({
     required this.userId,
@@ -31,15 +32,17 @@ class LeaseStrategy implements UploadProductStrategy {
     required this.condition,
     required this.categories,
     this.imageUrl,
+    this.imageSource,
   });
 
   @override
-  Future<void> saveImage(File selectedImage) async {
+  Future<void> saveImage(File selectedImage, String imgSource) async {
     const uuid = Uuid();
     final String fileName = 'images/${uuid.v4()}.jpg';
     await _storage.ref(fileName).putFile(selectedImage);
     final url = await _storage.ref(fileName).getDownloadURL();
     imageUrl = url;
+    imageSource = imgSource;
   }
 
   @override
@@ -60,6 +63,8 @@ class LeaseStrategy implements UploadProductStrategy {
       'condition': condition,
       'categories': categories,
       if (imageUrl != null && imageUrl!.isNotEmpty) 'image_url': imageUrl,
+      if (imageSource != null && imageSource!.isNotEmpty)
+        'image_source': imageSource,
     };
   }
 }
