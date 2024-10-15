@@ -178,10 +178,22 @@ class UploadProductView extends StatelessWidget {
                       // PRICE INPUT
                       _buildTextInput(
                         label: 'Price (COP)',
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                                ? 'Please enter a price for the product'
-                                : null,
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a price for the product';
+                          }
+
+                          try {
+                            if (int.parse(
+                                    value.replaceAll(RegExp(r'[^\d]'), '')) >
+                                90000000) {
+                              return 'The price cannot exceed a reasonable amount';
+                            }
+                          } catch (e) {
+                            return null;
+                          }
+                          return null;
+                        },
                         onSaved: (newValue) {
                           String rawValue =
                               newValue!.replaceAll(RegExp(r'[^\d]'), '');
