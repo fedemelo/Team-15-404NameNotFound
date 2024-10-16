@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
+import 'package:unitrade/screens/profile/views/profile_view.dart';
 import 'package:unitrade/screens/upload/views/upload_path_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
@@ -50,6 +51,10 @@ class NavBarViewState extends State<NavBarView> {
           break;
         case 4:
           // Profile logic
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileView()),
+          );
           break;
         default:
           break;
