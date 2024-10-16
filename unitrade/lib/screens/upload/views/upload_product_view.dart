@@ -318,37 +318,46 @@ class UploadProductView extends StatelessWidget {
 
                             // UPLOAD BUTTON
                             ElevatedButton(
-                              onPressed: () => viewModel.submit(context),
+                              onPressed: viewModel.isLoading
+                                  ? null
+                                  : () => viewModel.submit(context),
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                  AppColors.primary900,
-                                ),
+                                    AppColors.primary900),
                                 padding:
                                     WidgetStateProperty.all<EdgeInsetsGeometry>(
                                   const EdgeInsets.symmetric(
                                       horizontal: 22, vertical: 18),
                                 ),
                                 foregroundColor: WidgetStateProperty.all<Color>(
-                                  Colors.white,
-                                ),
+                                    Colors.white),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.file_upload_outlined),
-                                  const SizedBox(width: 14),
-                                  Text(
-                                    'UPLOAD PRODUCT',
-                                    style: GoogleFonts.urbanist(
-                                      textStyle: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                              child: viewModel.isLoading
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.0,
                                       ),
+                                    )
+                                  : Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.file_upload_outlined),
+                                        const SizedBox(width: 14),
+                                        Text(
+                                          'UPLOAD PRODUCT',
+                                          style: GoogleFonts.urbanist(
+                                            textStyle: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            )
                           ],
                         ),
                       ),

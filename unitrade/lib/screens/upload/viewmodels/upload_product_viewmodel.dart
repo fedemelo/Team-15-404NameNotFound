@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:unitrade/screens/upload/models/lease_strategy.dart';
 import 'package:unitrade/screens/upload/models/upload_product_strategy.dart';
 import 'package:unitrade/screens/upload/models/sale_strategy.dart';
 import 'package:unitrade/utils/firebase_service.dart';
+import 'package:unitrade/utils/api_config.dart';
+import 'package:http/http.dart' as http;
 
 class UploadProductViewModel with ChangeNotifier {
   // Form type
@@ -32,6 +35,9 @@ class UploadProductViewModel with ChangeNotifier {
 
   // Firebase services
   final _user = FirebaseService.instance.auth.currentUser;
+
+  // Loading state
+  bool isLoading = false;
 
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -77,6 +83,37 @@ class UploadProductViewModel with ChangeNotifier {
     _rentalPeriod = value ?? '';
   }
 
+  Future<List<String>> getCategoriesFromBack(
+      String condition, String description, String name, String price) async {
+    final body = jsonEncode({
+      'condition': condition,
+      'description': description,
+      'name': name,
+      'price': price,
+    });
+
+    const headers = {'Content-Type': 'application/json'};
+
+    try {
+      var response = await http.put(
+        Uri.parse(ApiConfig.apiTestUrl),
+        body: body,
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        return List<String>.from(jsonDecode(response.body));
+      } else {
+        return ["TEXTBOOKS", "CHARGERS"];
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return ["TEXTBOOKS", "CHARGERS"];
+    }
+  }
+
   // Submit the form
   Future<void> submit(BuildContext context) async {
     // First - Validate the form
@@ -84,7 +121,18 @@ class UploadProductViewModel with ChangeNotifier {
     formKey.currentState!.save();
 
     try {
-      // Second - Determine the strategy based on the product type
+      isLoading = true;
+      notifyListeners();
+
+      // Second - Get the categories from the backend
+      final categories = await getCategoriesFromBack(
+        _condition,
+        _description,
+        _name,
+        _price,
+      );
+
+      // Third - Determine the strategy based on the product type
       if (type == 'sale') {
         _strategy = SaleStrategy(
           userId: _user!.uid,
@@ -93,7 +141,7 @@ class UploadProductViewModel with ChangeNotifier {
           description: _description,
           price: _price,
           condition: _condition,
-          categories: ['TEXTBOOKS', 'CHARGERS'],
+          categories: categories,
           imageUrl: '',
           imageSource: '',
         );
@@ -106,28 +154,28 @@ class UploadProductViewModel with ChangeNotifier {
           price: _price,
           rentalPeriod: _rentalPeriod,
           condition: _condition,
-          categories: ['TEXTBOOKS', 'CHARGERS'],
+          categories: categories,
           imageUrl: '',
           imageSource: '',
         );
       }
 
-      // Third - If the user has selected an image, upload it to Firebase Storage via the strategy
+      // Fourth - If the user has selected an image, upload it to Firebase Storage via the strategy
       if (_selectedImage != null) {
         await _strategy.saveImage(_selectedImage!, _imageSource);
       }
 
-      // Fourth - Save the product data to Firestore via the strategy
+      // Fifth - Save the product data to Firestore via the strategy
       await _strategy.saveProduct();
 
-      // Fifth - Show a success message
+      // Sixth - Show a success message
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Product uploaded successfully')),
       );
 
-      // Sixth - Navigate to the home screen
+      // Seventh - Navigate to the home screen
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const HomeView(),
