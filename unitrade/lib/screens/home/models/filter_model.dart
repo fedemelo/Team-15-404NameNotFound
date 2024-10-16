@@ -1,13 +1,13 @@
 class FilterModel {
   double? minPrice;
   double? maxPrice;
-  double? minRate;
-  double? maxRate;
+  String? sortBy;
+  bool sortAscendant;
 
   FilterModel({
     this.minPrice,
     this.maxPrice,
-    this.minRate,
-    this.maxRate,
+    this.sortBy,
+    this.sortAscendant = true,
   });
 }

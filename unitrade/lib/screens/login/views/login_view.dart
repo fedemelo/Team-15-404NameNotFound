@@ -17,7 +17,7 @@ class LoginView extends StatelessWidget {
           builder: (context, loginViewModel, child) {
             return Scaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: AppColors.primaryNeutral,
+              backgroundColor: Theme.of(context).colorScheme.surface,
               body: SafeArea(
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -35,7 +35,10 @@ class LoginView extends StatelessWidget {
                               'Log in',
                               style: GoogleFonts.urbanist(
                                   fontSize: 36,
-                                  color: AppColors.primaryDark,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineSmall
+                                      ?.color,
                                   fontWeight: FontWeight.w700),
                             ),
                             const SizedBox(height: 20),
@@ -46,7 +49,10 @@ class LoginView extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.urbanist(
                                 fontSize: 16,
-                                color: AppColors.primaryDark,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
@@ -58,7 +64,10 @@ class LoginView extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.urbanist(
                                 fontSize: 16,
-                                color: AppColors.primaryDark,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.color,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -72,7 +81,10 @@ class LoginView extends StatelessWidget {
                                 hintText: 'example@gmail.com',
                                 labelStyle: GoogleFonts.urbanist(
                                   fontSize: 16,
-                                  color: AppColors.primaryDark,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -85,7 +97,10 @@ class LoginView extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: GoogleFonts.urbanist(
                                 fontSize: 16,
-                                color: AppColors.primaryDark,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.color,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -96,7 +111,10 @@ class LoginView extends StatelessWidget {
                                 hintText: 'password1234',
                                 labelStyle: GoogleFonts.urbanist(
                                   fontSize: 16,
-                                  color: AppColors.primaryDark,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -169,11 +187,14 @@ class LoginView extends StatelessWidget {
                                               const RegisterView()),
                                     );
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     "Create Account",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: AppColors.primaryDark),
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.color),
                                   ),
                                 ),
                               ],

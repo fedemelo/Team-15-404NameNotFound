@@ -8,9 +8,12 @@ class CustomSearchBarView extends StatelessWidget {
 
   final void Function() onClickFilter;
 
-  const CustomSearchBarView({
+  bool changeFliters;
+
+  CustomSearchBarView({
     required this.onChange,
     required this.onClickFilter,
+    required this.changeFliters
   });
 
   @override
@@ -19,7 +22,7 @@ class CustomSearchBarView extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       padding: EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: AppColors.primary900, width: 1.5),
       ),
@@ -39,7 +42,7 @@ class CustomSearchBarView extends StatelessWidget {
                 hintText: 'What are you looking for?',
                 hintStyle: GoogleFonts.urbanist(
                     fontSize: 15,
-                    color: AppColors.primary900,
+                    color: AppColors.light400,
                     fontWeight: FontWeight.w600),
                 border: InputBorder.none,
               ),
@@ -49,7 +52,8 @@ class CustomSearchBarView extends StatelessWidget {
           SizedBox(width: 8),
           GestureDetector(
             onTap: onClickFilter,
-            child: Icon(Icons.tune, color: AppColors.primary900),
+            child: Icon(Icons.tune,
+                color: changeFliters ? AppColors.secondary900 : AppColors.primary900),
           ),
         ],
       ),
