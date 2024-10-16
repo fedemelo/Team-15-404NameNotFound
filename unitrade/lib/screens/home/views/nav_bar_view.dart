@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:unitrade/screens/alert/views/alert_view.dart';
+import 'package:unitrade/screens/cart/views/cart_view.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/profile/views/profile_view.dart';
 import 'package:unitrade/screens/upload/views/upload_path_view.dart';
@@ -38,7 +40,10 @@ class NavBarViewState extends State<NavBarView> {
           );
           break;
         case 1:
-          // Shopping cart logic
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CartView()),
+          );
           break;
         case 2:
           Navigator.push(
@@ -47,7 +52,10 @@ class NavBarViewState extends State<NavBarView> {
           );
           break;
         case 3:
-          // Alerts logic
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AlertView()),
+          );
           break;
         case 4:
           Navigator.push(
