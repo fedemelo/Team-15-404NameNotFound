@@ -61,7 +61,7 @@ class ProductCardView extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.white, //Juanse
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -92,6 +92,8 @@ class ProductCardView extends StatelessWidget {
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontWeight: FontWeight.w600,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4.0),
                   Row(
@@ -120,12 +122,14 @@ class ProductCardView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    'COP \$ ${product.price}',
+                    productViewModel.processPrice(product.price),
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontWeight: FontWeight.w600,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8.0),
                   Text(
@@ -136,6 +140,7 @@ class ProductCardView extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 8.0),
                 ],
               ),
             ),

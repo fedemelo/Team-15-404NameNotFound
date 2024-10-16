@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:unitrade/utils/theme_provider.dart';
 import 'utils/firebase_options.dart';
 import 'package:flutter/services.dart';
+import 'package:unitrade/utils/crash_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  final crashManager = CrashManager();
+  FlutterError.onError = (FlutterErrorDetails details) async {
+    await crashManager.reportCrashToFirestore(details.exception, details.stack ?? StackTrace.empty);
+  };
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),

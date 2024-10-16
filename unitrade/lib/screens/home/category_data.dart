@@ -4,17 +4,17 @@ class Categories {
   static const String textbooks = "Textbooks";
   static const String studyGuides = "Study_guides";
   static const String electronics = "Electronics";
-  static const String laptopsTablets = "Laptops_&_tablets";
+  static const String laptopsTablets = "Laptops & tablets";
   static const String calculators = "Calculators";
   static const String chargers = "Chargers";
-  static const String labMaterials = "Lab_materials";
+  static const String labMaterials = "Lab materials";
   static const String notebooks = "Notebooks";
-  static const String artDesign = "Art_&_design";
-  static const String roboticKits = "Robotic_kits";
-  static const String threeDPrinting = "3D_printing";
+  static const String artDesign = "Art & design";
+  static const String roboticKits = "Robotic kits";
+  static const String threeDPrinting = "3d printing";
   static const String uniforms = "Uniforms";
   static const String sports = "Sports";
-  static const String musicalInstruments = "Musical_instruments";
+  static const String musicalInstruments = "Musical instruments";
 }
 
 class Groups {
@@ -66,7 +66,7 @@ final Map<String, List<String>> productGroups = {
 };
 
 final Map<String, IconData> categoryIcons = {
-  'For You': Icons.favorite,   // Ejemplo: Ícono para "For You"
+  'For You': Icons.star,   // Ejemplo: Ícono para "For You"
   'Study': Icons.book,         // Ejemplo: Ícono para "Study"
   'Tech': Icons.computer,      // Ejemplo: Ícono para "Tech"
   'Creative': Icons.palette,   // Ejemplo: Ícono para "Creative"

@@ -37,10 +37,7 @@ class HomeView extends StatelessWidget {
                               'Categories',
                               style: GoogleFonts.urbanist(
                                 fontSize: 20,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge
-                                    ?.color,
+                                color: AppColors.primary900,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -57,10 +54,7 @@ class HomeView extends StatelessWidget {
                                   : viewModel.selectedCategory,
                               style: GoogleFonts.urbanist(
                                 fontSize: 20,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge
-                                    ?.color,
+                                color: AppColors.primary900,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -68,6 +62,7 @@ class HomeView extends StatelessWidget {
                             ProductListView(
                               products: viewModel.filteredProducts,
                             ),
+
                           ],
                         ),
                       )
