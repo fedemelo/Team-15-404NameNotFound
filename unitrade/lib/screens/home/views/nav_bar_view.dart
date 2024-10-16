@@ -50,7 +50,6 @@ class NavBarViewState extends State<NavBarView> {
           // Alerts logic
           break;
         case 4:
-          // Profile logic
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ProfileView()),

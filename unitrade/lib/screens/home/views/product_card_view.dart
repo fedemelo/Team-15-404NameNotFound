@@ -44,10 +44,10 @@ class ProductCardView extends StatelessWidget {
                                 color: Colors.grey[300],
                                 child: const Center(
                                   child: Icon(
-                                  Icons.image,
-                                  size: 40,
-                                  color: Colors.black54,
-                                ),
+                                    Icons.image,
+                                    size: 40,
+                                    color: Colors.black54,
+                                  ),
                                 ),
                               ),
                       ),
@@ -61,7 +61,7 @@ class ProductCardView extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
-                              color: Colors.white, //Juanse
+                              color: Theme.of(context).scaffoldBackgroundColor,
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(
@@ -75,8 +75,7 @@ class ProductCardView extends StatelessWidget {
                               product.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border,
-                              color:
-                                  AppColors.primary900,
+                              color: AppColors.primary900,
                               size: 20,
                             ),
                           ),
@@ -101,8 +100,7 @@ class ProductCardView extends StatelessWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4.0),
                       Text(
-                        product.rating == 0 ? "-":
-                        product.rating.toString(),
+                        product.rating == 0 ? "-" : product.rating.toString(),
                         style: GoogleFonts.urbanist(
                           color: Theme.of(context).textTheme.bodyLarge?.color,
                           fontSize: 14,
@@ -134,8 +132,8 @@ class ProductCardView extends StatelessWidget {
                   const SizedBox(height: 8.0),
                   Text(
                     product.type == "sale" ? 'For Sale' : 'For Rent',
-                    style: const TextStyle(
-                      color: AppColors.primary900,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headlineLarge?.color,
                       fontSize: 11,
                       fontWeight: FontWeight.bold,
                     ),

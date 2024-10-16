@@ -28,7 +28,6 @@ class FilterSectionView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -53,8 +52,7 @@ class FilterSectionView extends StatelessWidget {
 
                 // Min Price y Max Price en fila
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 35.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 35.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -82,7 +80,10 @@ class FilterSectionView extends StatelessWidget {
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w600),
                                 filled: true,
-                                fillColor: Colors.grey[300],
+                                fillColor: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide.none,
@@ -118,7 +119,10 @@ class FilterSectionView extends StatelessWidget {
                                     color: Colors.grey,
                                     fontWeight: FontWeight.w600),
                                 filled: true,
-                                fillColor: Colors.grey[300],
+                                fillColor: Theme.of(context).brightness ==
+                                        Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                   borderSide: BorderSide.none,
@@ -178,11 +182,12 @@ class FilterSectionView extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => viewModel.updateSortBy("Rating"),
                         child: Container(
-                          padding: const EdgeInsets.all(
-                              3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: Colors
-                                .grey[300],
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
@@ -192,19 +197,18 @@ class FilterSectionView extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             decoration: BoxDecoration(
                               color: viewModel.sortBy == "Rating"
-                                  ? Colors
-                                      .white
-                                  : Colors
-                                      .transparent,
-                              borderRadius: BorderRadius.circular(
-                                  8),
+                                  ? Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : AppColors.light400
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
                               child: Text(
                                 "Rating",
                                 style: GoogleFonts.urbanist(
                                   fontSize: 15,
-                                  color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -217,11 +221,12 @@ class FilterSectionView extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => viewModel.updateSortBy("Price"),
                         child: Container(
-                          padding: const EdgeInsets.all(
-                              3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: Colors
-                                .grey[300],
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(10),
                               bottomRight: Radius.circular(10),
@@ -231,19 +236,18 @@ class FilterSectionView extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             decoration: BoxDecoration(
                               color: viewModel.sortBy == "Price"
-                                  ? Colors
-                                      .white
-                                  : Colors
-                                      .transparent,
-                              borderRadius: BorderRadius.circular(
-                                  8),
+                                  ? Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : AppColors.light400
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
                               child: Text(
                                 "Price",
                                 style: GoogleFonts.urbanist(
                                   fontSize: 15,
-                                  color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -259,7 +263,6 @@ class FilterSectionView extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-
                     Text(
                       "Order:",
                       style: GoogleFonts.urbanist(
@@ -275,11 +278,12 @@ class FilterSectionView extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => viewModel.updateSortOrder(true),
                         child: Container(
-                          padding: const EdgeInsets.all(
-                              3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: Colors
-                                .grey[300],
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(10),
                               bottomLeft: Radius.circular(10),
@@ -289,19 +293,18 @@ class FilterSectionView extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             decoration: BoxDecoration(
                               color: viewModel.sortAscendant
-                                  ? Colors
-                                      .white
-                                  : Colors
-                                      .transparent,
-                              borderRadius: BorderRadius.circular(
-                                  8),
+                                  ? Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : AppColors.light400
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
                               child: Text(
                                 "Ascendant",
                                 style: GoogleFonts.urbanist(
                                   fontSize: 15,
-                                  color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -316,11 +319,12 @@ class FilterSectionView extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => viewModel.updateSortOrder(false),
                         child: Container(
-                          padding: const EdgeInsets.all(
-                              3),
+                          padding: const EdgeInsets.all(3),
                           decoration: BoxDecoration(
-                            color: Colors
-                                .grey[300],
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                             borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(10),
                               bottomRight: Radius.circular(10),
@@ -330,19 +334,18 @@ class FilterSectionView extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 5),
                             decoration: BoxDecoration(
                               color: !viewModel.sortAscendant
-                                  ? Colors
-                                      .white
-                                  : Colors
-                                      .transparent,
-                              borderRadius: BorderRadius.circular(
-                                  8),
+                                  ? Theme.of(context).brightness ==
+                                          Brightness.light
+                                      ? Colors.white
+                                      : AppColors.light400
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: Center(
                               child: Text(
                                 "Descendant",
                                 style: GoogleFonts.urbanist(
                                   fontSize: 15,
-                                  color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -364,9 +367,13 @@ class FilterSectionView extends StatelessWidget {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[100],
+                            backgroundColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? Colors.grey[300]
+                                    : AppColors.dark500,
                             foregroundColor: AppColors.secondary900,
-                            side: const BorderSide(color: AppColors.secondary900),
+                            side:
+                                const BorderSide(color: AppColors.secondary900),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -386,7 +393,8 @@ class FilterSectionView extends StatelessWidget {
                         height: 50,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: !viewModel.invalidPriceRange && !viewModel.missingPriceFields
+                            backgroundColor: !viewModel.invalidPriceRange &&
+                                    !viewModel.missingPriceFields
                                 ? AppColors.secondary900
                                 : Colors.grey,
                             foregroundColor: Colors.white,
@@ -394,13 +402,15 @@ class FilterSectionView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          onPressed: viewModel.invalidPriceRange || viewModel.missingPriceFields
+                          onPressed: viewModel.invalidPriceRange ||
+                                  viewModel.missingPriceFields
                               ? null
                               : () {
-                            final updatedFilters = viewModel.applyFilters(selectedFilters);
-                            onUpdateFilters(updatedFilters);
-                            Navigator.pop(context);
-                          },
+                                  final updatedFilters =
+                                      viewModel.applyFilters(selectedFilters);
+                                  onUpdateFilters(updatedFilters);
+                                  Navigator.pop(context);
+                                },
                           child: const Text('APPLY'),
                         ),
                       ),

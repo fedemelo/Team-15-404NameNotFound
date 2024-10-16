@@ -37,12 +37,14 @@ class CategoryItemView extends StatelessWidget {
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: selected ? AppColors.secondary900 : AppColors.primary900,
+                    color: selected
+                        ? AppColors.secondary900
+                        : AppColors.primary900,
                   ),
                   child: Icon(
                     icon,
                     size: 32.0,
-                    color: Colors.white, //Juanse
+                    color: Theme.of(context).scaffoldBackgroundColor,
                   ),
                 ),
                 const SizedBox(height: 8.0),
@@ -50,7 +52,9 @@ class CategoryItemView extends StatelessWidget {
                   title,
                   style: GoogleFonts.urbanist(
                     fontSize: 14,
-                    color: selected ? AppColors.secondary900 : Theme.of(context).textTheme.bodyLarge?.color, //Juanse
+                    color: selected
+                        ? AppColors.secondary900
+                        : Theme.of(context).textTheme.bodyLarge?.color,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
