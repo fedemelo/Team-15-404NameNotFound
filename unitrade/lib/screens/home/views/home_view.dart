@@ -62,6 +62,7 @@ class HomeView extends StatelessWidget {
                             ProductListView(
                               products: viewModel.filteredProducts,
                             ),
+
                           ],
                         ),
                       )
