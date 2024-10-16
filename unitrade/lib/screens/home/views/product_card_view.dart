@@ -61,7 +61,7 @@ class ProductCardView extends StatelessWidget {
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: Colors.white, //Juanse
                               shape: BoxShape.circle,
                               boxShadow: [
                                 BoxShadow(

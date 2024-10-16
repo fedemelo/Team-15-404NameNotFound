@@ -42,7 +42,7 @@ class CategoryItemView extends StatelessWidget {
                   child: Icon(
                     icon,
                     size: 32.0,
-                    color: Colors.white,
+                    color: Colors.white, //Juanse
                   ),
                 ),
                 const SizedBox(height: 8.0),
@@ -50,7 +50,7 @@ class CategoryItemView extends StatelessWidget {
                   title,
                   style: GoogleFonts.urbanist(
                     fontSize: 14,
-                    color: AppColors.primary900,
+                    color: selected ? AppColors.secondary900 : Theme.of(context).textTheme.bodyLarge?.color, //Juanse
                     fontWeight: FontWeight.w600,
                   ),
                 ),
