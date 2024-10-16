@@ -18,6 +18,7 @@ class SaleStrategy implements UploadProductStrategy {
   final String price;
   final String condition;
   final List<String> categories;
+  static const reviewCount = 0;
   String? imageUrl;
   String? imageSource;
 
@@ -59,6 +60,7 @@ class SaleStrategy implements UploadProductStrategy {
       'price': price,
       'condition': condition,
       'categories': categories,
+      'review_count': reviewCount,
       if (imageUrl != null && imageUrl!.isNotEmpty) 'image_url': imageUrl,
       if (imageSource != null && imageSource!.isNotEmpty)
         'image_source': imageSource,

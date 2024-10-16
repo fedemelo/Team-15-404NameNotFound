@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:unitrade/screens/home/models/product_model.dart';
 
 class ProductCardViewModel extends ChangeNotifier {
-  bool isFavorite = false;
 
-  void toggleFavorite() {
-    isFavorite = !isFavorite;
+  void toggleFavorite(ProductModel product) {
+    product.isFavorite = !product.isFavorite;
     notifyListeners();
   }
 }

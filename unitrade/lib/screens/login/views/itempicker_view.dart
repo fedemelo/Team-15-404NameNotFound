@@ -79,8 +79,12 @@ class ItempickerView extends StatelessWidget {
                           labelStyle: TextStyle(
                             color: isSelected
                                 ? AppColors.primaryNeutral
-                                : AppColors.primary900,
+                                : Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AppColors.primaryNeutral
+                                    : AppColors.primary900,
                           ),
+                          checkmarkColor: AppColors.primaryNeutral,
                           backgroundColor:
                               Theme.of(context).colorScheme.surface,
                           selectedColor: AppColors.primary900,

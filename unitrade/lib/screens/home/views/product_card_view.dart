@@ -31,19 +31,32 @@ class ProductCardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.0),
-                        child: Image.network(
-                          product.imageUrl,
-                          height: 150,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                        child: product.imageUrl.isNotEmpty
+                            ? Image.network(
+                                product.imageUrl,
+                                height: 150,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                height: 150,
+                                width: double.infinity,
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Icon(
+                                  Icons.image,
+                                  size: 40,
+                                  color: Colors.black54,
+                                ),
+                                ),
+                              ),
                       ),
                       Positioned(
                         top: 8,
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite();
+                            productViewModel.toggleFavorite(product);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
@@ -59,12 +72,11 @@ class ProductCardView extends StatelessWidget {
                               ],
                             ),
                             child: Icon(
-                              productViewModel.isFavorite
+                              product.isFavorite
                                   ? Icons.favorite
                                   : Icons.favorite_border,
-                              color: productViewModel.isFavorite
-                                  ? Colors.red
-                                  : Colors.grey,
+                              color:
+                                  AppColors.primary900,
                               size: 20,
                             ),
                           ),
@@ -87,6 +99,7 @@ class ProductCardView extends StatelessWidget {
                       const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 4.0),
                       Text(
+                        product.rating == 0 ? "-":
                         product.rating.toString(),
                         style: GoogleFonts.urbanist(
                           color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -107,7 +120,7 @@ class ProductCardView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    '\$${product.price}',
+                    'COP \$ ${product.price}',
                     style: GoogleFonts.urbanist(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -116,7 +129,7 @@ class ProductCardView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    product.inStock ? 'In stock' : 'Out of stock',
+                    product.type == "sale" ? 'For Sale' : 'For Rent',
                     style: const TextStyle(
                       color: AppColors.primary900,
                       fontSize: 11,
