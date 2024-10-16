@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:intl/intl.dart';
 import '../viewmodels/upload_product_viewmodel.dart';
 
 class UploadProductView extends StatelessWidget {
@@ -82,11 +84,38 @@ class UploadProductView extends StatelessWidget {
     );
   }
 
+  // Price formatter to add commas and dollar sign
+  static TextInputFormatter priceFormatter() {
+    return TextInputFormatter.withFunction((oldValue, newValue) {
+      String text = newValue.text;
+
+      // Remove non-digit characters to clean input
+      text = text.replaceAll(RegExp(r'[^\d]'), '');
+
+      if (text.isEmpty) {
+        return newValue.copyWith(text: '');
+      }
+
+      // Format the number with dots for thousands and add dollar sign
+      final formatter = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
+      String newText = formatter.format(int.parse(text));
+
+      // Replace commas with dots
+      newText = newText.replaceAll(',', '.');
+
+      return TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => UploadProductViewModel(type: type),
       child: Scaffold(
+        bottomNavigationBar: const NavBarView(initialIndex: 2),
         appBar: AppBar(
           elevation: 1.0,
           leading: IconButton(
@@ -148,15 +177,32 @@ class UploadProductView extends StatelessWidget {
 
                       // PRICE INPUT
                       _buildTextInput(
-                        label: 'Price',
-                        validator: (value) =>
-                            value == null || value.trim().isEmpty
-                                ? 'Please enter a price for the product'
-                                : null,
-                        onSaved: viewModel.onPriceSaved,
+                        label: 'Price (COP)',
+                        validator: (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a price for the product';
+                          }
+
+                          try {
+                            if (int.parse(
+                                    value.replaceAll(RegExp(r'[^\d]'), '')) >
+                                90000000) {
+                              return 'The price cannot exceed a reasonable amount';
+                            }
+                          } catch (e) {
+                            return null;
+                          }
+                          return null;
+                        },
+                        onSaved: (newValue) {
+                          String rawValue =
+                              newValue!.replaceAll(RegExp(r'[^\d]'), '');
+                          viewModel.onPriceSaved(rawValue);
+                        },
                         keyboardType: TextInputType.number,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
+                          priceFormatter(),
                         ],
                       ),
                       const SizedBox(height: 28),
@@ -166,12 +212,21 @@ class UploadProductView extends StatelessWidget {
                         Column(
                           children: [
                             _buildTextInput(
-                              label: 'Rental Period',
-                              validator: (value) => value == null ||
-                                      value.trim().isEmpty
-                                  ? 'Please enter the rental period for the product'
-                                  : null,
+                              label: 'Rental Period (days)',
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter the rental period for the product';
+                                }
+                                if (int.parse(value) > 365) {
+                                  return 'The rental period cannot exceed a year';
+                                }
+                                return null;
+                              },
                               onSaved: viewModel.onRentalPeriodSaved,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                             ),
                             const SizedBox(height: 28),
                           ],
@@ -216,7 +271,7 @@ class UploadProductView extends StatelessWidget {
                                           ),
                                           const SizedBox(height: 10),
                                           Text(
-                                            'Select image',
+                                            'Upload Image',
                                             style: GoogleFonts.urbanist(
                                               textStyle: const TextStyle(
                                                 fontSize: 16,
@@ -263,37 +318,46 @@ class UploadProductView extends StatelessWidget {
 
                             // UPLOAD BUTTON
                             ElevatedButton(
-                              onPressed: () => viewModel.submit(context),
+                              onPressed: viewModel.isLoading
+                                  ? null
+                                  : () => viewModel.submit(context),
                               style: ButtonStyle(
                                 backgroundColor: WidgetStateProperty.all<Color>(
-                                  AppColors.primary900,
-                                ),
+                                    AppColors.primary900),
                                 padding:
                                     WidgetStateProperty.all<EdgeInsetsGeometry>(
                                   const EdgeInsets.symmetric(
                                       horizontal: 22, vertical: 18),
                                 ),
                                 foregroundColor: WidgetStateProperty.all<Color>(
-                                  Colors.white,
-                                ),
+                                    Colors.white),
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.file_upload_outlined),
-                                  const SizedBox(width: 14),
-                                  Text(
-                                    'UPLOAD PRODUCT',
-                                    style: GoogleFonts.urbanist(
-                                      textStyle: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                              child: viewModel.isLoading
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2.0,
                                       ),
+                                    )
+                                  : Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        const Icon(Icons.file_upload_outlined),
+                                        const SizedBox(width: 14),
+                                        Text(
+                                          'UPLOAD PRODUCT',
+                                          style: GoogleFonts.urbanist(
+                                            textStyle: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            )
                           ],
                         ),
                       ),

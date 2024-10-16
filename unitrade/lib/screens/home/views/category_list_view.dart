@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/views/category_item_view.dart';
+import 'package:unitrade/screens/home/category_data.dart';
 
 class CategoryListView extends StatelessWidget {
   final List<String> categories;
@@ -22,7 +23,7 @@ class CategoryListView extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: CategoryItemView(
-                icon: Icons.category,
+                icon: categoryIcons[category] ?? Icons.category,
                 title: category,
                 itemCount: 5,
                 selected: selectedCategory == category,
