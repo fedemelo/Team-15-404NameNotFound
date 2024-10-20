@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
+import 'package:unitrade/screens/profile/views/theme_view.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 
 class ProfileView extends StatelessWidget {
@@ -24,11 +25,10 @@ class ProfileView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Expanded widget to center the content in the middle
           Expanded(
             child: Center(
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Centers the column's content
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     'TODO: Implement Profile View',
@@ -40,6 +40,19 @@ class ProfileView extends StatelessWidget {
                   const SizedBox(height: 16),
                 ],
               ),
+            ),
+          ),
+          // Button to navigate to the theme settings
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ThemeView()),
+                );
+              },
+              child: const Text('Theme Settings'),
             ),
           ),
           // Logout button at the bottom

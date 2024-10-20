@@ -96,7 +96,7 @@ class UploadProductViewModel with ChangeNotifier {
 
     try {
       var response = await http.put(
-        Uri.parse(ApiConfig.apiUrl),
+        Uri.parse(ApiConfig.apiTestUrl),
         body: body,
         headers: headers,
       );
