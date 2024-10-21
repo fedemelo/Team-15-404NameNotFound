@@ -56,7 +56,6 @@ class ThemeProvider extends ChangeNotifier {
       await _saveThemePreference(getThemeModeString());
       _applyThemeMode();
     }
-    notifyListeners();
   }
 
   void _applyThemeMode() {

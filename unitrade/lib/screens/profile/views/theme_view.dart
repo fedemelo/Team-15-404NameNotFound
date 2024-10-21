@@ -24,6 +24,7 @@ class ThemeViewState extends State<ThemeView> {
   @override
   Widget build(BuildContext context) {
     bool isTimeBased = _viewModel.isTimeBased;
+    ThemeModeType? selectedThemeMode = _viewModel.selectedThemeMode;
 
     return Scaffold(
       bottomNavigationBar: const NavBarView(initialIndex: 4),
@@ -39,73 +40,115 @@ class ThemeViewState extends State<ThemeView> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Choose Theme Mode"),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    const Icon(Icons.wb_sunny, size: 40),
-                    Radio<ThemeModeType>(
-                      value: ThemeModeType.light,
-                      groupValue: _viewModel.selectedThemeMode,
-                      onChanged: isTimeBased
-                          ? null // Disable when time-based is ON
-                          : (ThemeModeType? value) {
-                              if (value != null) {
-                                _viewModel.setThemeMode(value);
-                                setState(() {});
-                              }
-                            },
-                    ),
-                    const Text("Light"),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const Icon(Icons.nights_stay, size: 40),
-                    Radio<ThemeModeType>(
-                      value: ThemeModeType.dark,
-                      groupValue: _viewModel.selectedThemeMode,
-                      onChanged: isTimeBased
-                          ? null // Disable when time-based is ON
-                          : (ThemeModeType? value) {
-                              if (value != null) {
-                                _viewModel.setThemeMode(value);
-                                setState(() {});
-                              }
-                            },
-                    ),
-                    const Text("Dark"),
-                  ],
-                ),
-              ],
+            // Appearance Section
+            Text(
+              "Appearance",
+              style: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.headlineLarge!.color,
+              ),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Automatic time-aware (Sunrise/Sunset)",
-                  style: GoogleFonts.urbanist(
-                    color: isTimeBased
-                        ? Theme.of(context).textTheme.bodyLarge!.color
-                        : AppColors.light400,
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? const Color.fromARGB(255, 246, 246, 246)
+                    : const Color.fromARGB(255, 17, 17, 17),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      const Icon(Icons.wb_sunny, size: 60),
+                      Radio<ThemeModeType>(
+                        value: ThemeModeType.light,
+                        groupValue: isTimeBased
+                            ? null
+                            : selectedThemeMode, // Radio button deselected when switch is on
+                        activeColor: AppColors.primary900,
+                        onChanged: (ThemeModeType? value) {
+                          if (value != null) {
+                            _viewModel.setThemeMode(value);
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      const Text("Light"),
+                    ],
                   ),
-                ),
-                Switch(
-                  value: isTimeBased,
-                  onChanged: (bool value) {
-                    _viewModel.toggleTimeBasedTheme(value);
-                    setState(() {});
-                  },
-                ),
-              ],
+                  Column(
+                    children: [
+                      const Icon(Icons.nights_stay, size: 60),
+                      Radio<ThemeModeType>(
+                        value: ThemeModeType.dark,
+                        groupValue: isTimeBased
+                            ? null
+                            : selectedThemeMode, // Radio button deselected when switch is on
+                        activeColor: AppColors.primary900,
+                        onChanged: (ThemeModeType? value) {
+                          if (value != null) {
+                            _viewModel.setThemeMode(value);
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      const Text("Dark"),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 30),
+
+            // Automatic Settings Section
+            Text(
+              "Automatic Settings",
+              style: GoogleFonts.urbanist(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.headlineLarge!.color,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? const Color.fromARGB(255, 246, 246, 246)
+                    : const Color.fromARGB(255, 17, 17, 17),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Automatic time-aware",
+                    style: GoogleFonts.urbanist(
+                      fontSize: 15,
+                      color: isTimeBased
+                          ? Theme.of(context).textTheme.bodyLarge!.color
+                          : AppColors.light400,
+                    ),
+                  ),
+                  Switch(
+                    value: isTimeBased,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _viewModel.toggleTimeBasedTheme(value);
+                      });
+                    },
+                    activeColor: AppColors.primary900,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

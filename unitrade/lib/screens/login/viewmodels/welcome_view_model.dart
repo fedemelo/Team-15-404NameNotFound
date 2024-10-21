@@ -56,8 +56,8 @@ class WelcomeViewModel extends ChangeNotifier {
         // If the user record doesn't exist, create one
         await _firebaseService.firestore.collection('users').doc(user.uid).set({
           'email': user.email,
-          'displayName': user.displayName,
-          'createdAt': DateTime.now(),
+          'name': user.displayName,
+          'time_aware_theme': true,
         });
         return true;
       }
