@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 class FilterSectionView extends StatelessWidget {
   final FilterModel actualFilters;
   final Function(FilterModel) onUpdateFilters;
-  Function(bool) selectedFilters;
+  final Function(bool) selectedFilters;
 
   FilterSectionView({
     required this.actualFilters,

@@ -31,7 +31,7 @@ class ThemeViewState extends State<ThemeView> {
       appBar: AppBar(
         elevation: 1.0,
         title: Text(
-          'Theme Settings',
+          'Light/Dark Mode',
           style: GoogleFonts.urbanist(
             fontSize: 16,
             fontWeight: FontWeight.bold,
