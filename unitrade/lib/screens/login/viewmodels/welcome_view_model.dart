@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/views/itempicker_view.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/analytic_service.dart';
 
@@ -14,6 +15,24 @@ class WelcomeViewModel extends ChangeNotifier {
   Future<void> signInWithMicrosoft(BuildContext context) async {
     authButtonLoading = true;
     notifyListeners();
+
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+    // If no connection, show a SnackBar and stop the execution
+    if (!hasConnection) {
+      authButtonLoading = false;
+      notifyListeners();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "No internet connection. Please try again when connected.",
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
     try {
       final userCredential = await microsoftRequest();
       if (userCredential != null && userCredential.user != null) {
