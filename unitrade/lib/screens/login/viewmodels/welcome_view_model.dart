@@ -2,33 +2,63 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/views/itempicker_view.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/analytic_service.dart';
 
 class WelcomeViewModel extends ChangeNotifier {
   final FirebaseService _firebaseService = FirebaseService.instance;
 
+  bool authButtonLoading = false;
+
   // Microsoft sign-in using OAuthProvider
   Future<void> signInWithMicrosoft(BuildContext context) async {
-    final userCredential = await microsoftRequest();
-    if (userCredential != null && userCredential.user != null) {
-      AnalyticService().logSignInStats(userCredential.user!);
+    authButtonLoading = true;
+    notifyListeners();
 
-      bool isFirstTime = await isFirstTimeUser(userCredential.user!);
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+    // If no connection, show a SnackBar and stop the execution
+    if (!hasConnection) {
+      authButtonLoading = false;
+      notifyListeners();
 
-      if (isFirstTime) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ItempickerView()),
-        );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "No internet connection. Please try again when connected.",
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+    try {
+      final userCredential = await microsoftRequest();
+      if (userCredential != null && userCredential.user != null) {
+        AnalyticService().logSignInStats(userCredential.user!);
+
+        bool isFirstTime = await isFirstTimeUser(userCredential.user!);
+
+        if (isFirstTime) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ItempickerView()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeView()),
+          );
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
-        );
+        print("Failed to sign in with Microsoft.");
       }
-    } else {
-      print("Failed to sign in with Microsoft.");
+    } catch (e) {
+      print("###Error during Microsoft sign-in: $e");
+    } finally {
+      authButtonLoading = false;
+      notifyListeners();
     }
   }
 
