@@ -137,27 +137,37 @@ class WelcomeView extends StatelessWidget {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton.icon(
-                        onPressed: () =>
-                            welcomeViewModel.signInWithMicrosoft(context),
+                        onPressed: welcomeViewModel.authButtonLoading
+                            ? null
+                            : () =>
+                                welcomeViewModel.signInWithMicrosoft(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary900,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        icon: Image.asset(
-                          'lib/assets/images/microsoft_logo.png',
-                          height: 30,
-                          width: 30,
-                        ),
-                        label: Text(
-                          'Login with Microsoft',
-                          style: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: AppColors.primaryNeutral,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        icon: welcomeViewModel.authButtonLoading
+                            ? const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.primaryNeutral),
+                                strokeWidth: 2.0,
+                              )
+                            : Image.asset(
+                                'lib/assets/images/microsoft_logo.png',
+                                height: 30,
+                                width: 30,
+                              ),
+                        label: welcomeViewModel.authButtonLoading
+                            ? const SizedBox.shrink()
+                            : Text(
+                                'Login with Microsoft',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 16,
+                                  color: AppColors.primaryNeutral,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 40),

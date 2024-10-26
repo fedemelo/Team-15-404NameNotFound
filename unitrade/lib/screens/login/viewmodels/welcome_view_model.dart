@@ -8,27 +8,38 @@ import 'package:unitrade/utils/analytic_service.dart';
 class WelcomeViewModel extends ChangeNotifier {
   final FirebaseService _firebaseService = FirebaseService.instance;
 
+  bool authButtonLoading = false;
+
   // Microsoft sign-in using OAuthProvider
   Future<void> signInWithMicrosoft(BuildContext context) async {
-    final userCredential = await microsoftRequest();
-    if (userCredential != null && userCredential.user != null) {
-      AnalyticService().logSignInStats(userCredential.user!);
+    authButtonLoading = true;
+    notifyListeners();
+    try {
+      final userCredential = await microsoftRequest();
+      if (userCredential != null && userCredential.user != null) {
+        AnalyticService().logSignInStats(userCredential.user!);
 
-      bool isFirstTime = await isFirstTimeUser(userCredential.user!);
+        bool isFirstTime = await isFirstTimeUser(userCredential.user!);
 
-      if (isFirstTime) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ItempickerView()),
-        );
+        if (isFirstTime) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ItempickerView()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeView()),
+          );
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomeView()),
-        );
+        print("Failed to sign in with Microsoft.");
       }
-    } else {
-      print("Failed to sign in with Microsoft.");
+    } catch (e) {
+      print("###Error during Microsoft sign-in: $e");
+    } finally {
+      authButtonLoading = false;
+      notifyListeners();
     }
   }
 
