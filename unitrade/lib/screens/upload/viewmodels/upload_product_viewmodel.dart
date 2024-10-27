@@ -124,58 +124,17 @@ class UploadProductViewModel with ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      // Second - Get the categories from the backend
-      final categories = await getCategoriesFromBack(
-        _condition,
-        _description,
-        _name,
-        _price,
-      );
+      // Second - Upload product
+      await prepareAndUploadProduct(useCache: false);
 
-      // Third - Determine the strategy based on the product type
-      if (type == 'sale') {
-        _strategy = SaleStrategy(
-          userId: _user!.uid,
-          type: type,
-          name: _name,
-          description: _description,
-          price: _price,
-          condition: _condition,
-          categories: categories,
-          imageUrl: '',
-          imageSource: '',
-        );
-      } else {
-        _strategy = LeaseStrategy(
-          userId: _user!.uid,
-          type: type,
-          name: _name,
-          description: _description,
-          price: _price,
-          rentalPeriod: _rentalPeriod,
-          condition: _condition,
-          categories: categories,
-          imageUrl: '',
-          imageSource: '',
-        );
-      }
-
-      // Fourth - If the user has selected an image, upload it to Firebase Storage via the strategy
-      if (_selectedImage != null) {
-        await _strategy.saveImage(_selectedImage!, _imageSource);
-      }
-
-      // Fifth - Save the product data to Firestore via the strategy
-      await _strategy.saveProduct();
-
-      // Sixth - Show a success message
+      // Third - Show a success message
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Product uploaded successfully')),
       );
 
-      // Seventh - Navigate to the home screen
+      // Fourth - Navigate to the home screen
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const HomeView(),
@@ -186,5 +145,51 @@ class UploadProductViewModel with ChangeNotifier {
         print(e);
       }
     }
+  }
+
+  Future<void> prepareAndUploadProduct({required bool useCache}) async {
+    // Get the categories from the backend
+    List<String> categories = await getCategoriesFromBack(
+      _condition,
+      _description,
+      _name,
+      _price,
+    );
+
+    // Determine strategy based on the type
+    if (type == 'sale') {
+      _strategy = SaleStrategy(
+        userId: _user!.uid,
+        type: type,
+        name: _name,
+        description: _description,
+        price: _price,
+        condition: _condition,
+        categories: categories,
+        imageUrl: '',
+        imageSource: '',
+      );
+    } else {
+      _strategy = LeaseStrategy(
+        userId: _user!.uid,
+        type: type,
+        name: _name,
+        description: _description,
+        price: _price,
+        rentalPeriod: _rentalPeriod,
+        condition: _condition,
+        categories: categories,
+        imageUrl: '',
+        imageSource: '',
+      );
+    }
+
+    // If an image is selected, upload it
+    if (_selectedImage != null) {
+      await _strategy.saveImage(_selectedImage!, _imageSource);
+    }
+
+    // Upload the product data
+    await _strategy.saveProduct();
   }
 }
