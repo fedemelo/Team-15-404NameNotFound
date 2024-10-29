@@ -113,7 +113,7 @@ class UploadProductView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => UploadProductViewModel(type: type),
+      create: (_) => UploadProductViewModel(type: type, context: context),
       child: Scaffold(
         bottomNavigationBar: const NavBarView(initialIndex: 2),
         appBar: AppBar(

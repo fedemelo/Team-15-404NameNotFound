@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,7 +17,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class UploadProductViewModel with ChangeNotifier {
   // Form type
   String type;
-  UploadProductViewModel({required this.type});
+  UploadProductViewModel({required this.type, required BuildContext context}) {
+    _connectivityMonitoring(context);
+  }
 
   // Strategy
   late final UploadProductStrategy _strategy;
@@ -266,5 +269,33 @@ class UploadProductViewModel with ChangeNotifier {
         key: 'product_image',
       );
     }
+  }
+
+  void _connectivityMonitoring(BuildContext context) {
+    // Listen for connectivity changes on the device
+    connectivityService.connectivityStream
+        .listen((List<ConnectivityResult> result) async {
+      if (result.contains(ConnectivityResult.mobile) ||
+          result.contains(ConnectivityResult.wifi)) {
+        // If internet connection is restored, upload the product if there is cached data
+        final cachedDataFile =
+            await cacheManager.getFileFromCache('product_data');
+        if (cachedDataFile != null) {
+          await prepareAndUploadProduct(useCache: true);
+          await cacheManager.removeFile('product_data');
+          await cacheManager.removeFile('product_image');
+
+          // Show a success message
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Connection restored. Product uploaded successfully from local memory'),
+            ),
+          );
+        }
+      }
+    });
   }
 }
