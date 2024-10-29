@@ -6,6 +6,7 @@ import 'package:unitrade/screens/home/views/filter_section_view.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/product_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
   String selectedCategory = 'For You';
@@ -153,8 +154,20 @@ class HomeViewModel extends ChangeNotifier {
       await Future.wait([
         fetchCategories(),
         fetchUserCategories(),
-        fetchProducts(),
       ]);
+
+      int retries = 0;
+      while (ProductService.instance.products == null && retries < 5) {
+        await Future.delayed(Duration(milliseconds: 500));
+        retries++;
+      }
+
+      if (ProductService.instance.products != null) {
+        productElementList = ProductService.instance.products!;
+      } else {
+        productElementList = [];
+        print("Error: Productos no cargados después de varios intentos.");
+      }
 
       finishedGets = true;
       _filterProducts();

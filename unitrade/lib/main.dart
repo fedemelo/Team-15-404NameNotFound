@@ -6,6 +6,7 @@ import 'package:unitrade/utils/theme_provider.dart';
 import 'utils/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:unitrade/utils/crash_manager.dart';
+import 'package:unitrade/utils/product_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  ProductService.instance.loadProductsInBackground();
 
   final crashManager = CrashManager();
   FlutterError.onError = (FlutterErrorDetails details) async {
