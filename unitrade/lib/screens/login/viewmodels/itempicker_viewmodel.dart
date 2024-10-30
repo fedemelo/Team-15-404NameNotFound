@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/models/itempicker_model.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 
 class ItemPickerViewModel extends ChangeNotifier {
   final ItemPickerModel _itemPickerModel = ItemPickerModel();
@@ -40,9 +42,36 @@ class ItemPickerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submit() async {
+  Future<void> submit(BuildContext context) async {
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+    // If no connection, show a SnackBar and stop the execution
+    if (!hasConnection) {
+      _itemPickerModel.queueUserCategories(selectedCategories);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "No internet connection. Please try again when connected.",
+          ),
+          duration: Duration(seconds: 3),
+        ),
+      );
+      Future.delayed(const Duration(seconds: 3), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeView()),
+        );
+      });
+      return;
+    }
+
     try {
       await _itemPickerModel.updateUserCategories(selectedCategories);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeView()),
+      );
     } catch (e) {
       errorMessage = e.toString();
       notifyListeners();
