@@ -106,20 +106,8 @@ class ItempickerView extends StatelessWidget {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () async {
-                        await itemPickerViewModel.submit();
-                        if (itemPickerViewModel.errorMessage == null) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const HomeView()),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content:
-                                    Text(itemPickerViewModel.errorMessage!)),
-                          );
-                        }
+                        await itemPickerViewModel.submit(context);
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary900,
