@@ -43,6 +43,8 @@ class ItemPickerViewModel extends ChangeNotifier {
   }
 
   Future<void> submit(BuildContext context) async {
+
+
     var connectivity = ConnectivityService();
     var hasConnection = await connectivity.checkConnectivity();
     // If no connection, show a SnackBar and stop the execution
@@ -52,7 +54,7 @@ class ItemPickerViewModel extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            "No internet connection. Please try again when connected.",
+            "No internet connection. User information will be stored and uploaded when connection is available.",
           ),
           duration: Duration(seconds: 3),
         ),

@@ -22,7 +22,6 @@ class FirebaseRetryService {
 
   Future<void> _retryQueuedRequests() async {
     List<FirebaseQueuedRequest> requests = _queueService.getQueuedRequests();
-    print('Retrying ${requests.length} requests');
     for (int i = 0; i < requests.length; i++) {
       final request = requests[i];
       try {

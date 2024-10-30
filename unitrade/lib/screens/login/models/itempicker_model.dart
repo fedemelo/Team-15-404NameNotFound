@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/firebase_queue_service.dart';
 import 'package:unitrade/utils/firebase_queued_request.dart';
@@ -40,5 +41,13 @@ class ItemPickerModel {
       data: {'categories': selectedCategories},
       operation: 'update',
     ));
+  }
+
+  // This method is used to save the user-selected categories locally
+  Future<void> localSaveUserCategories(List<String> selectedCategories) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setStringList('categories', selectedCategories);
+    // TODO: Also save semester and undergraduate program
   }
 }
