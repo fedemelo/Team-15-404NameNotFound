@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:isolate';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/utils/firebase_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:unitrade/utils/firebase_options.dart';
 
 class ProductService {
   ProductService._privateConstructor();
@@ -10,19 +14,44 @@ class ProductService {
 
   List<ProductModel>? _products;
 
-  final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
-
   List<ProductModel>? get products => _products;
 
   Future<void> loadProductsInBackground() async {
-    _products ??= await fetchProducts();
+    if (_products == null) {
+      final receivePort = ReceivePort();
+      final rootIsolateToken = RootIsolateToken.instance;
+
+      if (rootIsolateToken != null) {
+        await Isolate.spawn(_fetchProductsInIsolate, [receivePort.sendPort, rootIsolateToken]);
+      } else {
+        print("Error: RootIsolateToken es null.");
+        return;
+      }
+
+      final completer = Completer<List<ProductModel>>();
+      receivePort.listen((data) {
+        completer.complete(data as List<ProductModel>);
+      });
+
+      _products = await completer.future;
+    }
   }
 
+  static Future<void> _fetchProductsInIsolate(List<dynamic> args) async {
+    final SendPort sendPort = args[0];
+    final RootIsolateToken rootIsolateToken = args[1];
 
-  Future<List<ProductModel>> fetchProducts() async {
-    final QuerySnapshot productsSnapshot = await _firestore.collection('products').get();
+    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
 
-    return productsSnapshot.docs.map((doc) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    final FirebaseFirestore firestore = FirebaseService.instance.firestore;
+
+    final QuerySnapshot productsSnapshot = await firestore.collection('products').get();
+
+    List<ProductModel> products = productsSnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       return ProductModel(
         id: doc.id,
@@ -41,5 +70,7 @@ class ProductService {
         condition: data['condition'] ?? '',
       );
     }).toList();
+
+    sendPort.send(products);
   }
 }
