@@ -22,32 +22,60 @@ class ItemPickerModel {
     }
   }
 
+  // Fetch majors from Firebase
+  Future<List<String>> fetchMajors() async {
+    final majorsDoc =
+        await _firestore.collection('categories').doc('majors').get();
+
+    if (majorsDoc.exists) {
+      List<dynamic> majors = majorsDoc.data()?['names'] ?? [];
+      return majors.map((major) => major.toString()).toList();
+    } else {
+      throw Exception("Majors not found");
+    }
+  }
+
   // Update user-selected categories in Firebase
-  Future<void> updateUserCategories(List<String> selectedCategories) async {
+  Future<void> updateUserInformation(List<String> selectedCategories,
+      String selectedMajor, String selectedSemester) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw Exception('User not authenticated');
 
+    localSaveUserInformation(
+        selectedCategories, selectedMajor, selectedSemester);
     await _firestore.collection('users').doc(user.uid).update({
       'categories': selectedCategories,
+      'major': selectedMajor,
+      'semester': selectedSemester,
     });
   }
 
-  void queueUserCategories(List<String> selectedCategories) {
+  void queueUserInformation(List<String> selectedCategories,
+      String selectedMajor, String selectedSemester) {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw Exception('User not authenticated');
     queueService.addRequestToQueue(FirebaseQueuedRequest(
       collectionPath: 'users',
       documentId: user.uid,
-      data: {'categories': selectedCategories},
+      data: {
+        'categories': selectedCategories,
+        'major': selectedMajor,
+        'semester': selectedSemester
+      },
       operation: 'update',
     ));
   }
 
   // This method is used to save the user-selected categories locally
-  Future<void> localSaveUserCategories(List<String> selectedCategories) async {
+  Future<void> localSaveUserInformation(
+    List<String> selectedCategories,
+    String selectedMajor,
+    String selectedSemester,
+  ) async {
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setStringList('categories', selectedCategories);
-    // TODO: Also save semester and undergraduate program
+    await prefs.setString('major', selectedMajor);
+    await prefs.setString('semester', selectedSemester);
   }
 }

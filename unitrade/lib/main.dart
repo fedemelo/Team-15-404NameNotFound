@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_queue_service.dart';
 import 'package:unitrade/utils/firebase_retry_service.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 import 'package:unitrade/utils/theme_provider.dart';
 import 'utils/firebase_options.dart';
 import 'package:flutter/services.dart';
@@ -39,10 +40,14 @@ void main() async {
   };
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ScreenTimeService()),
+
+      ],
       child: const MyApp(),
-    ),
+      )
   );
 }
 

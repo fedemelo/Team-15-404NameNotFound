@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/models/itempicker_model.dart';
+import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 
 class ItemPickerViewModel extends ChangeNotifier {
@@ -8,27 +9,50 @@ class ItemPickerViewModel extends ChangeNotifier {
 
   List<String> _categories = [];
   List<String> selectedCategories = [];
+  final List<String> _semesters = ['1-2', '3-4', '5-6', '7-8', '9-10', '+10'];
+  String _selectedSemester = "1-2";
+  List<String> _majors = [];
+  String? _selectedMajor;
   bool isLoading = true;
   String? errorMessage;
 
   List<String> get categories => _categories;
+  List<String> get majors => _majors;
+  List<String> get semesters => _semesters;
+  String get selectedSemester => _selectedSemester;
+  String? get selectedMajor => _selectedMajor;
 
   ItemPickerViewModel() {
-    fetchCategories();
+    fetchAllData();
+  }
+
+  Future<void> fetchAllData() async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    await fetchCategories();
+    await fetchMajors();
+
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> fetchCategories() async {
     try {
-      isLoading = true;
-      errorMessage = null;
-      notifyListeners();
       _categories = await _itemPickerModel.fetchCategories();
-
-      isLoading = false;
-      notifyListeners();
     } catch (e) {
       errorMessage = e.toString();
       isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchMajors() async {
+    try {
+      _majors = await _itemPickerModel.fetchMajors();
+    } catch (e) {
+      errorMessage = e.toString();
       notifyListeners();
     }
   }
@@ -42,21 +66,42 @@ class ItemPickerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setSemester(String semester) {
+    _selectedSemester = semester;
+    notifyListeners();
+  }
+
+  void setMajor(String? major) {
+    _selectedMajor = major;
+    notifyListeners();
+  }
+
+  bool validateSelections() {
+    return _selectedMajor != null && _selectedMajor!.isNotEmpty;
+  }
+
   Future<void> submit(BuildContext context) async {
-
-
+    if (!validateSelections()) {
+      errorMessage = "Please select a major.";
+      notifyListeners();
+      return;
+    }
     var connectivity = ConnectivityService();
     var hasConnection = await connectivity.checkConnectivity();
-    // If no connection, show a SnackBar and stop the execution
     if (!hasConnection) {
-      _itemPickerModel.queueUserCategories(selectedCategories);
+      _itemPickerModel.queueUserInformation(
+          selectedCategories, _selectedMajor!, _selectedSemester);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
             "No internet connection. User information will be stored and uploaded when connection is available.",
+            style: TextStyle(color: AppColors.primaryNeutral),
           ),
           duration: Duration(seconds: 3),
+          showCloseIcon: true,
+          closeIconColor: AppColors.primaryNeutral,
+          backgroundColor: AppColors.danger,
         ),
       );
       Future.delayed(const Duration(seconds: 3), () {
@@ -69,7 +114,8 @@ class ItemPickerViewModel extends ChangeNotifier {
     }
 
     try {
-      await _itemPickerModel.updateUserCategories(selectedCategories);
+      await _itemPickerModel.updateUserInformation(
+          selectedCategories, _selectedMajor!, _selectedSemester);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeView()),
