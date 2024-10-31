@@ -1,18 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/views/itempicker_view.dart';
+import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/analytic_service.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 
 class WelcomeViewModel extends ChangeNotifier {
   final FirebaseService _firebaseService = FirebaseService.instance;
-
+  
   bool authButtonLoading = false;
 
   // Microsoft sign-in using OAuthProvider
   Future<void> signInWithMicrosoft(BuildContext context) async {
+
+    final screenTimeService = Provider.of<ScreenTimeService>(context, listen: false);
+    
     authButtonLoading = true;
     notifyListeners();
 
@@ -27,8 +33,14 @@ class WelcomeViewModel extends ChangeNotifier {
         const SnackBar(
           content: Text(
             "No internet connection. Please try again when connected.",
+            style: TextStyle(color: AppColors.primaryNeutral),
           ),
-          duration: Duration(seconds: 3),
+          duration: Duration(days: 365),
+          showCloseIcon: true,
+          closeIconColor: AppColors.primaryNeutral,
+          backgroundColor: AppColors.danger,
+
+
         ),
       );
       return;
@@ -40,6 +52,8 @@ class WelcomeViewModel extends ChangeNotifier {
 
         bool isFirstTime = await isFirstTimeUser(userCredential.user!);
 
+        screenTimeService.stopAndRecordTime('LoginView');
+
         if (isFirstTime) {
           Navigator.pushReplacement(
             context,
@@ -48,7 +62,8 @@ class WelcomeViewModel extends ChangeNotifier {
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const ItempickerView()),
+            // TODO: Change this to HomeView when finished developing
+            MaterialPageRoute(builder: (context) => const HomeView()),
           );
         }
       } else {

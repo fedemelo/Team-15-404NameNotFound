@@ -13,4 +13,6 @@ class AppColors {
   static const Color contrast700 = Color(0xFFD9B580);
   static const Color contrast900 = Color(0xFFE3C3A2);
   static const Color secondary900 = Color(0xFFF79256);
+  static const Color danger = Color(0xFFEB2117);
+
 }

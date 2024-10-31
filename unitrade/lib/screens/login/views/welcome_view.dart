@@ -5,12 +5,21 @@ import 'package:unitrade/screens/login/viewmodels/welcome_view_model.dart';
 // import 'package:unitrade/screens/login/views/login_view.dart';
 // import 'package:unitrade/screens/login/views/register_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 
 class WelcomeView extends StatelessWidget {
   const WelcomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenTimeService =
+        Provider.of<ScreenTimeService>(context, listen: false);
+
+    // Start tracking time when this screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      screenTimeService.startTrackingTime();
+    });
+
     return ChangeNotifierProvider(
       create: (_) => WelcomeViewModel(),
       child: Consumer<WelcomeViewModel>(
