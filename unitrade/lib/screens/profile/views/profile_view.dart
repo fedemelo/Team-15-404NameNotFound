@@ -5,6 +5,7 @@ import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/screens/profile/views/theme_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/firebase_service.dart';
+import 'package:unitrade/screens/profile/views/listings_view.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -84,7 +85,11 @@ class ProfileViewState extends State<ProfileView> {
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      // No action for now
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ListingsView()),
+                      );
                     },
                   ),
                   // My Orders

@@ -16,46 +16,58 @@ class ProductCardViewModel extends ChangeNotifier {
       return;
     }
 
+    // Alternar el estado de favorito
     product.isFavorite = !product.isFavorite;
 
     final DocumentReference productDoc = _firestore.collection('products').doc(product.id);
 
-    if (selectedCategory == 'For You') {
-      await productDoc.get().then((doc) async {
-        if (doc.exists) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    await productDoc.get().then((doc) async {
+      if (doc.exists) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+        // Manejo de favorites_foryou
+        if (selectedCategory == 'For You') {
           int currentFavoritesForYou = data['favorites_foryou'] ?? 0;
-          int newFavoritesForYou = product.isFavorite
-              ? currentFavoritesForYou + 1
-              : (currentFavoritesForYou > 0 ? currentFavoritesForYou - 1 : 0);
-
-          await productDoc.update({'favorites_foryou': newFavoritesForYou});
+          if (product.isFavorite) {
+            await productDoc.update({'favorites_foryou': currentFavoritesForYou + 1});
+          }
         } else {
-          await productDoc.set({
-            'favorites_foryou': product.isFavorite ? 1 : 0,
-          }, SetOptions(merge: true));
+          int currentFavoriteCategory = data['favorites_category'] ?? 0;
+          if (product.isFavorite) {
+            await productDoc.update({'favorites_category': currentFavoriteCategory + 1});
+          }
         }
-      });
-    } else {
-      await productDoc.get().then((doc) async {
-        if (doc.exists) {
-          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-          int currentFavoriteCategory = data['favorite_category'] ?? 0;
-          int newFavoriteCategory = product.isFavorite
-              ? currentFavoriteCategory + 1
-              : (currentFavoriteCategory > 0 ? currentFavoriteCategory - 1 : 0);
 
-          await productDoc.update({'favorite_category': newFavoriteCategory});
+        // Manejo de favorites (total de favoritos)
+        int currentFavorites = data['favorites'] ?? 0;
+        int newFavorites = product.isFavorite
+            ? currentFavorites + 1
+            : (currentFavorites > 0 ? currentFavorites - 1 : 0);
+        await productDoc.update({'favorites': newFavorites});
+
+      } else {
+        // Crear las variables en Firestore si no existen
+        Map<String, dynamic> newData = {};
+        if (product.isFavorite) {
+          if (selectedCategory == 'For You') {
+            newData['favorites_foryou'] = 1;
+          } else {
+            newData['favorites_category'] = 1;
+          }
+          newData['favorites'] = 1;
         } else {
-          await productDoc.set({
-            'favorite_category': product.isFavorite ? 1 : 0,
-          }, SetOptions(merge: true));
+          // Si se quita de favoritos y no existen las variables, se inician en 0
+          newData['favorites_foryou'] = 0;
+          newData['favorites_category'] = 0;
+          newData['favorites'] = 0;
         }
-      });
-    }
+        await productDoc.set(newData, SetOptions(merge: true));
+      }
+    });
 
     notifyListeners();
   }
+
 
   String processPrice(double price) {
     String priceString = price.toStringAsFixed(2);
