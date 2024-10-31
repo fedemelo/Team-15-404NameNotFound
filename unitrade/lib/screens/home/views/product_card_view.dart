@@ -7,9 +7,11 @@ import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
 
 class ProductCardView extends StatelessWidget {
   final ProductModel product;
+  bool currentConnection;
 
   ProductCardView({
     required this.product,
+    required this.currentConnection,
   });
 
   @override
@@ -31,7 +33,7 @@ class ProductCardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.0),
-                        child: product.imageUrl.isNotEmpty
+                        child: product.imageUrl.isNotEmpty && currentConnection
                             ? Image.network(
                                 product.imageUrl,
                                 height: 150,

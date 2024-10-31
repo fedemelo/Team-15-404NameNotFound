@@ -7,6 +7,7 @@ import 'package:unitrade/utils/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unitrade/utils/product_service.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
   String selectedCategory = 'For You';
@@ -15,6 +16,8 @@ class HomeViewModel extends ChangeNotifier {
 
   bool finishedGets = false;
   bool selectedFilters = false;
+  bool currentConnection = false;
+  bool isSnackBarVisible = false;
 
   List<String> categoryElementList = [];
   List<String> categoryGroupList = ['For You', 'Study', 'Tech', 'Creative', 'Others', 'Lab', 'Personal'];
@@ -31,7 +34,7 @@ class HomeViewModel extends ChangeNotifier {
     _filterProducts();
   }
 
-  void updateFilterColor(bool filter){
+  void updateFilterColor(bool filter) {
     selectedFilters = filter;
     notifyListeners();
   }
@@ -92,7 +95,6 @@ class HomeViewModel extends ChangeNotifier {
       }));
 
       categoryElementList.insert(0, 'For You');
-
     } else {
       throw Exception("Categories not found");
     }
@@ -111,7 +113,6 @@ class HomeViewModel extends ChangeNotifier {
         String lowerCased = category.toLowerCase();
         return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
       }));
-
     } else {
       categoryUserList = ["TEXTBOOKS", "ELECTRONICS"];
     }
@@ -150,6 +151,19 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchAllData() async {
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+
+    if (!hasConnection) {
+      currentConnection = false;
+      finishedGets = true;
+      notifyListeners();
+      return;
+    } else {
+      currentConnection = true;
+      notifyListeners();
+    }
+
     try {
       await Future.wait([
         fetchCategories(),
@@ -165,7 +179,7 @@ class HomeViewModel extends ChangeNotifier {
       if (ProductService.instance.products != null) {
         productElementList = ProductService.instance.products!;
       } else {
-        productElementList = [];
+        await Future.wait([fetchProducts()]);
         print("Error: Productos no cargados después de varios intentos.");
       }
 
@@ -176,7 +190,38 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> refreshData() async {
+  Future<void> refreshData(BuildContext context) async {
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+
+    if (!hasConnection) {
+      currentConnection = false;
+      if (!isSnackBarVisible) {
+        isSnackBarVisible = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              "No internet connection. You can still see our products but you could see old information.",
+            ),
+            duration: const Duration(days: 1),
+            action: SnackBarAction(
+              label: "OK",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                isSnackBarVisible = false;
+              },
+            ),
+          ),
+        );
+      }
+      notifyListeners();
+      return;
+    } else {
+      currentConnection = true;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      isSnackBarVisible = false;
+    }
+
     try {
       await Future.wait([
         fetchCategories(),
@@ -190,5 +235,4 @@ class HomeViewModel extends ChangeNotifier {
       print("Error fetching data: $e");
     }
   }
-
 }

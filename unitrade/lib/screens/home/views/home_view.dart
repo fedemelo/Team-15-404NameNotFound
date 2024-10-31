@@ -23,8 +23,7 @@ class HomeView extends StatelessWidget {
                 child: viewModel.finishedGets
                     ? RefreshIndicator(
                         onRefresh: () async {
-                          await viewModel
-                              .refreshData();
+                          await viewModel.refreshData(context);
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(left: 30, right: 30),
@@ -70,9 +69,35 @@ class HomeView extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              ProductListView(
-                                products: viewModel.filteredProducts,
-                              ),
+                              !viewModel.currentConnection &&
+                                      viewModel.filteredProducts.isEmpty
+                                  ? Center(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Icon(
+                                            Icons.wifi_off,
+                                            size: 80,
+                                            color: Colors.grey[600],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            "Failed to load products. Please check your connection.",
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 16,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : ProductListView(
+                                      products: viewModel.filteredProducts,
+                                      currentConnection:
+                                          viewModel.currentConnection,
+                                    )
                             ],
                           ),
                         ),
