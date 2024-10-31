@@ -176,4 +176,19 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshData() async {
+    try {
+      await Future.wait([
+        fetchCategories(),
+        fetchUserCategories(),
+        fetchProducts(),
+      ]);
+      print("Data refreshed");
+
+      _filterProducts();
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
 }

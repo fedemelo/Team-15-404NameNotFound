@@ -21,54 +21,60 @@ class HomeView extends StatelessWidget {
             body: SafeArea(
               child: Center(
                 child: viewModel.finishedGets
-                    ? Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: ListView(
-                          children: [
-                            const SizedBox(height: 20),
-                            CustomSearchBarView(
-                              onChange: viewModel.updateSearch,
-                              onClickFilter: () => viewModel.showFilterWidget(
-                                  context, viewModel),
-                              changeFliters: viewModel.selectedFilters,
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'Categories',
-                              style: GoogleFonts.urbanist(
-                                fontSize: 20,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge
-                                    ?.color,
-                                fontWeight: FontWeight.w600,
+                    ? RefreshIndicator(
+                        onRefresh: () async {
+                          await viewModel
+                              .refreshData();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 30, right: 30),
+                          child: ListView(
+                            children: [
+                              const SizedBox(height: 20),
+                              CustomSearchBarView(
+                                onChange: viewModel.updateSearch,
+                                onClickFilter: () => viewModel.showFilterWidget(
+                                    context, viewModel),
+                                changeFliters: viewModel.selectedFilters,
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            CategoryListView(
-                              categories: viewModel.categoryGroupList,
-                              selectedCategory: viewModel.selectedCategory,
-                              onClick: viewModel.clickCategory,
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              viewModel.selectedCategory.isEmpty
-                                  ? 'Search'
-                                  : viewModel.selectedCategory,
-                              style: GoogleFonts.urbanist(
-                                fontSize: 20,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .headlineLarge
-                                    ?.color,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(height: 20),
+                              Text(
+                                'Categories',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 20,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge
+                                      ?.color,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            ProductListView(
-                              products: viewModel.filteredProducts,
-                            ),
-                          ],
+                              const SizedBox(height: 20),
+                              CategoryListView(
+                                categories: viewModel.categoryGroupList,
+                                selectedCategory: viewModel.selectedCategory,
+                                onClick: viewModel.clickCategory,
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                viewModel.selectedCategory.isEmpty
+                                    ? 'Search'
+                                    : viewModel.selectedCategory,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 20,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headlineLarge
+                                      ?.color,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              ProductListView(
+                                products: viewModel.filteredProducts,
+                              ),
+                            ],
+                          ),
                         ),
                       )
                     : const CircularProgressIndicator(
