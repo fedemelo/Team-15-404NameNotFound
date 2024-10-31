@@ -1,19 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/views/itempicker_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/analytic_service.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 
 class WelcomeViewModel extends ChangeNotifier {
   final FirebaseService _firebaseService = FirebaseService.instance;
-
+  
   bool authButtonLoading = false;
 
   // Microsoft sign-in using OAuthProvider
   Future<void> signInWithMicrosoft(BuildContext context) async {
+
+    final screenTimeService = Provider.of<ScreenTimeService>(context, listen: false);
+    
     authButtonLoading = true;
     notifyListeners();
 
@@ -46,6 +51,8 @@ class WelcomeViewModel extends ChangeNotifier {
         AnalyticService().logSignInStats(userCredential.user!);
 
         bool isFirstTime = await isFirstTimeUser(userCredential.user!);
+
+        screenTimeService.stopAndRecordTime('LoginView');
 
         if (isFirstTime) {
           Navigator.pushReplacement(
