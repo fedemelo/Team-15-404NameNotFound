@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/models/itempicker_model.dart';
+import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 
 class ItemPickerViewModel extends ChangeNotifier {
@@ -88,14 +89,19 @@ class ItemPickerViewModel extends ChangeNotifier {
     var connectivity = ConnectivityService();
     var hasConnection = await connectivity.checkConnectivity();
     if (!hasConnection) {
-      _itemPickerModel.queueUserInformation(selectedCategories, _selectedMajor!, _selectedSemester);
+      _itemPickerModel.queueUserInformation(
+          selectedCategories, _selectedMajor!, _selectedSemester);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
             "No internet connection. User information will be stored and uploaded when connection is available.",
+            style: TextStyle(color: AppColors.primaryNeutral),
           ),
           duration: Duration(seconds: 3),
+          showCloseIcon: true,
+          closeIconColor: AppColors.primaryNeutral,
+          backgroundColor: AppColors.danger,
         ),
       );
       Future.delayed(const Duration(seconds: 3), () {
@@ -108,7 +114,8 @@ class ItemPickerViewModel extends ChangeNotifier {
     }
 
     try {
-      await _itemPickerModel.updateUserInformation(selectedCategories, _selectedMajor!, _selectedSemester);
+      await _itemPickerModel.updateUserInformation(
+          selectedCategories, _selectedMajor!, _selectedSemester);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomeView()),
