@@ -48,6 +48,7 @@ class WelcomeViewModel extends ChangeNotifier {
         } else {
           Navigator.pushReplacement(
             context,
+            // TODO: Change this to HomeView when finished developing
             MaterialPageRoute(builder: (context) => const ItempickerView()),
           );
         }
