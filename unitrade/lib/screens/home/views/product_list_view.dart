@@ -4,9 +4,10 @@ import 'package:unitrade/screens/home/views/product_card_view.dart';
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
-  bool currentConnection;
+  final bool currentConnection;
+  final String selectedCategory;
 
-  ProductListView({required this.products, required this.currentConnection});
+  ProductListView({required this.products, required this.currentConnection, required this.selectedCategory});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class ProductListView extends StatelessWidget {
         return ProductCardView(
           product: product,
           currentConnection: currentConnection,
+          selectedCategory: selectedCategory,
         );
       },
     );

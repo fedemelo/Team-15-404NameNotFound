@@ -95,8 +95,8 @@ class HomeView extends StatelessWidget {
                                     )
                                   : ProductListView(
                                       products: viewModel.filteredProducts,
-                                      currentConnection:
-                                          viewModel.currentConnection,
+                                      currentConnection: viewModel.currentConnection,
+                                      selectedCategory: viewModel.selectedCategory,
                                     )
                             ],
                           ),

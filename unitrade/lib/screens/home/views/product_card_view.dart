@@ -7,11 +7,13 @@ import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
 
 class ProductCardView extends StatelessWidget {
   final ProductModel product;
-  bool currentConnection;
+  final bool currentConnection;
+  final String selectedCategory;
 
   ProductCardView({
     required this.product,
     required this.currentConnection,
+    required this.selectedCategory,
   });
 
   @override
@@ -58,7 +60,7 @@ class ProductCardView extends StatelessWidget {
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite(product);
+                            productViewModel.toggleFavorite(product, selectedCategory, currentConnection);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
