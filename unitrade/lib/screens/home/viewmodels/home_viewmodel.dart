@@ -140,7 +140,10 @@ class HomeViewModel extends ChangeNotifier {
           userId: data['user_id'] ?? '',
           type: data['type'] ?? '',
           imageUrl: data['image_url'] ?? '',
+          favorites_foryou: data['favorites_foryou'] ?? 0,
+          favorite_category: data['favorite_category'] ?? 0,
           condition: data['condition'] ?? '',
+
         );
       }).toList();
 

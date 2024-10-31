@@ -11,6 +11,8 @@ class ProductModel {
   final String condition;
   final String userId;
   final String type;
+  final int favorites_foryou;
+  final int favorite_category;
 
   bool isFavorite;
 
@@ -28,5 +30,7 @@ class ProductModel {
     this.inStock = true,
     this.condition = 'new',
     this.isFavorite = false,
+    this.favorites_foryou = 0,
+    this.favorite_category = 0,
   });
 }
