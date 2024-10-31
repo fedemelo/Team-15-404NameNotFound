@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,11 +11,15 @@ import 'package:unitrade/screens/upload/models/sale_strategy.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/api_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:unitrade/utils/connectivity_service.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class UploadProductViewModel with ChangeNotifier {
   // Form type
-  final String type;
-  UploadProductViewModel({required this.type});
+  String type;
+  UploadProductViewModel({required this.type, required BuildContext context}) {
+    _connectivityMonitoring(context);
+  }
 
   // Strategy
   late final UploadProductStrategy _strategy;
@@ -38,6 +43,10 @@ class UploadProductViewModel with ChangeNotifier {
 
   // Loading state
   bool isLoading = false;
+
+  // Cache and connectivity services
+  final ConnectivityService connectivityService = ConnectivityService();
+  final DefaultCacheManager cacheManager = DefaultCacheManager();
 
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -124,67 +133,169 @@ class UploadProductViewModel with ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
-      // Second - Get the categories from the backend
-      final categories = await getCategoriesFromBack(
-        _condition,
-        _description,
-        _name,
-        _price,
-      );
-
-      // Third - Determine the strategy based on the product type
-      if (type == 'sale') {
-        _strategy = SaleStrategy(
-          userId: _user!.uid,
-          type: type,
-          name: _name,
-          description: _description,
-          price: _price,
-          condition: _condition,
-          categories: categories,
-          imageUrl: '',
-          imageSource: '',
-        );
+      // Second - Cache Strategy
+      final bool isConnected = await connectivityService.checkConnectivity();
+      if (isConnected) {
+        // Upload the product
+        await prepareAndUploadProduct(useCache: false);
       } else {
-        _strategy = LeaseStrategy(
-          userId: _user!.uid,
-          type: type,
-          name: _name,
-          description: _description,
-          price: _price,
-          rentalPeriod: _rentalPeriod,
-          condition: _condition,
-          categories: categories,
-          imageUrl: '',
-          imageSource: '',
-        );
+        // Cache the product
+        await cacheProductData();
       }
 
-      // Fourth - If the user has selected an image, upload it to Firebase Storage via the strategy
-      if (_selectedImage != null) {
-        await _strategy.saveImage(_selectedImage!, _imageSource);
-      }
-
-      // Fifth - Save the product data to Firestore via the strategy
-      await _strategy.saveProduct();
-
-      // Sixth - Show a success message
+      // Third - Show a success message
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Product uploaded successfully')),
+        isConnected
+            ? const SnackBar(content: Text('Product uploaded successfully'))
+            : const SnackBar(
+                content: Text(
+                  'No internet connection. Product saved locally and will be uploaded when you are back online',
+                ),
+              ),
       );
 
-      // Seventh - Navigate to the home screen
+      // Fourth - Navigate to the home screen
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => const HomeView(),
         ),
       );
+      return;
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
+      return;
     }
+  }
+
+  Future<void> prepareAndUploadProduct({required bool useCache}) async {
+    if (useCache) {
+      // Load cached data if available
+      final cachedDataFile =
+          await cacheManager.getFileFromCache('product_data');
+      final cachedImageFile =
+          await cacheManager.getFileFromCache('product_image');
+
+      if (cachedDataFile != null) {
+        final cachedData = jsonDecode(await cachedDataFile.file.readAsString());
+
+        // Assign cached data to variables
+        type = cachedData['type'];
+        _name = cachedData['name'];
+        _description = cachedData['description'];
+        _price = cachedData['price'];
+        _rentalPeriod = cachedData['rentalPeriod'];
+        _condition = cachedData['condition'];
+        _imageSource = cachedData['imageSource'];
+
+        if (cachedImageFile != null) {
+          _selectedImage = File(cachedImageFile.file.path);
+        }
+      } else {
+        return;
+      }
+    }
+
+    // Get the categories from the backend
+    List<String> categories = await getCategoriesFromBack(
+      _condition,
+      _description,
+      _name,
+      _price,
+    );
+
+    // Determine strategy based on the type
+    if (type == 'sale') {
+      _strategy = SaleStrategy(
+        userId: _user!.uid,
+        type: type,
+        name: _name,
+        description: _description,
+        price: _price,
+        condition: _condition,
+        categories: categories,
+        imageUrl: '',
+        imageSource: '',
+      );
+    } else {
+      _strategy = LeaseStrategy(
+        userId: _user!.uid,
+        type: type,
+        name: _name,
+        description: _description,
+        price: _price,
+        rentalPeriod: _rentalPeriod,
+        condition: _condition,
+        categories: categories,
+        imageUrl: '',
+        imageSource: '',
+      );
+    }
+
+    // If an image is selected, upload it
+    if (_selectedImage != null) {
+      await _strategy.saveImage(_selectedImage!, _imageSource);
+    }
+
+    // Upload the product data
+    await _strategy.saveProduct();
+  }
+
+  Future<void> cacheProductData() async {
+    // Serialize form data
+    final productData = jsonEncode({
+      'type': type,
+      'name': _name,
+      'description': _description,
+      'price': _price,
+      'rentalPeriod': _rentalPeriod,
+      'condition': _condition,
+      'imageSource': _imageSource,
+    });
+
+    // Cache product details
+    await cacheManager.putFile(
+        'cached_product_data', Uint8List.fromList(utf8.encode(productData)),
+        key: 'product_data');
+
+    // Cache image if available
+    if (_selectedImage != null) {
+      await cacheManager.putFile(
+        'cached_product_image',
+        await _selectedImage!.readAsBytes(),
+        key: 'product_image',
+      );
+    }
+  }
+
+  void _connectivityMonitoring(BuildContext context) {
+    // Listen for connectivity changes on the device
+    connectivityService.connectivityStream
+        .listen((List<ConnectivityResult> result) async {
+      if (result.contains(ConnectivityResult.mobile) ||
+          result.contains(ConnectivityResult.wifi)) {
+        // If internet connection is restored, upload the product if there is cached data
+        final cachedDataFile =
+            await cacheManager.getFileFromCache('product_data');
+        if (cachedDataFile != null) {
+          await prepareAndUploadProduct(useCache: true);
+          await cacheManager.removeFile('product_data');
+          await cacheManager.removeFile('product_image');
+
+          // Show a success message
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).clearSnackBars();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Connection restored. Product uploaded successfully from local memory'),
+            ),
+          );
+        }
+      }
+    });
   }
 }

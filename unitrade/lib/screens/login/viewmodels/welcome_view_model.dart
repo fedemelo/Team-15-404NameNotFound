@@ -48,7 +48,7 @@ class WelcomeViewModel extends ChangeNotifier {
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomeView()),
+            MaterialPageRoute(builder: (context) => const ItempickerView()),
           );
         }
       } else {
