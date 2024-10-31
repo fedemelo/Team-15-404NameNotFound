@@ -19,7 +19,13 @@ class UploadProductViewModel with ChangeNotifier {
   String type;
   static bool _isMonitoringConnectivity = false;
 
-  UploadProductViewModel({required this.type, required BuildContext context}) {
+  // Queue modal
+  final Future<bool> Function(BuildContext context)? onQueueFullModal;
+
+  UploadProductViewModel(
+      {required this.type,
+      required BuildContext context,
+      this.onQueueFullModal}) {
     // Single instance of connectivity monitoring, to avoid multiple listeners
     if (!_isMonitoringConnectivity) {
       _connectivityMonitoring(context);
@@ -131,9 +137,19 @@ class UploadProductViewModel with ChangeNotifier {
 
   // Submit the form
   Future<void> submit(BuildContext context) async {
-    // First - Validate the form
+    // First - Validate the form & cache
     if (!formKey.currentState!.validate()) return;
     formKey.currentState!.save();
+
+    // If there is no connection and a product is cached, trigger the function _showNoInternetModal in the view
+    if (await checkConnectivityAndCache(context)) {
+      if (!context.mounted) return;
+      bool shouldReplace =
+          await (onQueueFullModal?.call(context) ?? Future.value(false));
+      if (!shouldReplace) {
+        return; // User chose to dismiss, exit the method
+      }
+    }
 
     try {
       isLoading = true;
@@ -355,5 +371,17 @@ class UploadProductViewModel with ChangeNotifier {
         }
       }
     });
+  }
+
+  Future<bool> checkConnectivityAndCache(BuildContext context) async {
+    // If no internet connection and a product is cached, return true
+    bool isConnected = await connectivityService.checkConnectivity();
+    bool isProductCached =
+        await cacheManager.getFileFromCache('product_data') != null;
+    if (!isConnected && isProductCached) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
