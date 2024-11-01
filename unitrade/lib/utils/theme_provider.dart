@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/firebase_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Firebase services
+final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
 
 // Theme modes
 enum ThemeModeType { light, dark }
@@ -120,6 +126,22 @@ class ThemeProvider extends ChangeNotifier {
       await prefs.remove('theme');
     } else {
       await prefs.setString('theme', preference);
+    }
+    await _setTimeAwarePreferenceFirestore(preference);
+  }
+
+  Future<void> _setTimeAwarePreferenceFirestore(String? preference) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        await _firestore.collection('users').doc(user.uid).update({
+          'time_aware_theme': preference == null,
+        });
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error setting time aware theme preference: $e');
+        }
+      }
     }
   }
 }
