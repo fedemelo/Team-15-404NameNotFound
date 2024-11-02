@@ -14,22 +14,27 @@ class ScreenTimeService with ChangeNotifier {
   Future<void> stopAndRecordTime(String screenName) async {
     if (_startTime == null) return;
 
-    final timeSpent = DateTime.now().difference(_startTime!).inSeconds.toDouble();
+    final timeSpent =
+        DateTime.now().difference(_startTime!).inSeconds.toDouble();
 
-    final collectionRef = _firestore
-        .collection('analytics')
-        .doc('screen_time')
-        .collection(screenName);
-    final docRef = collectionRef.doc('statistics');
-
+    final collectionRef =
+        _firestore.collection('analytics').doc('screen_time').collection('all');
+    final docRef = collectionRef.doc(screenName);
+    print('Recording screen time for $screenName: $timeSpent seconds');
     try {
       // Fetch the document to update average time
       final document = await docRef.get();
       if (document.exists) {
-        final currentAvgTime = (document['average_time'] ?? 0.0) as double;
-        final visitCount = (document['visit_count'] ?? 0) as int;
+        final currentAvgTime = (document['average_time'] ?? 0.0);
+        final visitCount = (document['visit_count'] ?? 0);
 
-        final newAvgTime = ((currentAvgTime * visitCount) + timeSpent) / (visitCount + 1);
+        final double safeCurrentAvgTime = (currentAvgTime is int)
+            ? currentAvgTime.toDouble()
+            : currentAvgTime as double;
+        final int safeVisitCount = visitCount as int;
+
+        final newAvgTime = ((safeCurrentAvgTime * safeVisitCount) + timeSpent) /
+            (safeVisitCount + 1);
 
         await docRef.update({
           'average_time': newAvgTime,
