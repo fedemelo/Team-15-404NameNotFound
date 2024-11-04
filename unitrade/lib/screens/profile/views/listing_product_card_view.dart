@@ -10,19 +10,12 @@ class ListingProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+
         borderRadius: BorderRadius.circular(16.0),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 8.0,
-            offset: Offset(0, 4),
-          ),
-        ],
+
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,58 +25,35 @@ class ListingProductCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
             child: product.imageUrl.isNotEmpty
                 ? Image.network(
-              product.imageUrl,
-              height: 100,
-              width: 80,
-              fit: BoxFit.cover,
-            )
+                    product.imageUrl,
+                    height: 80,
+                    width: 80,
+                    fit: BoxFit.cover,
+                  )
                 : Container(
-              height: 100,
-              width: 80,
-              color: Colors.grey[300],
-              child: const Center(
-                child: Icon(
-                  Icons.image,
-                  size: 40,
-                  color: Colors.black54,
-                ),
-              ),
-            ),
+                    height: 80,
+                    width: 80,
+                    color: Colors.grey[300],
+                    child: const Center(
+                      child: Icon(
+                        Icons.image,
+                        size: 40,
+                        color: Colors.black54,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(width: 12.0),
-          // Information Section
+          // Product Info Section
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      product.favorites.toString(),
-                      style: GoogleFonts.urbanist(
-                        fontSize: 30,
-                        color: AppColors.primary900,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(width: 4.0),
-                    Text(
-                      'Favorites',
-                      style: GoogleFonts.urbanist(
-                        fontSize: 17,
-                        color: AppColors.primary900,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4.0),
                 Text(
                   product.name,
                   style: GoogleFonts.urbanist(
                     fontSize: 16,
-                    color: Colors.black87,
+                    color: AppColors.primary900,
                     fontWeight: FontWeight.w600,
                   ),
                   maxLines: 1,
@@ -93,8 +63,8 @@ class ListingProductCard extends StatelessWidget {
                 Text(
                   '\$${product.price.toStringAsFixed(0)}',
                   style: GoogleFonts.urbanist(
-                    fontSize: 18,
-                    color: Colors.black87,
+                    fontSize: 16,
+                    color: AppColors.primary900,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -103,12 +73,34 @@ class ListingProductCard extends StatelessWidget {
                   product.type == 'sale' ? 'For Sale' : 'For Rent',
                   style: GoogleFonts.urbanist(
                     fontSize: 14,
-                    color: AppColors.primary900,
+                    color: AppColors.secondary900,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
+          ),
+          // Saves Section
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                product.favorites.toString(),
+                style: GoogleFonts.urbanist(
+                  fontSize: 30,
+                  color: AppColors.primary900,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Saves',
+                style: GoogleFonts.urbanist(
+                  fontSize: 14,
+                  color: AppColors.primary900,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
           ),
         ],
       ),

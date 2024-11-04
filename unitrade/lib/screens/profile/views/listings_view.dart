@@ -13,14 +13,6 @@ class ListingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final screenTimeService =
-    Provider.of<ScreenTimeService>(context, listen: false);
-
-    // Start tracking time when this screen is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      screenTimeService.startTrackingTime();
-    });
-
     return ChangeNotifierProvider(
       create: (context) => ListingsViewModel(),
       child: Consumer<ListingsViewModel>(
@@ -31,7 +23,6 @@ class ListingsView extends StatelessWidget {
               elevation: 1.0,
               leading: GestureDetector(
                 onTap: () {
-                  screenTimeService.stopAndRecordTime("ListingView");
 
                   Navigator.pop(context);
                 },
