@@ -13,6 +13,9 @@ import 'utils/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:unitrade/utils/crash_manager.dart';
 
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -59,6 +62,7 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
+      navigatorObservers: [routeObserver],
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,
       home: const LoadingView(),
