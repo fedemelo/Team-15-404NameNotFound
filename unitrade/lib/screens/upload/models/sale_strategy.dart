@@ -46,8 +46,14 @@ class SaleStrategy implements UploadProductStrategy {
 
   @override
   Future<void> saveProduct() async {
+    final startTime = DateTime.now();
     final id = const Uuid().v4();
     await _firestore.collection('products').doc(id).set(toMap());
+    final endTime = DateTime.now();
+    final duration = endTime.difference(startTime).inMilliseconds;
+    await _firestore.collection('analytics').doc('upload_time').update({
+      'listing_times': FieldValue.arrayUnion([duration])
+    });
   }
 
   @override

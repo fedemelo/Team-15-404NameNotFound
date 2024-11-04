@@ -17,12 +17,24 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 class UploadProductViewModel with ChangeNotifier {
   // Form type
   String type;
-  UploadProductViewModel({required this.type, required BuildContext context}) {
-    _connectivityMonitoring(context);
+  static bool _isMonitoringConnectivity = false;
+
+  // Queue modal
+  final Future<bool> Function(BuildContext context)? onQueueFullModal;
+
+  UploadProductViewModel(
+      {required this.type,
+      required BuildContext context,
+      this.onQueueFullModal}) {
+    // Single instance of connectivity monitoring, to avoid multiple listeners
+    if (!_isMonitoringConnectivity) {
+      _connectivityMonitoring(context);
+      _isMonitoringConnectivity = true;
+    }
   }
 
   // Strategy
-  late final UploadProductStrategy _strategy;
+  UploadProductStrategy? _strategy;
 
   // Form data
   final formKey = GlobalKey<FormState>();
@@ -125,9 +137,19 @@ class UploadProductViewModel with ChangeNotifier {
 
   // Submit the form
   Future<void> submit(BuildContext context) async {
-    // First - Validate the form
+    // First - Validate the form & cache
     if (!formKey.currentState!.validate()) return;
     formKey.currentState!.save();
+
+    // If there is no connection and a product is cached, trigger the function _showNoInternetModal in the view
+    if (await checkConnectivityAndCache(context)) {
+      if (!context.mounted) return;
+      bool shouldReplace =
+          await (onQueueFullModal?.call(context) ?? Future.value(false));
+      if (!shouldReplace) {
+        return; // User chose to dismiss, exit the method
+      }
+    }
 
     try {
       isLoading = true;
@@ -147,13 +169,28 @@ class UploadProductViewModel with ChangeNotifier {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        isConnected
-            ? const SnackBar(content: Text('Product uploaded successfully'))
-            : const SnackBar(
-                content: Text(
-                  'No internet connection. Product saved locally and will be uploaded when you are back online',
+        SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  isConnected
+                      ? 'Product uploaded successfully'
+                      : 'No internet connection. Product saved locally and will be uploaded when you are back online',
                 ),
               ),
+              IconButton(
+                icon: Icon(Icons.close,
+                    color: Theme.of(context).colorScheme.surface),
+                onPressed: () {
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                },
+              ),
+            ],
+          ),
+          duration: const Duration(minutes: 1),
+        ),
       );
 
       // Fourth - Navigate to the home screen
@@ -193,7 +230,13 @@ class UploadProductViewModel with ChangeNotifier {
 
         if (cachedImageFile != null) {
           _selectedImage = File(cachedImageFile.file.path);
+        } else {
+          _selectedImage = null;
         }
+
+        // Remove cached data
+        await cacheManager.removeFile('product_data');
+        await cacheManager.removeFile('product_image');
       } else {
         return;
       }
@@ -237,14 +280,27 @@ class UploadProductViewModel with ChangeNotifier {
 
     // If an image is selected, upload it
     if (_selectedImage != null) {
-      await _strategy.saveImage(_selectedImage!, _imageSource);
+      await _strategy?.saveImage(_selectedImage!, _imageSource);
     }
 
     // Upload the product data
-    await _strategy.saveProduct();
+    await _strategy?.saveProduct();
+
+    // Reset the form
+    _name = '';
+    _description = '';
+    _price = '';
+    _rentalPeriod = '';
+    _condition = '';
+    _selectedImage = null;
+    _imageSource = '';
   }
 
   Future<void> cacheProductData() async {
+    // Remove any existing cached data
+    await cacheManager.removeFile('product_data');
+    await cacheManager.removeFile('product_image');
+
     // Serialize form data
     final productData = jsonEncode({
       'type': type,
@@ -258,13 +314,13 @@ class UploadProductViewModel with ChangeNotifier {
 
     // Cache product details
     await cacheManager.putFile(
-        'cached_product_data', Uint8List.fromList(utf8.encode(productData)),
+        'product_data', Uint8List.fromList(utf8.encode(productData)),
         key: 'product_data');
 
     // Cache image if available
     if (_selectedImage != null) {
       await cacheManager.putFile(
-        'cached_product_image',
+        'product_image',
         await _selectedImage!.readAsBytes(),
         key: 'product_image',
       );
@@ -281,21 +337,51 @@ class UploadProductViewModel with ChangeNotifier {
         final cachedDataFile =
             await cacheManager.getFileFromCache('product_data');
         if (cachedDataFile != null) {
+          if (kDebugMode) {
+            print('Uploading product from local memory');
+          }
+          // Upload the product via the cache
           await prepareAndUploadProduct(useCache: true);
-          await cacheManager.removeFile('product_data');
-          await cacheManager.removeFile('product_image');
 
           // Show a success message
           if (!context.mounted) return;
           ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Connection restored. Product uploaded successfully from local memory'),
+            SnackBar(
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Expanded(
+                    child: Text(
+                      'Connection restored. Product uploaded successfully from local memory',
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close,
+                        color: Theme.of(context).colorScheme.surface),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    },
+                  ),
+                ],
+              ),
+              duration: const Duration(minutes: 1),
             ),
           );
         }
       }
     });
+  }
+
+  Future<bool> checkConnectivityAndCache(BuildContext context) async {
+    // If no internet connection and a product is cached, return true
+    bool isConnected = await connectivityService.checkConnectivity();
+    bool isProductCached =
+        await cacheManager.getFileFromCache('product_data') != null;
+    if (!isConnected && isProductCached) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
