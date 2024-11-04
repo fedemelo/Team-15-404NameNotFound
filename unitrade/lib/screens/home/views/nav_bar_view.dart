@@ -34,7 +34,7 @@ class NavBarViewState extends State<NavBarView> {
       // Navigate to the corresponding view
       switch (index) {
         case 0:
-          Navigator.pushReplacement(
+          Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const HomeView()),
           );

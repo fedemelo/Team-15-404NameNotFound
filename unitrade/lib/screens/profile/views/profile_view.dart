@@ -140,12 +140,13 @@ class ProfileViewState extends State<ProfileView> {
                     backgroundColor:
                         WidgetStateProperty.all<Color>(AppColors.primary900),
                     padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+                      const EdgeInsets.symmetric(vertical: 18),
                     ),
                     foregroundColor:
                         WidgetStateProperty.all<Color>(Colors.white),
                   ),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Icon(Icons.power_settings_new),
                       const SizedBox(width: 12),
