@@ -3,12 +3,34 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/screens/upload/views/upload_product_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
+import 'package:provider/provider.dart';
 
-class UploadPathView extends StatelessWidget {
+class UploadPathView extends StatefulWidget {
   const UploadPathView({super.key});
 
   @override
+  UploadPathViewState createState() => UploadPathViewState();
+}
+
+class UploadPathViewState extends State<UploadPathView> {
+  late ScreenTimeService screenTimeService;
+
+  @override
+  void dispose() {
+    screenTimeService.stopAndRecordTime('ChooseUploadTypeView');
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Start tracking time when this screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      screenTimeService =
+          Provider.of<ScreenTimeService>(context, listen: false);
+      screenTimeService.startTrackingTime();
+    });
+
     return Scaffold(
       bottomNavigationBar: const NavBarView(initialIndex: 2),
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -51,6 +73,7 @@ class UploadPathView extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
+                    screenTimeService.stopAndRecordTime('ChooseUploadTypeView');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -86,6 +109,7 @@ class UploadPathView extends StatelessWidget {
                 const SizedBox(width: 12),
                 ElevatedButton(
                   onPressed: () {
+                    screenTimeService.stopAndRecordTime('ChooseUploadTypeView');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
