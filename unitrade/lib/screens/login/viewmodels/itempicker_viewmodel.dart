@@ -107,7 +107,6 @@ class ItemPickerViewModel extends ChangeNotifier {
           duration: Duration(seconds: 3),
           showCloseIcon: true,
           closeIconColor: AppColors.primaryNeutral,
-          backgroundColor: AppColors.danger,
         ),
       );
       
