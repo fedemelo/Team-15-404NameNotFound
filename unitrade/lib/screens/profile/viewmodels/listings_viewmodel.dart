@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/utils/firebase_service.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 
 class ListingsViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
   final FirebaseAuth _firebase = FirebaseService.instance.auth;
   List<ProductModel> products = [];
   bool isLoading = true;
+  bool hasConnection = true;
 
   ListingsViewModel() {
     fetchProducts();
@@ -16,6 +18,16 @@ class ListingsViewModel extends ChangeNotifier {
 
   Future<void> fetchProducts() async {
     try {
+
+      var connectivity = ConnectivityService();
+      hasConnection = await connectivity.checkConnectivity();
+
+      if (!hasConnection) {
+        isLoading = false;
+        notifyListeners();
+        return;
+      }
+
       final user = _firebase.currentUser;
       if (user == null) {
         throw Exception("User not authenticated");
