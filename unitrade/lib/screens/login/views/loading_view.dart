@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/screens/login/views/welcome_view.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});
@@ -11,36 +13,31 @@ class LoadingView extends StatefulWidget {
 }
 
 class _LoadingViewState extends State<LoadingView> {
+  late ScreenTimeService screenTimeService;
+
   @override
-  // Here we define a timeout before redirecting to the login page
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      screenTimeService =
+          Provider.of<ScreenTimeService>(context, listen: false);
+      screenTimeService.startTrackingTime();
+    });
+
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const WelcomeView()),
       );
-
-      // Listen to the auth state
-      // TODO: Uncomment this code when the auth state is implemented
-      // FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      //   if (user != null) {
-      //     // User is logged in, redirect to Home page
-      //     print("USER LOGGED IN~~~~~~~~~~~~~~~~~~~~~~");
-      //     Navigator.pushReplacement(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => const Home()),
-      //     );
-      //   } else {
-      //     // User is not logged in, redirect to Welcome page
-      //     print("USER NOT LOGGED IN~~~~~~~~~~~~~~~~~~~~~~");
-      //     Navigator.pushReplacement(
-      //       context,
-      //       MaterialPageRoute(builder: (context) => const WelcomePage()),
-      //     );
-      //   }
-      // });
     });
+  }
+
+  @override
+  void dispose() {
+    // Stop tracking time without accessing context
+    screenTimeService.stopAndRecordTime("SplashScreen");
+    super.dispose();
   }
 
   @override
