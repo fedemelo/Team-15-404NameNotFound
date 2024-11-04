@@ -6,6 +6,8 @@ import 'package:unitrade/screens/home/views/filter_section_view.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/product_service.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 
 class HomeViewModel extends ChangeNotifier {
   String selectedCategory = 'For You';
@@ -14,6 +16,8 @@ class HomeViewModel extends ChangeNotifier {
 
   bool finishedGets = false;
   bool selectedFilters = false;
+  bool currentConnection = false;
+  bool isSnackBarVisible = false;
 
   List<String> categoryElementList = [];
   List<String> categoryGroupList = ['For You', 'Study', 'Tech', 'Creative', 'Others', 'Lab', 'Personal'];
@@ -30,7 +34,7 @@ class HomeViewModel extends ChangeNotifier {
     _filterProducts();
   }
 
-  void updateFilterColor(bool filter){
+  void updateFilterColor(bool filter) {
     selectedFilters = filter;
     notifyListeners();
   }
@@ -91,7 +95,6 @@ class HomeViewModel extends ChangeNotifier {
       }));
 
       categoryElementList.insert(0, 'For You');
-
     } else {
       throw Exception("Categories not found");
     }
@@ -110,7 +113,6 @@ class HomeViewModel extends ChangeNotifier {
         String lowerCased = category.toLowerCase();
         return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
       }));
-
     } else {
       categoryUserList = ["TEXTBOOKS", "ELECTRONICS"];
     }
@@ -138,7 +140,10 @@ class HomeViewModel extends ChangeNotifier {
           userId: data['user_id'] ?? '',
           type: data['type'] ?? '',
           imageUrl: data['image_url'] ?? '',
+          favoritesForyou: data['favorites_foryou'] ?? 0,
+          favoritesCategory: data['favorites_category'] ?? 0,
           condition: data['condition'] ?? '',
+
         );
       }).toList();
 
@@ -149,12 +154,37 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchAllData() async {
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+
+    if (!hasConnection) {
+      currentConnection = false;
+      finishedGets = true;
+      notifyListeners();
+      return;
+    } else {
+      currentConnection = true;
+      notifyListeners();
+    }
+
     try {
       await Future.wait([
         fetchCategories(),
         fetchUserCategories(),
-        fetchProducts(),
       ]);
+
+      int retries = 0;
+      while (ProductService.instance.products == null && retries < 5) {
+        await Future.delayed(Duration(milliseconds: 500));
+        retries++;
+      }
+
+      if (ProductService.instance.products != null) {
+        productElementList = ProductService.instance.products!;
+      } else {
+        await Future.wait([fetchProducts()]);
+        print("Error: Productos no cargados después de varios intentos.");
+      }
 
       finishedGets = true;
       _filterProducts();
@@ -163,4 +193,49 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> refreshData(BuildContext context) async {
+    var connectivity = ConnectivityService();
+    var hasConnection = await connectivity.checkConnectivity();
+
+    if (!hasConnection) {
+      currentConnection = false;
+      if (!isSnackBarVisible) {
+        isSnackBarVisible = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text(
+              "No internet connection. You can still see our products but you could see old information.",
+            ),
+            duration: const Duration(days: 1),
+            action: SnackBarAction(
+              label: "OK",
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                isSnackBarVisible = false;
+              },
+            ),
+          ),
+        );
+      }
+      notifyListeners();
+      return;
+    } else {
+      currentConnection = true;
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      isSnackBarVisible = false;
+    }
+
+    try {
+      await Future.wait([
+        fetchCategories(),
+        fetchUserCategories(),
+        fetchProducts(),
+      ]);
+      print("Data refreshed");
+
+      _filterProducts();
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
 }

@@ -7,9 +7,13 @@ import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
 
 class ProductCardView extends StatelessWidget {
   final ProductModel product;
+  final bool currentConnection;
+  final String selectedCategory;
 
   ProductCardView({
     required this.product,
+    required this.currentConnection,
+    required this.selectedCategory,
   });
 
   @override
@@ -31,7 +35,7 @@ class ProductCardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.0),
-                        child: product.imageUrl.isNotEmpty
+                        child: product.imageUrl.isNotEmpty && currentConnection
                             ? Image.network(
                                 product.imageUrl,
                                 height: 150,
@@ -56,7 +60,7 @@ class ProductCardView extends StatelessWidget {
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite(product);
+                            productViewModel.toggleFavorite(product, selectedCategory, currentConnection);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
