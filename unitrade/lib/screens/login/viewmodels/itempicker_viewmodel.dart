@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/login/models/itempicker_model.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 
 class ItemPickerViewModel extends ChangeNotifier {
   final ItemPickerModel _itemPickerModel = ItemPickerModel();
@@ -86,8 +88,12 @@ class ItemPickerViewModel extends ChangeNotifier {
       notifyListeners();
       return;
     }
+
+    final screenTimeService = Provider.of<ScreenTimeService>(context, listen: false);
+
     var connectivity = ConnectivityService();
     var hasConnection = await connectivity.checkConnectivity();
+  
     if (!hasConnection) {
       _itemPickerModel.queueUserInformation(
           selectedCategories, _selectedMajor!, _selectedSemester);
@@ -104,7 +110,9 @@ class ItemPickerViewModel extends ChangeNotifier {
           backgroundColor: AppColors.danger,
         ),
       );
+      
       Future.delayed(const Duration(seconds: 3), () {
+        screenTimeService.stopAndRecordTime('CategoryPicker');
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeView()),
@@ -114,6 +122,7 @@ class ItemPickerViewModel extends ChangeNotifier {
     }
 
     try {
+      screenTimeService.stopAndRecordTime('CategoryPicker');
       await _itemPickerModel.updateUserInformation(
           selectedCategories, _selectedMajor!, _selectedSemester);
       Navigator.pushReplacement(
