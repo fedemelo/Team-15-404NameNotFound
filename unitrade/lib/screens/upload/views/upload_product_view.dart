@@ -110,10 +110,61 @@ class UploadProductView extends StatelessWidget {
     });
   }
 
+  Future<bool> _showQueueFullModal(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Row(
+                children: [
+                  Icon(Icons.wifi_off, color: Colors.redAccent),
+                  SizedBox(width: 8),
+                  Text("Upload Queue Full"),
+                ],
+              ),
+              content: const Text(
+                "No internet connection. A product is already waiting to upload. Connect to the internet to complete the upload, or replace the existing product with this one.",
+                style: TextStyle(fontSize: 15),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false); // Return false on dismiss
+                  },
+                  child: const Text("Dismiss",
+                      style: TextStyle(color: Colors.grey)),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(true); // Return true on replace
+                  },
+                  child: const Text("Replace",
+                      style: TextStyle(color: Colors.white)),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // Return false if dialog is dismissed without a selection
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => UploadProductViewModel(type: type),
+      create: (_) => UploadProductViewModel(
+        type: type,
+        context: context,
+        onQueueFullModal: _showQueueFullModal,
+      ),
       child: Scaffold(
         bottomNavigationBar: const NavBarView(initialIndex: 2),
         appBar: AppBar(

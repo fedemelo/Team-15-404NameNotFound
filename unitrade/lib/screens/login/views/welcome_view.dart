@@ -5,12 +5,21 @@ import 'package:unitrade/screens/login/viewmodels/welcome_view_model.dart';
 // import 'package:unitrade/screens/login/views/login_view.dart';
 // import 'package:unitrade/screens/login/views/register_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:unitrade/utils/screen_time_service.dart';
 
 class WelcomeView extends StatelessWidget {
   const WelcomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final screenTimeService =
+        Provider.of<ScreenTimeService>(context, listen: false);
+
+    // Start tracking time when this screen is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      screenTimeService.startTrackingTime();
+    });
+
     return ChangeNotifierProvider(
       create: (_) => WelcomeViewModel(),
       child: Consumer<WelcomeViewModel>(
@@ -137,27 +146,37 @@ class WelcomeView extends StatelessWidget {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton.icon(
-                        onPressed: () =>
-                            welcomeViewModel.signInWithMicrosoft(context),
+                        onPressed: welcomeViewModel.authButtonLoading
+                            ? null
+                            : () =>
+                                welcomeViewModel.signInWithMicrosoft(context),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary900,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        icon: Image.asset(
-                          'lib/assets/images/microsoft_logo.png',
-                          height: 30,
-                          width: 30,
-                        ),
-                        label: Text(
-                          'Login with Microsoft',
-                          style: GoogleFonts.urbanist(
-                            fontSize: 16,
-                            color: AppColors.primaryNeutral,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        icon: welcomeViewModel.authButtonLoading
+                            ? const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    AppColors.primaryNeutral),
+                                strokeWidth: 2.0,
+                              )
+                            : Image.asset(
+                                'lib/assets/images/microsoft_logo.png',
+                                height: 30,
+                                width: 30,
+                              ),
+                        label: welcomeViewModel.authButtonLoading
+                            ? const SizedBox.shrink()
+                            : Text(
+                                'Login with Microsoft',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 16,
+                                  color: AppColors.primaryNeutral,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(height: 40),
