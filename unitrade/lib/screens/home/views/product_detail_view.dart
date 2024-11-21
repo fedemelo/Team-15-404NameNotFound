@@ -104,11 +104,41 @@ class ProductDetailView extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 16),
+                      RichText(
+                        text: TextSpan(
+                          text: product.name, // Name
+                          style: GoogleFonts.urbanist(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black, // Default text color
+                          ),
+                          children: [
+                            TextSpan(
+                              text: product.type == "sale"
+                                  ? ' • For Sale'
+                                  : ' • For Rent',
+                              style: GoogleFonts.urbanist(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .headlineLarge
+                                    ?.color,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text('Condition',
+                          style: GoogleFonts.urbanist(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
                       Text(
-                        product.name,
+                        product.condition,
                         style: GoogleFonts.urbanist(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -126,9 +156,28 @@ class ProductDetailView extends StatelessWidget {
                         ),
                         textAlign: TextAlign.justify,
                       ),
+                      ...(product.type == 'lease'
+                          ? [
+                              const SizedBox(height: 20),
+                              Text(
+                                'Rental Period',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                '${product.rentalPeriod} days',
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 14,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ]
+                          : []),
                       const SizedBox(height: 20),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +197,6 @@ class ProductDetailView extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(width: 64),
                           ElevatedButton(
                             onPressed: () {
                               // TODO

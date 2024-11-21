@@ -20,7 +20,15 @@ class HomeViewModel extends ChangeNotifier {
   bool isSnackBarVisible = false;
 
   List<String> categoryElementList = [];
-  List<String> categoryGroupList = ['For You', 'Study', 'Tech', 'Creative', 'Others', 'Lab', 'Personal'];
+  List<String> categoryGroupList = [
+    'For You',
+    'Study',
+    'Tech',
+    'Creative',
+    'Others',
+    'Lab',
+    'Personal'
+  ];
   List<String> categoryUserList = [];
   List<ProductModel> productElementList = [];
 
@@ -81,10 +89,8 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchCategories() async {
-    final categoriesDoc = await _firestore
-        .collection('categories')
-        .doc('all')
-        .get();
+    final categoriesDoc =
+        await _firestore.collection('categories').doc('all').get();
 
     if (categoriesDoc.exists) {
       List<dynamic> categories = categoriesDoc.data()?['names'] ?? [];
@@ -119,9 +125,8 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    final QuerySnapshot productsSnapshot = await _firestore
-        .collection('products')
-        .get();
+    final QuerySnapshot productsSnapshot =
+        await _firestore.collection('products').get();
 
     if (productsSnapshot.docs.isNotEmpty) {
       List<ProductModel> products = productsSnapshot.docs.map((doc) {
@@ -131,19 +136,18 @@ class HomeViewModel extends ChangeNotifier {
           name: data['name'] ?? '',
           description: data['description'] ?? '',
           price: double.tryParse(data['price'].toString()) ?? 0.0,
-          categories: List<String>.from(
-              (data['categories'] ?? []).map((category) {
-                String lowerCased = category.toLowerCase();
-                return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
-              })
-          ),
+          categories:
+              List<String>.from((data['categories'] ?? []).map((category) {
+            String lowerCased = category.toLowerCase();
+            return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
+          })),
           userId: data['user_id'] ?? '',
           type: data['type'] ?? '',
           imageUrl: data['image_url'] ?? '',
           favoritesForyou: data['favorites_foryou'] ?? 0,
           favoritesCategory: data['favorites_category'] ?? 0,
           condition: data['condition'] ?? '',
-
+          rentalPeriod: data['rental_period'] ?? '',
         );
       }).toList();
 
