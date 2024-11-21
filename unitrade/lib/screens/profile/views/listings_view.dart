@@ -5,14 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/screens/profile/views/listing_product_card_view.dart';
-import 'package:unitrade/utils/screen_time_service.dart';
 
 class ListingsView extends StatelessWidget {
   const ListingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return ChangeNotifierProvider(
       create: (context) => ListingsViewModel(),
       child: Consumer<ListingsViewModel>(
@@ -23,7 +21,6 @@ class ListingsView extends StatelessWidget {
               elevation: 1.0,
               leading: GestureDetector(
                 onTap: () {
-
                   Navigator.pop(context);
                 },
                 child: const Icon(Icons.arrow_back),
