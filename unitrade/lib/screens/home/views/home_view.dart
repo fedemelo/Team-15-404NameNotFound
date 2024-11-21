@@ -95,8 +95,10 @@ class HomeView extends StatelessWidget {
                                     )
                                   : ProductListView(
                                       products: viewModel.filteredProducts,
-                                      currentConnection: viewModel.currentConnection,
-                                      selectedCategory: viewModel.selectedCategory,
+                                      currentConnection:
+                                          viewModel.currentConnection,
+                                      selectedCategory:
+                                          viewModel.selectedCategory,
                                     )
                             ],
                           ),
@@ -107,7 +109,7 @@ class HomeView extends StatelessWidget {
                       ),
               ),
             ),
-            bottomNavigationBar: const NavBarView(),
+            bottomNavigationBar: const NavBarView(initialIndex: 0),
           );
         },
       ),

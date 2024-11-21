@@ -32,7 +32,7 @@ class UploadPathViewState extends State<UploadPathView> {
     });
 
     return Scaffold(
-      bottomNavigationBar: const NavBarView(initialIndex: 2),
+      bottomNavigationBar: const NavBarView(initialIndex: 1),
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 1.0,

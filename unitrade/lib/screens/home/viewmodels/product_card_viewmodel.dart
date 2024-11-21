@@ -8,10 +8,10 @@ import 'package:unitrade/screens/home/viewmodels/decorator/currency_decorator.da
 import 'package:unitrade/utils/firebase_service.dart';
 
 class ProductCardViewModel extends ChangeNotifier {
-
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
 
-  void toggleFavorite(ProductModel product, String selectedCategory, bool currentConnection) async {
+  void toggleFavorite(ProductModel product, String selectedCategory,
+      bool currentConnection) async {
     if (!currentConnection) {
       return;
     }
@@ -19,7 +19,8 @@ class ProductCardViewModel extends ChangeNotifier {
     // Alternar el estado de favorito
     product.isFavorite = !product.isFavorite;
 
-    final DocumentReference productDoc = _firestore.collection('products').doc(product.id);
+    final DocumentReference productDoc =
+        _firestore.collection('products').doc(product.id);
 
     await productDoc.get().then((doc) async {
       if (doc.exists) {
@@ -29,12 +30,14 @@ class ProductCardViewModel extends ChangeNotifier {
         if (selectedCategory == 'For You') {
           int currentFavoritesForYou = data['favorites_foryou'] ?? 0;
           if (product.isFavorite) {
-            await productDoc.update({'favorites_foryou': currentFavoritesForYou + 1});
+            await productDoc
+                .update({'favorites_foryou': currentFavoritesForYou + 1});
           }
         } else {
           int currentFavoriteCategory = data['favorites_category'] ?? 0;
           if (product.isFavorite) {
-            await productDoc.update({'favorites_category': currentFavoriteCategory + 1});
+            await productDoc
+                .update({'favorites_category': currentFavoriteCategory + 1});
           }
         }
 
@@ -44,7 +47,6 @@ class ProductCardViewModel extends ChangeNotifier {
             ? currentFavorites + 1
             : (currentFavorites > 0 ? currentFavorites - 1 : 0);
         await productDoc.update({'favorites': newFavorites});
-
       } else {
         // Crear las variables en Firestore si no existen
         Map<String, dynamic> newData = {};
@@ -68,9 +70,8 @@ class ProductCardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   String processPrice(double price) {
-    String priceString = price.toStringAsFixed(2);
+    String priceString = price.toStringAsFixed(0);
 
     Price basePrice = BasePrice(priceString);
 

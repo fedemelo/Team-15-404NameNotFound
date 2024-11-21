@@ -27,7 +27,7 @@ class ThemeViewState extends State<ThemeView> {
     ThemeModeType? selectedThemeMode = _viewModel.selectedThemeMode;
 
     return Scaffold(
-      bottomNavigationBar: const NavBarView(initialIndex: 4),
+      bottomNavigationBar: const NavBarView(initialIndex: 3),
       appBar: AppBar(
         elevation: 1.0,
         title: Text(
