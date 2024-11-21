@@ -22,7 +22,8 @@ class ProductService {
       final rootIsolateToken = RootIsolateToken.instance;
 
       if (rootIsolateToken != null) {
-        await Isolate.spawn(_fetchProductsInIsolate, [receivePort.sendPort, rootIsolateToken]);
+        await Isolate.spawn(
+            _fetchProductsInIsolate, [receivePort.sendPort, rootIsolateToken]);
       } else {
         print("Error: RootIsolateToken es null.");
         return;
@@ -49,7 +50,8 @@ class ProductService {
 
     final FirebaseFirestore firestore = FirebaseService.instance.firestore;
 
-    final QuerySnapshot productsSnapshot = await firestore.collection('products').get();
+    final QuerySnapshot productsSnapshot =
+        await firestore.collection('products').get();
 
     List<ProductModel> products = productsSnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -68,6 +70,7 @@ class ProductService {
         type: data['type'] ?? '',
         imageUrl: data['image_url'] ?? '',
         condition: data['condition'] ?? '',
+        rentalPeriod: data['rental_period'] ?? '',
       );
     }).toList();
 

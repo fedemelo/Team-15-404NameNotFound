@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/views/product_card_view.dart';
+import 'package:unitrade/screens/home/views/product_detail_view.dart';
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
   final bool currentConnection;
   final String selectedCategory;
 
-  ProductListView({required this.products, required this.currentConnection, required this.selectedCategory});
+  const ProductListView(
+      {super.key,
+      required this.products,
+      required this.currentConnection,
+      required this.selectedCategory});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +26,23 @@ class ProductListView extends StatelessWidget {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return ProductCardView(
-          product: product,
-          currentConnection: currentConnection,
-          selectedCategory: selectedCategory,
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProductDetailView(
+                    product: product,
+                    currentConnection: currentConnection,
+                    selectedCategory: selectedCategory),
+              ),
+            );
+          },
+          child: ProductCardView(
+            product: product,
+            currentConnection: currentConnection,
+            selectedCategory: selectedCategory,
+          ),
         );
       },
     );

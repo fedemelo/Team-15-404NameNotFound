@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unitrade/screens/alert/views/alert_view.dart';
-import 'package:unitrade/screens/cart/views/cart_view.dart';
+import 'package:unitrade/screens/favorite/views/favorite_view.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/profile/views/profile_view.dart';
 import 'package:unitrade/screens/upload/views/upload_path_view.dart';
@@ -42,22 +41,16 @@ class NavBarViewState extends State<NavBarView> {
         case 1:
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const CartView()),
+            MaterialPageRoute(builder: (context) => const UploadPathView()),
           );
           break;
         case 2:
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const UploadPathView()),
+            MaterialPageRoute(builder: (context) => const FavoriteView()),
           );
           break;
         case 3:
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AlertView()),
-          );
-          break;
-        case 4:
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const ProfileView()),
@@ -78,12 +71,10 @@ class NavBarViewState extends State<NavBarView> {
         children: [
           _buildNavItem(Icons.home, Icons.home_outlined, "Home", 0),
           _buildNavItem(
-              Icons.shopping_cart, Icons.shopping_cart_outlined, "Cart", 1),
+              Icons.add_circle, Icons.add_circle_outline, "Upload", 1),
           _buildNavItem(
-              Icons.add_circle, Icons.add_circle_outline, "Upload", 2),
-          _buildNavItem(Icons.notifications, Icons.notifications_none_outlined,
-              "Alerts", 3),
-          _buildNavItem(Icons.person, Icons.person_outline, "Profile", 4),
+              Icons.favorite, Icons.favorite_border_outlined, "Favorites", 2),
+          _buildNavItem(Icons.person, Icons.person_outline, "Profile", 3),
         ],
       ),
     );
