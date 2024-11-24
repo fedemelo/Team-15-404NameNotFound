@@ -61,6 +61,7 @@ class MyOrdersViewmodel extends ChangeNotifier {
             rentalPeriod: data['rental_period'] ?? '',
           );
         })
+            // TODO: Implementar el filtro de productos por usuario
             // .where((product) => product.userId == userId)
             .toList();
       }
