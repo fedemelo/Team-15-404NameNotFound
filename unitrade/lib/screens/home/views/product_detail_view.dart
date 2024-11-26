@@ -5,13 +5,15 @@ import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:unitrade/utils/connectivity_service.dart';
 
 class ProductDetailView extends StatelessWidget {
   final ProductModel product;
   final bool currentConnection;
   final String selectedCategory;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
-  const ProductDetailView(
+  ProductDetailView(
       {super.key,
       required this.product,
       required this.currentConnection,
@@ -106,11 +108,10 @@ class ProductDetailView extends StatelessWidget {
                       const SizedBox(height: 16),
                       RichText(
                         text: TextSpan(
-                          text: product.name, // Name
+                          text: product.name,
                           style: GoogleFonts.urbanist(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black, // Default text color
                           ),
                           children: [
                             TextSpan(
@@ -198,9 +199,41 @@ class ProductDetailView extends StatelessWidget {
                             ],
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // TODO
-                            },
+                            onPressed: productViewModel.isLoading
+                                ? null
+                                : () async {
+                                    productViewModel.isLoading = true;
+                                    final hasInternet =
+                                        await _connectivityService
+                                            .checkConnectivity();
+                                    if (!context.mounted) return;
+                                    if (!hasInternet) {
+                                      productViewModel.isLoading = false;
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'No Internet Connection'),
+                                            content: const Text(
+                                                'Please check your internet connection and try again.'),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text('OK'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      // Si hay conexión, llama a buyProduct
+                                      productViewModel.buyProduct(
+                                          product, context);
+                                    }
+                                  },
                             style: ButtonStyle(
                               backgroundColor: WidgetStateProperty.all<Color>(
                                   AppColors.primary900),
@@ -212,23 +245,34 @@ class ProductDetailView extends StatelessWidget {
                               foregroundColor:
                                   WidgetStateProperty.all<Color>(Colors.white),
                             ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.shopping_cart_outlined),
-                                const SizedBox(width: 12),
-                                Text(
-                                  product.type == 'sale'
-                                      ? 'BUY NOW'
-                                      : 'RENT NOW',
-                                  style: GoogleFonts.urbanist(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                            child: productViewModel.isLoading
+                                ? const SizedBox(
+                                    width: 24,
+                                    height: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.0,
                                     ),
+                                  )
+                                : Row(
+                                    // Existing children wrapped in a Row
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.shopping_cart_outlined),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        product.type == 'sale'
+                                            ? 'BUY NOW'
+                                            : 'RENT NOW',
+                                        style: GoogleFonts.urbanist(
+                                          textStyle: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
                           ),
                         ],
                       ),
