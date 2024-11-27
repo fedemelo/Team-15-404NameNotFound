@@ -5,10 +5,19 @@ import 'package:unitrade/screens/home/viewmodels/decorator/price.dart';
 import 'package:unitrade/screens/home/viewmodels/decorator/base_price.dart';
 import 'package:unitrade/screens/home/viewmodels/decorator/format_decorator.dart';
 import 'package:unitrade/screens/home/viewmodels/decorator/currency_decorator.dart';
+import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 
 class ProductCardViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
+  final _user = FirebaseService.instance.auth.currentUser;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  set isLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
 
   void toggleFavorite(ProductModel product, String selectedCategory,
       bool currentConnection) async {
@@ -79,5 +88,42 @@ class ProductCardViewModel extends ChangeNotifier {
     Price finalPrice = CurrencyDecorator(formattedPrice);
 
     return finalPrice.getPrice();
+  }
+
+  // For product detail
+  Future<void> buyProduct(ProductModel product, BuildContext context) async {
+    await _firestore.collection('products').doc(product.id).update({
+      'in_stock': false,
+      'buyer_id': _user!.uid,
+    });
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Expanded(
+              child: Text('Product purchased successfully!'),
+            ),
+            IconButton(
+              icon: Icon(Icons.close,
+                  color: Theme.of(context).colorScheme.surface),
+              onPressed: () {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              },
+            ),
+          ],
+        ),
+        duration: const Duration(minutes: 1),
+      ),
+    );
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const HomeView(),
+      ),
+    );
   }
 }
