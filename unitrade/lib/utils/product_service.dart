@@ -51,7 +51,7 @@ class ProductService {
     final FirebaseFirestore firestore = FirebaseService.instance.firestore;
 
     final QuerySnapshot productsSnapshot =
-        await firestore.collection('products').get();
+        await firestore.collection('products').where('in_stock', isEqualTo: true).get();
 
     List<ProductModel> products = productsSnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;

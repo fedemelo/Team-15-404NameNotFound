@@ -126,7 +126,7 @@ class HomeViewModel extends ChangeNotifier {
 
   Future<void> fetchProducts() async {
     final QuerySnapshot productsSnapshot =
-        await _firestore.collection('products').get();
+        await _firestore.collection('products').where('in_stock', isEqualTo: true).get();
 
     if (productsSnapshot.docs.isNotEmpty) {
       List<ProductModel> products = productsSnapshot.docs.map((doc) {
