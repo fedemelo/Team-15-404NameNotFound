@@ -59,11 +59,14 @@ class MyOrdersViewmodel extends ChangeNotifier {
             favorites: data['favorites'] ?? 0,
             condition: data['condition'] ?? '',
             rentalPeriod: data['rental_period'] ?? '',
+            buyer_id: data['buyer_id'] ?? '',
+            purchase_date: data['purchase_date'] ?? '',
           );
         })
-            // TODO: Implementar el filtro de productos por usuario
-            // .where((product) => product.userId == userId)
+            .where((product) =>  product.buyer_id == userId)
             .toList();
+
+        print('userId: $userId');
       }
     } catch (e) {
       print("Error fetching products: $e");

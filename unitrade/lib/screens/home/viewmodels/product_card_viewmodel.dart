@@ -95,6 +95,7 @@ class ProductCardViewModel extends ChangeNotifier {
     await _firestore.collection('products').doc(product.id).update({
       'in_stock': false,
       'buyer_id': _user!.uid,
+      'purchase_date': DateTime.now().toLocal().toString().split(' ')[0],
     });
 
     if (!context.mounted) return;

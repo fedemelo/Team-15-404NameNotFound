@@ -15,6 +15,8 @@ class ProductModel {
   final int favoritesCategory;
   final int favorites;
   final String rentalPeriod;
+  final String buyer_id;
+  final String purchase_date;
 
   bool isFavorite;
 
@@ -36,5 +38,7 @@ class ProductModel {
     this.favoritesCategory = 0,
     this.favorites = 0,
     this.rentalPeriod = '',
+    this.buyer_id = '',
+    this.purchase_date = '',
   });
 }

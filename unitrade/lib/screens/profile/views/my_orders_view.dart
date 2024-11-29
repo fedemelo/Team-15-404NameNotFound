@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/screens/profile/viewmodels/my_orders_viewmodel.dart';
-import 'package:unitrade/screens/profile/views/listing_product_card_view.dart';
+import 'package:unitrade/screens/profile/views/my_orders_product_card_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 
 class MyOrdersView extends StatelessWidget {
@@ -48,7 +48,7 @@ class MyOrdersView extends StatelessWidget {
                           var product = viewModel.products[index];
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
-                            child: ListingProductCard(product: product),
+                            child: MyOrdersProductCard(product: product),
                           );
                         },
                       ),
