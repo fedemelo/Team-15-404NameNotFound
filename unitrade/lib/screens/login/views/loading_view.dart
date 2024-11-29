@@ -32,8 +32,6 @@ class _LoadingViewState extends State<LoadingView> {
 
     Future.delayed(const Duration(seconds: 2), () {
       if (user != null) {
-        print("################################User is not null");
-        print(user.displayName);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeView()),

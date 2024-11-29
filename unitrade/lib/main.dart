@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/login/views/loading_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:unitrade/utils/crash_manager.dart';
 import 'package:unitrade/utils/product_service.dart';
 
-
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 void main() async {
@@ -25,12 +24,15 @@ void main() async {
 
   // Initialize Hive
   await Hive.initFlutter();
+  Hive.registerAdapter(ProductModelAdapter());
+
+  await Hive.openBox('myOrders');
   await Hive.openBox('firebaseQueuedRequests');
 
   // Create instances of the services
   final connectivityService = ConnectivityService();
   final queueService = FirebaseQueueService();
-  
+
   // Instantiate the FirebaseRetryService to listen for connectivity changes
   FirebaseRetryService(connectivityService, queueService);
 
@@ -42,19 +44,17 @@ void main() async {
 
   final crashManager = CrashManager();
   FlutterError.onError = (FlutterErrorDetails details) async {
-    await crashManager.reportCrashToFirestore(details.exception, details.stack ?? StackTrace.empty);
+    await crashManager.reportCrashToFirestore(
+        details.exception, details.stack ?? StackTrace.empty);
   };
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => ScreenTimeService()),
-
-      ],
-      child: const MyApp(),
-      )
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ChangeNotifierProvider(create: (_) => ScreenTimeService()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

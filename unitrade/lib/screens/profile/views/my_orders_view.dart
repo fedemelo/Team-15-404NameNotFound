@@ -39,19 +39,38 @@ class MyOrdersView extends StatelessWidget {
                     color: AppColors.primary900,
                   ),
                 )
-              : viewModel.hasConnection
-                  ? Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ListView.builder(
-                        itemCount: viewModel.products.length,
-                        itemBuilder: (context, index) {
-                          var product = viewModel.products[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: MyOrdersProductCard(product: product),
-                          );
-                        },
-                      ),
+              : viewModel.products.isNotEmpty
+                  ? Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ListView.builder(
+                            itemCount: viewModel.products.length,
+                            itemBuilder: (context, index) {
+                              var product = viewModel.products[index];
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: MyOrdersProductCard(product: product),
+                              );
+                            },
+                          ),
+                        ),
+                        if (viewModel.isOfflineData)
+                          Positioned(
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              color: Theme.of(context).colorScheme.surface,
+                              padding: const EdgeInsets.all(8.0),
+                              child: const Text(
+                                "You're viewing offline data. It may be outdated.",
+                                // style: TextStyle(color: Colors.black),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
                     )
                   : Center(
                       child: Column(
