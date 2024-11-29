@@ -65,10 +65,9 @@ class ListingsView extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              "Failed to load products. Please check your connection.",
+                              "Failed to load products. \n Please check your connection.",
                               style: GoogleFonts.urbanist(
                                 fontSize: 16,
-                                color: Colors.red,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,

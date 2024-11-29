@@ -64,7 +64,7 @@ class MyOrdersView extends StatelessWidget {
                           ),
                           const SizedBox(height: 16),
                           Text(
-                            'No internet connection',
+                            'Failed to load products. \n Please check your connection.',
                             style: GoogleFonts.urbanist(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
