@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
+import 'package:unitrade/screens/profile/views/my_orders_view.dart';
 import 'package:unitrade/screens/profile/views/theme_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/firebase_service.dart';
@@ -101,7 +103,11 @@ class ProfileViewState extends State<ProfileView> {
                     ),
                     trailing: const Icon(Icons.arrow_forward_ios),
                     onTap: () {
-                      // No action for now
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyOrdersView()),
+                      );
                     },
                   ),
                   // Light/Dark Mode (Navigates to Theme Settings)
@@ -130,10 +136,13 @@ class ProfileViewState extends State<ProfileView> {
               child: SizedBox(
                 width: 170,
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     final FirebaseService firebaseService =
                         FirebaseService.instance;
                     firebaseService.auth.signOut();
+                    final SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    await prefs.clear();
                     firebaseService.getUser(context);
                   },
                   style: ButtonStyle(
