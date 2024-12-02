@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 
 class ConnectivityBannerService {
@@ -12,14 +11,14 @@ class ConnectivityBannerService {
 
   ConnectivityBannerService(this.scaffoldMessengerKey);
 
-  void startMonitoring() {
+  void startMonitoring(themeData) {
     _connectionSubscription =
         InternetConnection().onStatusChange.listen((status) {
       final hasConnection = status == InternetStatus.connected;
       final user = _firebaseAuth.currentUser;
       if (!hasConnection && user != null) {
         Future.delayed(const Duration(seconds: 1), () {
-          _showConnectivityBanner();
+          _showConnectivityBanner(themeData);
         });
       } else {
         _hideConnectivityBanner();
@@ -27,24 +26,24 @@ class ConnectivityBannerService {
     });
   }
 
-  void _showConnectivityBanner() {
+  void _showConnectivityBanner(themeData) {
     scaffoldMessengerKey.currentState?.showSnackBar(
-      const SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.wifi_off,
-              size: 20,
-              color: AppColors.primary900,
-            ),
-            SizedBox(width: 8),
-            Text(
-              "No Internet Connection",
-            ),
-          ],
+      SnackBar(
+        content: Container(
+          height: 18,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.wifi_off, size: 15, color: themeData.iconTheme.color),
+              const SizedBox(width: 8),
+              const Text(
+                "No Internet Connection",
+                style: TextStyle(),
+              ),
+            ],
+          ),
         ),
-        duration: Duration(days: 1),
+        duration: const Duration(days: 1),
       ),
     );
   }
@@ -56,12 +55,4 @@ class ConnectivityBannerService {
   void stopMonitoring() {
     _connectionSubscription.cancel();
   }
-
-  // void enableMonitoring() {
-  //   _shouldMonitor = true;
-  // }
-
-  // void disableMonitoring() {
-  //   _shouldMonitor = false;
-  // }
 }

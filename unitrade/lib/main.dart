@@ -84,8 +84,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    // connectivityBannerService.disableMonitoring();
-    connectivityBannerService.startMonitoring();
+    connectivityBannerService.startMonitoring(themeProvider.themeData);
 
     return MaterialApp(
       scaffoldMessengerKey: scaffoldMessengerKey,

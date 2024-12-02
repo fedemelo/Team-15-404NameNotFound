@@ -156,8 +156,11 @@ final ThemeData lightTheme = ThemeData(
           bodySmall: const TextStyle(color: AppColors.light400),
           headlineSmall: const TextStyle(color: AppColors.primaryDark),
           headlineLarge: const TextStyle(color: AppColors.primary900),
+          
         ),
   ),
+  iconTheme: const IconThemeData(color: AppColors.primaryDark),
+  primaryIconTheme: const IconThemeData(color: AppColors.primaryDark),
 );
 
 final ThemeData darkTheme = ThemeData(
@@ -171,4 +174,6 @@ final ThemeData darkTheme = ThemeData(
           headlineLarge: const TextStyle(color: AppColors.primary600),
         ),
   ),
+  iconTheme: const IconThemeData(color: AppColors.primaryNeutral),
+  primaryIconTheme: const IconThemeData(color: AppColors.primaryNeutral),
 );
