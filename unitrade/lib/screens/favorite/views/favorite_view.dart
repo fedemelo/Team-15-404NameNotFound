@@ -34,13 +34,18 @@ class FavoriteView extends StatelessWidget {
                     ? (viewModel.productElementList.isNotEmpty
                         ? Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: ProductListView(
-                              products: viewModel.productElementList,
-                              currentConnection: viewModel.currentConnection,
-                              selectedCategory: "Favorites",
-                              userFavoriteProducts: viewModel.favoriteProducts,
-                              updateScreen: viewModel.updateScreen,
-                              lastScreen: 'favorites',
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                ProductListView(
+                                  products: viewModel.productElementList,
+                                  currentConnection: viewModel.currentConnection,
+                                  selectedCategory: "Favorites",
+                                  userFavoriteProducts: viewModel.favoriteProducts,
+                                  updateScreen: viewModel.updateFavoritesList,
+                                  lastScreen: 'favorites',
+                                ),
+                              ],
                             ),
                           )
                         : Center(

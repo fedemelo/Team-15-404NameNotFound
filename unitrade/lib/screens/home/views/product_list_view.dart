@@ -4,6 +4,7 @@ import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/views/product_card_view.dart';
 import 'package:unitrade/screens/home/views/product_detail_view.dart';
 import 'package:unitrade/screens/home/viewmodels/home_viewmodel.dart';
+import 'package:unitrade/screens/favorite/viewmodels/favorite_viewmodel.dart';
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
@@ -59,6 +60,7 @@ class ProductListView extends StatelessWidget {
             currentConnection: currentConnection,
             selectedCategory: selectedCategory,
             userFavoriteProducts: userFavoriteProducts,
+            lastScreen: lastScreen,
           ),
         );
       },

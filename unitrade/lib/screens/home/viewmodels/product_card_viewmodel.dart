@@ -23,7 +23,7 @@ class ProductCardViewModel extends ChangeNotifier {
   }
 
   void toggleFavorite(ProductModel product, String selectedCategory,
-      bool currentConnection, List<String> userFavoriteProducts) async {
+      bool currentConnection, List<String> userFavoriteProducts, VoidCallback updateFavoritesCallback, String lastScreen) async {
     if (!currentConnection) {
       return;
     }
@@ -92,6 +92,9 @@ class ProductCardViewModel extends ChangeNotifier {
         await productDoc.set(newData, SetOptions(merge: true));
       }
     });
+    if (lastScreen == 'favorites') {
+      updateFavoritesCallback();
+    }
 
     notifyListeners();
   }

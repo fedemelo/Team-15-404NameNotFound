@@ -7,6 +7,7 @@ import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:unitrade/screens/favorite/viewmodels/favorite_viewmodel.dart';
 
 class ProductDetailView extends StatelessWidget {
   final ProductModel product;
@@ -89,7 +90,12 @@ class ProductDetailView extends StatelessWidget {
                                     product,
                                     selectedCategory,
                                     currentConnection,
-                                    userFavoriteProducts);
+                                    userFavoriteProducts,
+                                    () {
+                                      //
+                                    },
+                                    lastScreen,
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(4.0),

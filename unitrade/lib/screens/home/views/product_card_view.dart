@@ -5,18 +5,21 @@ import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:unitrade/screens/favorite/viewmodels/favorite_viewmodel.dart';
 
 class ProductCardView extends StatelessWidget {
   final ProductModel product;
   final bool currentConnection;
   final String selectedCategory;
   final List<String> userFavoriteProducts;
+  final String lastScreen;
 
   ProductCardView({
     required this.product,
     required this.currentConnection,
     required this.selectedCategory,
     required this.userFavoriteProducts,
+    required this.lastScreen,
   });
 
   @override
@@ -71,7 +74,12 @@ class ProductCardView extends StatelessWidget {
                                 product,
                                 selectedCategory,
                                 currentConnection,
-                                userFavoriteProducts);
+                                userFavoriteProducts,
+                                  () {
+                                Provider.of<FavoriteViewModel>(context, listen: false).updateFavoritesList();
+                              },
+                              lastScreen,
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),

@@ -23,6 +23,14 @@ class FavoriteViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateFavoritesList() {
+    productElementList = productElementList
+        .where((product) => favoriteProducts.contains(product.id))
+        .toList();
+
+    notifyListeners();
+  }
+
   Future<void> updateFavoritesQuantity() async {
     try {
       final int userFavoritesCount = favoriteProducts.length;
