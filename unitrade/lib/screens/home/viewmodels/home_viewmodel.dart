@@ -19,6 +19,8 @@ class HomeViewModel extends ChangeNotifier {
   bool currentConnection = false;
   bool isSnackBarVisible = false;
 
+  List<String> favoriteProducts = [];
+
   List<String> categoryElementList = [];
   List<String> categoryGroupList = [
     'For You',
@@ -124,9 +126,24 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchFavorites() async {
+    final favoritesDoc = await _firestore
+        .collection('users')
+        .doc(_firebase.currentUser?.uid)
+        .get();
+
+    if (favoritesDoc.exists) {
+      List<dynamic> favorites = favoritesDoc.data()?['favorites'] ?? [];
+
+      favoriteProducts = List<String>.from(favorites);
+    } else {
+      throw Exception("Favorites not found");
+    }
+  }
+
   Future<void> fetchProducts() async {
     final QuerySnapshot productsSnapshot =
-        await _firestore.collection('products').where('in_stock', isEqualTo: true).get();
+        await _firestore.collection('products').get(); // .where('in_stock', isEqualTo: true).get();
 
     if (productsSnapshot.docs.isNotEmpty) {
       List<ProductModel> products = productsSnapshot.docs.map((doc) {
@@ -175,6 +192,7 @@ class HomeViewModel extends ChangeNotifier {
       await Future.wait([
         fetchCategories(),
         fetchUserCategories(),
+        fetchFavorites(),
       ]);
 
       int retries = 0;
@@ -234,6 +252,7 @@ class HomeViewModel extends ChangeNotifier {
         fetchCategories(),
         fetchUserCategories(),
         fetchProducts(),
+        fetchFavorites(),
       ]);
       print("Data refreshed");
 

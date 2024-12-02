@@ -7,9 +7,12 @@ import 'package:unitrade/screens/home/viewmodels/decorator/format_decorator.dart
 import 'package:unitrade/screens/home/viewmodels/decorator/currency_decorator.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/utils/firebase_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class ProductCardViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
+  final FirebaseAuth _firebase = FirebaseService.instance.auth;
   final _user = FirebaseService.instance.auth.currentUser;
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -19,14 +22,26 @@ class ProductCardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavorite(ProductModel product, String selectedCategory,
-      bool currentConnection) async {
+  void toggleFavorite(ProductModel product, String selectedCategory, bool currentConnection, List<String>userFavoriteProducts) async {
     if (!currentConnection) {
       return;
     }
 
-    // Alternar el estado de favorito
-    product.isFavorite = !product.isFavorite;
+    final userDocRef = _firestore.collection('users').doc(_firebase.currentUser?.uid);
+
+    if (userFavoriteProducts.contains(product.id)) {
+      // Eliminar de favoritos en la lista local y en Firebase
+      userFavoriteProducts.remove(product.id);
+      await userDocRef.update({
+        'favorites': FieldValue.arrayRemove([product.id])
+      });
+    } else {
+      // Agregar a favoritos en la lista local y en Firebase
+      userFavoriteProducts.add(product.id);
+      await userDocRef.update({
+        'favorites': FieldValue.arrayUnion([product.id])
+      });
+    }
 
     final DocumentReference productDoc =
         _firestore.collection('products').doc(product.id);

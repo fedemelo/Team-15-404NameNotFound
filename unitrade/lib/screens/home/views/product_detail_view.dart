@@ -12,12 +12,14 @@ class ProductDetailView extends StatelessWidget {
   final bool currentConnection;
   final String selectedCategory;
   final ConnectivityService _connectivityService = ConnectivityService();
+  final List<String> userFavoriteProducts;
 
   ProductDetailView(
       {super.key,
       required this.product,
       required this.currentConnection,
-      required this.selectedCategory});
+      required this.selectedCategory,
+      required this.userFavoriteProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +79,7 @@ class ProductDetailView extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () {
                                 productViewModel.toggleFavorite(product,
-                                    selectedCategory, currentConnection);
+                                    selectedCategory, currentConnection, userFavoriteProducts);
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(4.0),
@@ -94,7 +96,7 @@ class ProductDetailView extends StatelessWidget {
                                   ],
                                 ),
                                 child: Icon(
-                                  product.isFavorite
+                                  userFavoriteProducts.contains(product.id)
                                       ? Icons.favorite
                                       : Icons.favorite_border,
                                   color: AppColors.primary900,
