@@ -30,33 +30,55 @@ class FavoriteView extends StatelessWidget {
               centerTitle: true,
             ),
             body: viewModel.finishedGets
-                ? (viewModel.productElementList.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ProductListView(
-                          products: viewModel.productElementList,
-                          currentConnection: viewModel.currentConnection,
-                          selectedCategory: "Favorites",
-                          userFavoriteProducts: viewModel.favoriteProducts,
-                          updateScreen: viewModel.updateScreen,
-                        ),
-                      )
+                ? (viewModel.currentConnection
+                    ? (viewModel.productElementList.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ProductListView(
+                              products: viewModel.productElementList,
+                              currentConnection: viewModel.currentConnection,
+                              selectedCategory: "Favorites",
+                              userFavoriteProducts: viewModel.favoriteProducts,
+                              updateScreen: viewModel.updateScreen,
+                            ),
+                          )
+                        : Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.favorite_border,
+                                  size: 80,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'No favorite products yet.',
+                                  style: GoogleFonts.urbanist(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[600],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ))
                     : Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              Icons.favorite_border,
+                              Icons.wifi_off,
                               size: 80,
                               color: Colors.grey[600],
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 10),
                             Text(
-                              'No favorite products yet.',
+                              "Failed to load products. Please check your connection.",
                               style: GoogleFonts.urbanist(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey[600],
                               ),
                               textAlign: TextAlign.center,
                             ),
