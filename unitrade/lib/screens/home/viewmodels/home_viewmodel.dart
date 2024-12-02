@@ -44,6 +44,10 @@ class HomeViewModel extends ChangeNotifier {
     _filterProducts();
   }
 
+  void updateScreen() {
+    notifyListeners();
+  }
+
   void updateFilterColor(bool filter) {
     selectedFilters = filter;
     notifyListeners();

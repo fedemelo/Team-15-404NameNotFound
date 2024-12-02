@@ -10,13 +10,15 @@ class ProductListView extends StatelessWidget {
   final bool currentConnection;
   final String selectedCategory;
   final List<String> userFavoriteProducts;
+  final Function updateScreen;
 
   const ProductListView(
       {super.key,
       required this.products,
       required this.currentConnection,
       required this.selectedCategory,
-      required this.userFavoriteProducts});
+      required this.userFavoriteProducts,
+      required this.updateScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +41,14 @@ class ProductListView extends StatelessWidget {
                     userFavoriteProducts: userFavoriteProducts,
                     product: product,
                     currentConnection: currentConnection,
-                    selectedCategory: selectedCategory),
+                    selectedCategory: selectedCategory,
+                ),
+
               ),
             );
-            Provider.of<HomeViewModel>(context, listen: false).notifyListeners();
+
+            updateScreen();
+
           },
           child: ProductCardView(
             product: product,

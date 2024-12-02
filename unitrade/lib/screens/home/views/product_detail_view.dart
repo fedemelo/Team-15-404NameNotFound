@@ -19,7 +19,8 @@ class ProductDetailView extends StatelessWidget {
       required this.product,
       required this.currentConnection,
       required this.selectedCategory,
-      required this.userFavoriteProducts});
+      required this.userFavoriteProducts,
+      });
 
   @override
   Widget build(BuildContext context) {
