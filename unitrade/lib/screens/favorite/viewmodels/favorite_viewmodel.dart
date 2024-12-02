@@ -23,6 +23,33 @@ class FavoriteViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateFavoritesQuantity() async {
+    try {
+      final int userFavoritesCount = favoriteProducts.length;
+
+      final DocumentReference analyticsDoc = _firestore
+          .collection('analytics')
+          .doc('favorites_quantity');
+
+      final DocumentSnapshot docSnapshot = await analyticsDoc.get();
+
+      if (docSnapshot.exists) {
+        Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+
+        List<dynamic> currentFavoritesList = data?['favorites_list'] ?? [];
+        currentFavoritesList.add(userFavoritesCount);
+
+        await analyticsDoc.update({'favorites_list': currentFavoritesList});
+      } else {
+        await analyticsDoc.set({
+          'favorites_list': [userFavoritesCount],
+        });
+      }
+    } catch (e) {
+      print("Error updating favorites quantity: $e");
+    }
+  }
+
   Future<void> fetchFavoritesData() async {
     try {
       var connectivity = ConnectivityService();
@@ -80,6 +107,7 @@ class FavoriteViewModel extends ChangeNotifier {
       print("Error fetching favorites data: $e");
     } finally {
       finishedGets = true;
+      updateFavoritesQuantity();
       notifyListeners();
     }
   }
