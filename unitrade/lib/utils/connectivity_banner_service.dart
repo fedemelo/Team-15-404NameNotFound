@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 
 class ConnectivityBannerService {
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
   late StreamSubscription<InternetStatus> _connectionSubscription;
+  final FirebaseAuth _firebaseAuth = FirebaseService.instance.auth;
 
   ConnectivityBannerService(this.scaffoldMessengerKey);
 
@@ -13,9 +16,11 @@ class ConnectivityBannerService {
     _connectionSubscription =
         InternetConnection().onStatusChange.listen((status) {
       final hasConnection = status == InternetStatus.connected;
-
-      if (!hasConnection) {
-        _showConnectivityBanner();
+      final user = _firebaseAuth.currentUser;
+      if (!hasConnection && user != null) {
+        Future.delayed(const Duration(seconds: 1), () {
+          _showConnectivityBanner();
+        });
       } else {
         _hideConnectivityBanner();
       }
@@ -31,7 +36,6 @@ class ConnectivityBannerService {
             Icon(
               Icons.wifi_off,
               size: 20,
-              // Sett the color to the background color of the app\
               color: AppColors.primary900,
             ),
             SizedBox(width: 8),
@@ -52,4 +56,12 @@ class ConnectivityBannerService {
   void stopMonitoring() {
     _connectionSubscription.cancel();
   }
+
+  // void enableMonitoring() {
+  //   _shouldMonitor = true;
+  // }
+
+  // void disableMonitoring() {
+  //   _shouldMonitor = false;
+  // }
 }

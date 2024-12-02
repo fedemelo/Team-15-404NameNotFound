@@ -53,12 +53,15 @@ void main() async {
       GlobalKey<ScaffoldMessengerState>();
 
   final ConnectivityBannerService connectivityBannerService =
-      ConnectivityBannerService(scaffoldMessengerKey);
+      ConnectivityBannerService(
+    scaffoldMessengerKey,
+  );
 
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ChangeNotifierProvider(create: (_) => ScreenTimeService()),
+      Provider(create: (_) => connectivityBannerService),
     ],
     child: MyApp(
       scaffoldMessengerKey: scaffoldMessengerKey,
@@ -81,6 +84,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    // connectivityBannerService.disableMonitoring();
     connectivityBannerService.startMonitoring();
 
     return MaterialApp(
