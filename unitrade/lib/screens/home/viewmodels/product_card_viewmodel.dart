@@ -106,12 +106,32 @@ class ProductCardViewModel extends ChangeNotifier {
   }
 
   // For product detail
-  Future<void> buyProduct(ProductModel product, BuildContext context) async {
+  Future<void> buyProduct(ProductModel product, BuildContext context, String lastScreen) async {
     await _firestore.collection('products').doc(product.id).update({
       'in_stock': false,
       'buyer_id': _user!.uid,
       'purchase_date': DateTime.now().toLocal().toString().split(' ')[0],
     });
+
+    final boughtFromDoc = _firestore.collection('analytics').doc('bought_from');
+    final DocumentSnapshot docSnapshot = await boughtFromDoc.get();
+
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+      if (lastScreen == 'favorites') {
+        int currentFavoritesCount = data['favorites'] ?? 0;
+        await boughtFromDoc.update({
+          'favorites': currentFavoritesCount + 1,
+        });
+      } else if (lastScreen == 'home') {
+        int currentHomeCount = data['home'] ?? 0;
+        await boughtFromDoc.update({
+          'home': currentHomeCount + 1,
+        });
+      }
+    }
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();

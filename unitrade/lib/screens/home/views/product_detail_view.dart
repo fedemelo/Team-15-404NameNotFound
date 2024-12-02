@@ -14,6 +14,7 @@ class ProductDetailView extends StatelessWidget {
   final String selectedCategory;
   final ConnectivityService _connectivityService = ConnectivityService();
   final List<String> userFavoriteProducts;
+  final String lastScreen;
 
   ProductDetailView({
     super.key,
@@ -21,6 +22,7 @@ class ProductDetailView extends StatelessWidget {
     required this.currentConnection,
     required this.selectedCategory,
     required this.userFavoriteProducts,
+    required this.lastScreen,
   });
 
   @override
@@ -241,7 +243,7 @@ class ProductDetailView extends StatelessWidget {
                                     } else {
                                       // Si hay conexión, llama a buyProduct
                                       productViewModel.buyProduct(
-                                          product, context);
+                                          product, context, lastScreen);
                                     }
                                   },
                             style: ButtonStyle(

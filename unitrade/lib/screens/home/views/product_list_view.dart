@@ -11,6 +11,7 @@ class ProductListView extends StatelessWidget {
   final String selectedCategory;
   final List<String> userFavoriteProducts;
   final Function updateScreen;
+  final String lastScreen;
 
   const ProductListView(
       {super.key,
@@ -18,7 +19,9 @@ class ProductListView extends StatelessWidget {
       required this.currentConnection,
       required this.selectedCategory,
       required this.userFavoriteProducts,
-      required this.updateScreen});
+      required this.updateScreen,
+      required this.lastScreen});
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +45,7 @@ class ProductListView extends StatelessWidget {
                     product: product,
                     currentConnection: currentConnection,
                     selectedCategory: selectedCategory,
+                    lastScreen: lastScreen,
                 ),
 
               ),

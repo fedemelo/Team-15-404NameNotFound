@@ -40,6 +40,7 @@ class FavoriteView extends StatelessWidget {
                               selectedCategory: "Favorites",
                               userFavoriteProducts: viewModel.favoriteProducts,
                               updateScreen: viewModel.updateScreen,
+                              lastScreen: 'favorites',
                             ),
                           )
                         : Center(

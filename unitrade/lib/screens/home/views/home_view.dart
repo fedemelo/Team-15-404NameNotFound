@@ -101,6 +101,7 @@ class HomeView extends StatelessWidget {
                                       selectedCategory:
                                           viewModel.selectedCategory,
                                       updateScreen: viewModel.updateScreen,
+                                      lastScreen: 'home',
                                     )
                             ],
                           ),
