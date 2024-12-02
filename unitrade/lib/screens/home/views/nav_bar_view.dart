@@ -1,11 +1,9 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:unitrade/screens/favorite/views/favorite_view.dart';
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/screens/profile/views/profile_view.dart';
 import 'package:unitrade/screens/upload/views/upload_path_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
-import 'package:unitrade/utils/connectivity_service.dart';
 
 class NavBarView extends StatefulWidget {
   final int initialIndex;
@@ -18,31 +16,17 @@ class NavBarView extends StatefulWidget {
 
 class NavBarViewState extends State<NavBarView> {
   late int _selectedIndex;
-  bool hasConnection = false;
 
-  final ConnectivityService connectivityService = ConnectivityService();
-
-  void _connectivityMonitoring() {
-    connectivityService.connectivityStream
-        .listen((List<ConnectivityResult> result) async {
-      if (result.contains(ConnectivityResult.mobile) ||
-          result.contains(ConnectivityResult.wifi)) {
-        setState(() {
-          hasConnection = true;
-        });
-      } else {
-        setState(() {
-          hasConnection = false;
-        });
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
-    _connectivityMonitoring();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void _onItemTapped(int index) {
@@ -86,41 +70,19 @@ class NavBarViewState extends State<NavBarView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (!hasConnection)
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.wifi_off,
-                  size: 20,
-                ),
-                SizedBox(width: 8),
-                Text(
-                  "No Internet Connection",
-                ),
-              ],
-            ),
-          ),
-        BottomAppBar(
-          color: AppColors.primary900,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home, Icons.home_outlined, "Home", 0),
-              _buildNavItem(
-                  Icons.add_circle, Icons.add_circle_outline, "Upload", 1),
-              _buildNavItem(Icons.favorite, Icons.favorite_border_outlined,
-                  "Favorites", 2),
-              _buildNavItem(Icons.person, Icons.person_outline, "Profile", 3),
-            ],
-          ),
-        ),
-      ],
+    return BottomAppBar(
+      color: AppColors.primary900,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(Icons.home, Icons.home_outlined, "Home", 0),
+          _buildNavItem(
+              Icons.add_circle, Icons.add_circle_outline, "Upload", 1),
+          _buildNavItem(
+              Icons.favorite, Icons.favorite_border_outlined, "Favorites", 2),
+          _buildNavItem(Icons.person, Icons.person_outline, "Profile", 3),
+        ],
+      ),
     );
   }
 

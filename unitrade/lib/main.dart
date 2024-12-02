@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/login/views/loading_view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:unitrade/utils/connectivity_banner_service.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_queue_service.dart';
 import 'package:unitrade/utils/firebase_retry_service.dart';
@@ -48,23 +49,42 @@ void main() async {
         details.exception, details.stack ?? StackTrace.empty);
   };
 
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
+
+  final ConnectivityBannerService connectivityBannerService =
+      ConnectivityBannerService(scaffoldMessengerKey);
+
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ChangeNotifierProvider(create: (_) => ScreenTimeService()),
     ],
-    child: const MyApp(),
+    child: MyApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      connectivityBannerService: connectivityBannerService,
+    ),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
+  final ConnectivityBannerService connectivityBannerService;
+
+  const MyApp({
+    super.key,
+    required this.scaffoldMessengerKey,
+    required this.connectivityBannerService,
+  });
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    connectivityBannerService.startMonitoring();
+
     return MaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       navigatorObservers: [routeObserver],
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,

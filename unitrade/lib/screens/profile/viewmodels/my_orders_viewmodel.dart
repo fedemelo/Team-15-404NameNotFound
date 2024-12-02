@@ -29,18 +29,16 @@ class MyOrdersViewmodel extends ChangeNotifier {
       hasConnection = await connectivity.checkConnectivity();
 
       if (hasConnection) {
-        print("Fetching products from Firebase");
         await _fetchProductsFromFirebase();
       } else {
-        print("Fetching products from Hive");
         isOfflineData = true;
-        await _fetchProductsFromHive();
+        await fetchProductsFromHive();
       }
     } catch (e) {
       print("Error fetching products: $e");
     } finally {
       isLoading = false;
-      notifyListeners(); // Notify UI that loading has finished
+      notifyListeners();
     }
   }
 
@@ -82,24 +80,24 @@ class MyOrdersViewmodel extends ChangeNotifier {
 
       // Save products to Hive in the background
       await saveProductsToHive(products);
-      print("Products fetched from Firebase");
     } catch (e) {
       print("Error fetching products from Firebase: $e");
     }
   }
 
-  Future<void> _fetchProductsFromHive() async {
+  Future<void> fetchProductsFromHive() async {
     try {
-      await Hive.openBox('myOrders');
-      final box = Hive.box('myOrders');
-      final storedProducts = box.get('products', defaultValue: []);
+      print("Fetching products from Hive");
+      final box = await Hive.openBox('myOrders');
+      final storedProducts =
+          box.get('products', defaultValue: <ProductModel>[]);
       if (storedProducts is List<ProductModel>) {
         products = storedProducts;
-        print("Products fetched from Hive");
       } else {
         products = [];
-        print("No products found in Hive");
       }
+      print("Products fetched from Hive");
+      print(products);
     } catch (e) {
       print("Error fetching products from Hive: $e");
       products = [];
@@ -107,12 +105,13 @@ class MyOrdersViewmodel extends ChangeNotifier {
   }
 
   Future<void> saveProductsToHive(List<ProductModel> products) async {
-    print("Saving products to Hive");
-    await Hive.openBox('myOrders');
-    final box = Hive.box('myOrders');
-
-    // Offload the save task to a background thread
-    await box.put('products', products);
-    print("Products saved to Hive");
+    try {
+      print("Saving products to Hive");
+      final box = await Hive.openBox('myOrders');
+      await box.put('products', products);
+      print("Products saved to Hive");
+    } catch (e) {
+      print("Error saving products to Hive: $e");
+    }
   }
 }
