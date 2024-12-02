@@ -57,7 +57,7 @@ class MyOrdersView extends StatelessWidget {
                         ),
                         if (viewModel.isOfflineData)
                           Positioned(
-                            bottom: 0,
+                            bottom: 50,
                             left: 0,
                             right: 0,
                             child: Container(
@@ -65,7 +65,9 @@ class MyOrdersView extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: const Text(
                                 "You're viewing offline data. It may be outdated.",
-                                // style: TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 textAlign: TextAlign.center,
                               ),
                             ),

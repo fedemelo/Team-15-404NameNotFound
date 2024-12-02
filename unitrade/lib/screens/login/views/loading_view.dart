@@ -30,7 +30,7 @@ class _LoadingViewState extends State<LoadingView> {
       screenTimeService.startTrackingTime();
     });
 
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (user != null) {
         Navigator.pushReplacement(
           context,

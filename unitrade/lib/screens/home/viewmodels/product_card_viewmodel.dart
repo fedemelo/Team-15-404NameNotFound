@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/viewmodels/decorator/price.dart';
 import 'package:unitrade/screens/home/viewmodels/decorator/base_price.dart';
@@ -8,7 +9,6 @@ import 'package:unitrade/screens/home/viewmodels/decorator/currency_decorator.da
 import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 class ProductCardViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
@@ -22,12 +22,14 @@ class ProductCardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleFavorite(ProductModel product, String selectedCategory, bool currentConnection, List<String>userFavoriteProducts) async {
+  void toggleFavorite(ProductModel product, String selectedCategory,
+      bool currentConnection, List<String> userFavoriteProducts) async {
     if (!currentConnection) {
       return;
     }
 
-    final userDocRef = _firestore.collection('users').doc(_firebase.currentUser?.uid);
+    final userDocRef =
+        _firestore.collection('users').doc(_firebase.currentUser?.uid);
 
     if (userFavoriteProducts.contains(product.id)) {
       // Eliminar de favoritos en la lista local y en Firebase
@@ -107,10 +109,23 @@ class ProductCardViewModel extends ChangeNotifier {
 
   // For product detail
   Future<void> buyProduct(ProductModel product, BuildContext context, String lastScreen) async {
+    // Get user
+    String semester = '';
+    await _firestore
+        .collection('users')
+        .doc(_user!.uid)
+        .get()
+        .then((userDoc) async {
+      if (userDoc.exists) {
+        semester = userDoc.data()?['semester'] ?? '';
+      }
+    });
+
     await _firestore.collection('products').doc(product.id).update({
       'in_stock': false,
       'buyer_id': _user!.uid,
       'purchase_date': DateTime.now().toLocal().toString().split(' ')[0],
+      'buyer_semester': semester,
     });
 
     final boughtFromDoc = _firestore.collection('analytics').doc('bought_from');
