@@ -17,10 +17,16 @@ class NavBarView extends StatefulWidget {
 class NavBarViewState extends State<NavBarView> {
   late int _selectedIndex;
 
+
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialIndex;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void _onItemTapped(int index) {
