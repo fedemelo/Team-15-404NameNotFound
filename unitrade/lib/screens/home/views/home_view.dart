@@ -85,7 +85,6 @@ class HomeView extends StatelessWidget {
                                             "Failed to load products. Please check your connection.",
                                             style: GoogleFonts.urbanist(
                                               fontSize: 16,
-                                              color: Colors.red,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             textAlign: TextAlign.center,
