@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProductCardView extends StatelessWidget {
   final ProductModel product;
@@ -37,12 +38,16 @@ class ProductCardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.0),
-                        child: product.imageUrl.isNotEmpty && currentConnection
-                            ? Image.network(
-                                product.imageUrl,
+                        child: product.imageUrl.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: product.imageUrl,
                                 height: 150,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                    const Center(child: Icon(Icons.error)),
                               )
                             : Container(
                                 height: 150,
@@ -62,7 +67,11 @@ class ProductCardView extends StatelessWidget {
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite(product, selectedCategory, currentConnection, userFavoriteProducts);
+                            productViewModel.toggleFavorite(
+                                product,
+                                selectedCategory,
+                                currentConnection,
+                                userFavoriteProducts);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
