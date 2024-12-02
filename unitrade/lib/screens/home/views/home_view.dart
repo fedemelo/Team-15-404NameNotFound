@@ -93,6 +93,8 @@ class HomeView extends StatelessWidget {
                                       ),
                                     )
                                   : ProductListView(
+                                      userFavoriteProducts:
+                                          viewModel.favoriteProducts,
                                       products: viewModel.filteredProducts,
                                       currentConnection:
                                           viewModel.currentConnection,

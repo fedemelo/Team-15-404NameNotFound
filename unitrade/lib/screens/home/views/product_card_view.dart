@@ -9,11 +9,13 @@ class ProductCardView extends StatelessWidget {
   final ProductModel product;
   final bool currentConnection;
   final String selectedCategory;
+  final List<String> userFavoriteProducts;
 
   ProductCardView({
     required this.product,
     required this.currentConnection,
     required this.selectedCategory,
+    required this.userFavoriteProducts,
   });
 
   @override
@@ -60,7 +62,7 @@ class ProductCardView extends StatelessWidget {
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite(product, selectedCategory, currentConnection);
+                            productViewModel.toggleFavorite(product, selectedCategory, currentConnection, userFavoriteProducts);
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
@@ -76,7 +78,7 @@ class ProductCardView extends StatelessWidget {
                               ],
                             ),
                             child: Icon(
-                              product.isFavorite
+                              userFavoriteProducts.contains(product.id)
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               color: AppColors.primary900,
