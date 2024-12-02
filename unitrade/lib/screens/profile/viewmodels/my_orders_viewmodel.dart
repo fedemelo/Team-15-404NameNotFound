@@ -88,14 +88,9 @@ class MyOrdersViewmodel extends ChangeNotifier {
   Future<void> fetchProductsFromHive() async {
     try {
       print("Fetching products from Hive");
-      final box = await Hive.openBox('myOrders');
-      final storedProducts =
-          box.get('products', defaultValue: <ProductModel>[]);
-      if (storedProducts is List<ProductModel>) {
-        products = storedProducts;
-      } else {
-        products = [];
-      }
+      final box = await Hive.openBox<ProductModel>('myOrders');
+      print("Box content: ${box.toMap()}");
+      products = box.values.toList().cast<ProductModel>();
       print("Products fetched from Hive");
       print(products);
     } catch (e) {
@@ -107,9 +102,13 @@ class MyOrdersViewmodel extends ChangeNotifier {
   Future<void> saveProductsToHive(List<ProductModel> products) async {
     try {
       print("Saving products to Hive");
-      final box = await Hive.openBox('myOrders');
-      await box.put('products', products);
-      print("Products saved to Hive");
+      final box = await Hive.openBox<ProductModel>('myOrders');
+      await box.clear();
+      for (var product in products) {
+        
+        box.put(product.id, product);
+      }
+      print("Box content after save: ${box.toMap()}");
     } catch (e) {
       print("Error saving products to Hive: $e");
     }

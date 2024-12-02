@@ -27,7 +27,7 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ProductModelAdapter());
 
-  await Hive.openBox('myOrders');
+  // await Hive.openBox('myOrders');
   await Hive.openBox('firebaseQueuedRequests');
 
   // Create instances of the services
