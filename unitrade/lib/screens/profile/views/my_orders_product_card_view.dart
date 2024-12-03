@@ -4,10 +4,10 @@ import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class ListingProductCard extends StatelessWidget {
+class MyOrdersProductCard extends StatelessWidget {
   final ProductModel product;
 
-  const ListingProductCard({super.key, required this.product});
+  const MyOrdersProductCard({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -71,15 +71,6 @@ class ListingProductCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 4.0),
-                Text(
-                  product.type == 'sale' ? 'For Sale' : 'For Rent',
-                  style: GoogleFonts.urbanist(
-                    fontSize: 14,
-                    color: AppColors.secondary900,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
               ],
             ),
           ),
@@ -88,18 +79,9 @@ class ListingProductCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                product.favorites.toString(),
-                style: GoogleFonts.urbanist(
-                  fontSize: 30,
-                  color: AppColors.primary900,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'Saves',
+                product.purchase_date,
                 style: GoogleFonts.urbanist(
                   fontSize: 14,
-                  color: AppColors.primary900,
                   fontWeight: FontWeight.w600,
                 ),
               ),

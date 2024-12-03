@@ -85,7 +85,6 @@ class HomeView extends StatelessWidget {
                                             "Failed to load products. Please check your connection.",
                                             style: GoogleFonts.urbanist(
                                               fontSize: 16,
-                                              color: Colors.red,
                                               fontWeight: FontWeight.bold,
                                             ),
                                             textAlign: TextAlign.center,
@@ -94,9 +93,15 @@ class HomeView extends StatelessWidget {
                                       ),
                                     )
                                   : ProductListView(
+                                      userFavoriteProducts:
+                                          viewModel.favoriteProducts,
                                       products: viewModel.filteredProducts,
-                                      currentConnection: viewModel.currentConnection,
-                                      selectedCategory: viewModel.selectedCategory,
+                                      currentConnection:
+                                          viewModel.currentConnection,
+                                      selectedCategory:
+                                          viewModel.selectedCategory,
+                                      updateScreen: viewModel.updateScreen,
+                                      lastScreen: 'home',
                                     )
                             ],
                           ),
@@ -107,7 +112,7 @@ class HomeView extends StatelessWidget {
                       ),
               ),
             ),
-            bottomNavigationBar: const NavBarView(),
+            bottomNavigationBar: const NavBarView(initialIndex: 0),
           );
         },
       ),

@@ -4,16 +4,22 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:unitrade/screens/favorite/viewmodels/favorite_viewmodel.dart';
 
 class ProductCardView extends StatelessWidget {
   final ProductModel product;
   final bool currentConnection;
   final String selectedCategory;
+  final List<String> userFavoriteProducts;
+  final String lastScreen;
 
   ProductCardView({
     required this.product,
     required this.currentConnection,
     required this.selectedCategory,
+    required this.userFavoriteProducts,
+    required this.lastScreen,
   });
 
   @override
@@ -35,12 +41,16 @@ class ProductCardView extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(16.0),
-                        child: product.imageUrl.isNotEmpty && currentConnection
-                            ? Image.network(
-                                product.imageUrl,
+                        child: product.imageUrl.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: product.imageUrl,
                                 height: 150,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                    const Center(child: Icon(Icons.error)),
                               )
                             : Container(
                                 height: 150,
@@ -60,7 +70,16 @@ class ProductCardView extends StatelessWidget {
                         right: 8,
                         child: GestureDetector(
                           onTap: () {
-                            productViewModel.toggleFavorite(product, selectedCategory, currentConnection);
+                            productViewModel.toggleFavorite(
+                                product,
+                                selectedCategory,
+                                currentConnection,
+                                userFavoriteProducts,
+                                  () {
+                                Provider.of<FavoriteViewModel>(context, listen: false).updateFavoritesList();
+                              },
+                              lastScreen,
+                            );
                           },
                           child: Container(
                             padding: const EdgeInsets.all(4.0),
@@ -76,7 +95,7 @@ class ProductCardView extends StatelessWidget {
                               ],
                             ),
                             child: Icon(
-                              product.isFavorite
+                              userFavoriteProducts.contains(product.id)
                                   ? Icons.favorite
                                   : Icons.favorite_border,
                               color: AppColors.primary900,

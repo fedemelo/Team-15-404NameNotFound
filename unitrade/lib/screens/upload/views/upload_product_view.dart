@@ -166,7 +166,7 @@ class UploadProductView extends StatelessWidget {
         onQueueFullModal: _showQueueFullModal,
       ),
       child: Scaffold(
-        bottomNavigationBar: const NavBarView(initialIndex: 2),
+        bottomNavigationBar: const NavBarView(initialIndex: 1),
         appBar: AppBar(
           elevation: 1.0,
           leading: IconButton(

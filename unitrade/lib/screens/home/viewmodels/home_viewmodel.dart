@@ -19,8 +19,18 @@ class HomeViewModel extends ChangeNotifier {
   bool currentConnection = false;
   bool isSnackBarVisible = false;
 
+  List<String> favoriteProducts = [];
+
   List<String> categoryElementList = [];
-  List<String> categoryGroupList = ['For You', 'Study', 'Tech', 'Creative', 'Others', 'Lab', 'Personal'];
+  List<String> categoryGroupList = [
+    'For You',
+    'Study',
+    'Tech',
+    'Creative',
+    'Others',
+    'Lab',
+    'Personal'
+  ];
   List<String> categoryUserList = [];
   List<ProductModel> productElementList = [];
 
@@ -32,6 +42,10 @@ class HomeViewModel extends ChangeNotifier {
   HomeViewModel() {
     fetchAllData();
     _filterProducts();
+  }
+
+  void updateScreen() {
+    notifyListeners();
   }
 
   void updateFilterColor(bool filter) {
@@ -81,10 +95,8 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchCategories() async {
-    final categoriesDoc = await _firestore
-        .collection('categories')
-        .doc('all')
-        .get();
+    final categoriesDoc =
+        await _firestore.collection('categories').doc('all').get();
 
     if (categoriesDoc.exists) {
       List<dynamic> categories = categoriesDoc.data()?['names'] ?? [];
@@ -118,10 +130,24 @@ class HomeViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchProducts() async {
-    final QuerySnapshot productsSnapshot = await _firestore
-        .collection('products')
+  Future<void> fetchFavorites() async {
+    final favoritesDoc = await _firestore
+        .collection('users')
+        .doc(_firebase.currentUser?.uid)
         .get();
+
+    if (favoritesDoc.exists) {
+      List<dynamic> favorites = favoritesDoc.data()?['favorites'] ?? [];
+
+      favoriteProducts = List<String>.from(favorites);
+    } else {
+      throw Exception("Favorites not found");
+    }
+  }
+
+  Future<void> fetchProducts() async {
+    final QuerySnapshot productsSnapshot =
+        await _firestore.collection('products').get(); // .where('in_stock', isEqualTo: true).get();
 
     if (productsSnapshot.docs.isNotEmpty) {
       List<ProductModel> products = productsSnapshot.docs.map((doc) {
@@ -131,19 +157,18 @@ class HomeViewModel extends ChangeNotifier {
           name: data['name'] ?? '',
           description: data['description'] ?? '',
           price: double.tryParse(data['price'].toString()) ?? 0.0,
-          categories: List<String>.from(
-              (data['categories'] ?? []).map((category) {
-                String lowerCased = category.toLowerCase();
-                return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
-              })
-          ),
+          categories:
+              List<String>.from((data['categories'] ?? []).map((category) {
+            String lowerCased = category.toLowerCase();
+            return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
+          })),
           userId: data['user_id'] ?? '',
           type: data['type'] ?? '',
           imageUrl: data['image_url'] ?? '',
           favoritesForyou: data['favorites_foryou'] ?? 0,
           favoritesCategory: data['favorites_category'] ?? 0,
           condition: data['condition'] ?? '',
-
+          rentalPeriod: data['rental_period'] ?? '',
         );
       }).toList();
 
@@ -171,13 +196,8 @@ class HomeViewModel extends ChangeNotifier {
       await Future.wait([
         fetchCategories(),
         fetchUserCategories(),
+        fetchFavorites(),
       ]);
-
-      int retries = 0;
-      while (ProductService.instance.products == null && retries < 5) {
-        await Future.delayed(Duration(milliseconds: 500));
-        retries++;
-      }
 
       if (ProductService.instance.products != null) {
         productElementList = ProductService.instance.products!;
@@ -230,6 +250,7 @@ class HomeViewModel extends ChangeNotifier {
         fetchCategories(),
         fetchUserCategories(),
         fetchProducts(),
+        fetchFavorites(),
       ]);
       print("Data refreshed");
 

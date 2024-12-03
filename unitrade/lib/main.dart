@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/login/views/loading_view.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:unitrade/utils/connectivity_banner_service.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
 import 'package:unitrade/utils/firebase_queue_service.dart';
 import 'package:unitrade/utils/firebase_retry_service.dart';
@@ -13,7 +14,8 @@ import 'utils/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:unitrade/utils/crash_manager.dart';
 import 'package:unitrade/utils/product_service.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/favorites_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -25,12 +27,15 @@ void main() async {
 
   // Initialize Hive
   await Hive.initFlutter();
+  Hive.registerAdapter(ProductModelAdapter());
+
+  // await Hive.openBox('myOrders');
   await Hive.openBox('firebaseQueuedRequests');
 
   // Create instances of the services
   final connectivityService = ConnectivityService();
   final queueService = FirebaseQueueService();
-  
+
   // Instantiate the FirebaseRetryService to listen for connectivity changes
   FirebaseRetryService(connectivityService, queueService);
 
@@ -40,31 +45,56 @@ void main() async {
 
   ProductService.instance.loadProductsInBackground();
 
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    FavoritesService.instance.loadFavoritesInBackground(user.uid);
+  }
+
   final crashManager = CrashManager();
   FlutterError.onError = (FlutterErrorDetails details) async {
-    await crashManager.reportCrashToFirestore(details.exception, details.stack ?? StackTrace.empty);
+    await crashManager.reportCrashToFirestore(
+        details.exception, details.stack ?? StackTrace.empty);
   };
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => ScreenTimeService()),
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
-      ],
-      child: const MyApp(),
-      )
+  final ConnectivityBannerService connectivityBannerService =
+      ConnectivityBannerService(
+    scaffoldMessengerKey,
   );
+
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ChangeNotifierProvider(create: (_) => ScreenTimeService()),
+      Provider(create: (_) => connectivityBannerService),
+    ],
+    child: MyApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
+      connectivityBannerService: connectivityBannerService,
+    ),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey;
+  final ConnectivityBannerService connectivityBannerService;
+
+  const MyApp({
+    super.key,
+    required this.scaffoldMessengerKey,
+    required this.connectivityBannerService,
+  });
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
+    connectivityBannerService.startMonitoring(themeProvider.themeData);
+
     return MaterialApp(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       navigatorObservers: [routeObserver],
       debugShowCheckedModeBanner: false,
       theme: themeProvider.themeData,

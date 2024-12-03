@@ -1,8 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:unitrade/screens/home/views/home_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/screens/login/views/welcome_view.dart';
+import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/screen_time_service.dart';
 
 class LoadingView extends StatefulWidget {
@@ -14,10 +17,12 @@ class LoadingView extends StatefulWidget {
 
 class _LoadingViewState extends State<LoadingView> {
   late ScreenTimeService screenTimeService;
+  final FirebaseAuth _firebaseAuth = FirebaseService.instance.auth;
 
   @override
   void initState() {
     super.initState();
+    final user = _firebaseAuth.currentUser;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       screenTimeService =
@@ -25,11 +30,18 @@ class _LoadingViewState extends State<LoadingView> {
       screenTimeService.startTrackingTime();
     });
 
-    Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const WelcomeView()),
-      );
+    Future.delayed(const Duration(seconds: 1), () {
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeView()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const WelcomeView()),
+        );
+      }
     });
   }
 

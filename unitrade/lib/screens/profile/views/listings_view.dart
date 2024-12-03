@@ -16,7 +16,7 @@ class ListingsView extends StatelessWidget {
       child: Consumer<ListingsViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            bottomNavigationBar: const NavBarView(initialIndex: 4),
+            bottomNavigationBar: const NavBarView(initialIndex: 3),
             appBar: AppBar(
               elevation: 1.0,
               leading: GestureDetector(
@@ -65,10 +65,9 @@ class ListingsView extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             Text(
-                              "Failed to load products. Please check your connection.",
+                              "Failed to load products. \n Please check your connection.",
                               style: GoogleFonts.urbanist(
                                 fontSize: 16,
-                                color: Colors.red,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,
