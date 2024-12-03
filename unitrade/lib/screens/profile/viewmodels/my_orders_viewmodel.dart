@@ -36,6 +36,7 @@ class MyOrdersViewmodel extends ChangeNotifier {
       }
     } catch (e) {
       print("Error fetching products: $e");
+      products = [];
     } finally {
       isLoading = false;
       notifyListeners();
@@ -82,6 +83,7 @@ class MyOrdersViewmodel extends ChangeNotifier {
       await saveProductsToHive(products);
     } catch (e) {
       print("Error fetching products from Firebase: $e");
+      products = [];
     }
   }
 
@@ -92,7 +94,6 @@ class MyOrdersViewmodel extends ChangeNotifier {
       print("Box content: ${box.toMap()}");
       products = box.values.toList().cast<ProductModel>();
       print("Products fetched from Hive");
-      print(products);
     } catch (e) {
       print("Error fetching products from Hive: $e");
       products = [];
@@ -105,7 +106,6 @@ class MyOrdersViewmodel extends ChangeNotifier {
       final box = await Hive.openBox<ProductModel>('myOrders');
       await box.clear();
       for (var product in products) {
-        
         box.put(product.id, product);
       }
       print("Box content after save: ${box.toMap()}");
