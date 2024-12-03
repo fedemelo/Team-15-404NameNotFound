@@ -4,19 +4,25 @@ import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/screens/home/views/product_card_view.dart';
 import 'package:unitrade/screens/home/views/product_detail_view.dart';
 import 'package:unitrade/screens/home/viewmodels/home_viewmodel.dart';
+import 'package:unitrade/screens/favorite/viewmodels/favorite_viewmodel.dart';
 
 class ProductListView extends StatelessWidget {
   final List<ProductModel> products;
   final bool currentConnection;
   final String selectedCategory;
   final List<String> userFavoriteProducts;
+  final Function updateScreen;
+  final String lastScreen;
 
   const ProductListView(
       {super.key,
       required this.products,
       required this.currentConnection,
       required this.selectedCategory,
-      required this.userFavoriteProducts});
+      required this.userFavoriteProducts,
+      required this.updateScreen,
+      required this.lastScreen});
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +45,22 @@ class ProductListView extends StatelessWidget {
                     userFavoriteProducts: userFavoriteProducts,
                     product: product,
                     currentConnection: currentConnection,
-                    selectedCategory: selectedCategory),
+                    selectedCategory: selectedCategory,
+                    lastScreen: lastScreen,
+                ),
+
               ),
             );
-            Provider.of<HomeViewModel>(context, listen: false).notifyListeners();
+
+            updateScreen();
+
           },
           child: ProductCardView(
             product: product,
             currentConnection: currentConnection,
             selectedCategory: selectedCategory,
             userFavoriteProducts: userFavoriteProducts,
+            lastScreen: lastScreen,
           ),
         );
       },
