@@ -15,7 +15,6 @@ class ConnectivityBannerService {
     _connectionSubscription =
         InternetConnection().onStatusChange.listen((status) {
       final hasConnection = status == InternetStatus.connected;
-      print("Connection status: $status");
       final user = _firebaseAuth.currentUser;
       if (!hasConnection && user != null) {
         Future.delayed(const Duration(seconds: 1), () {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/utils/app_colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MyOrdersProductCard extends StatelessWidget {
   final ProductModel product;
@@ -22,11 +23,15 @@ class MyOrdersProductCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
             child: product.imageUrl.isNotEmpty
-                ? Image.network(
-                    product.imageUrl,
+                ? CachedNetworkImage(
+                    imageUrl: product.imageUrl,
                     height: 80,
                     width: 80,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        const Center(child: Icon(Icons.error)),
                   )
                 : Container(
                     height: 80,

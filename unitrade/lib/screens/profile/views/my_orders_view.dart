@@ -61,7 +61,7 @@ class MyOrdersView extends StatelessWidget {
                             left: 0,
                             right: 0,
                             child: Container(
-                              color: Theme.of(context).colorScheme.surface,
+                              color: Colors.transparent,
                               padding: const EdgeInsets.all(8.0),
                               child: const Text(
                                 "You're viewing offline data. It may be outdated.",
