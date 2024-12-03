@@ -22,7 +22,7 @@ class ProductCardViewModel extends ChangeNotifier {
   }
 
   void toggleFavorite(ProductModel product, String selectedCategory,
-      bool currentConnection, List<String> userFavoriteProducts) async {
+      bool currentConnection, List<String> userFavoriteProducts, VoidCallback updateFavoritesCallback, String lastScreen) async {
     if (!currentConnection) {
       return;
     }
@@ -91,6 +91,9 @@ class ProductCardViewModel extends ChangeNotifier {
         await productDoc.set(newData, SetOptions(merge: true));
       }
     });
+    if (lastScreen == 'favorites') {
+      updateFavoritesCallback();
+    }
 
     notifyListeners();
   }
@@ -107,7 +110,7 @@ class ProductCardViewModel extends ChangeNotifier {
   }
 
   // For product detail
-  Future<void> buyProduct(ProductModel product, BuildContext context) async {
+  Future<void> buyProduct(ProductModel product, BuildContext context, String lastScreen) async {
     // Get user
     String semester = '';
     await _firestore
@@ -126,6 +129,26 @@ class ProductCardViewModel extends ChangeNotifier {
       'purchase_date': DateTime.now().toLocal().toString().split(' ')[0],
       'buyer_semester': semester,
     });
+
+    final boughtFromDoc = _firestore.collection('analytics').doc('bought_from');
+    final DocumentSnapshot docSnapshot = await boughtFromDoc.get();
+
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+
+      if (lastScreen == 'favorites') {
+        int currentFavoritesCount = data['favorites'] ?? 0;
+        await boughtFromDoc.update({
+          'favorites': currentFavoritesCount + 1,
+        });
+      } else if (lastScreen == 'home') {
+        int currentHomeCount = data['home'] ?? 0;
+        await boughtFromDoc.update({
+          'home': currentHomeCount + 1,
+        });
+      }
+    }
 
     if (!context.mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();

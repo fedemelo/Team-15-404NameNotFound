@@ -14,6 +14,8 @@ import 'utils/firebase_options.dart';
 import 'package:flutter/services.dart';
 import 'package:unitrade/utils/crash_manager.dart';
 import 'package:unitrade/utils/product_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:unitrade/utils/favorites_service.dart';
 
 final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
@@ -42,6 +44,11 @@ void main() async {
   ]);
 
   ProductService.instance.loadProductsInBackground();
+
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    FavoritesService.instance.loadFavoritesInBackground(user.uid);
+  }
 
   final crashManager = CrashManager();
   FlutterError.onError = (FlutterErrorDetails details) async {

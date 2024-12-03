@@ -44,6 +44,10 @@ class HomeViewModel extends ChangeNotifier {
     _filterProducts();
   }
 
+  void updateScreen() {
+    notifyListeners();
+  }
+
   void updateFilterColor(bool filter) {
     selectedFilters = filter;
     notifyListeners();
@@ -194,12 +198,6 @@ class HomeViewModel extends ChangeNotifier {
         fetchUserCategories(),
         fetchFavorites(),
       ]);
-
-      int retries = 0;
-      while (ProductService.instance.products == null && retries < 5) {
-        await Future.delayed(Duration(milliseconds: 500));
-        retries++;
-      }
 
       if (ProductService.instance.products != null) {
         productElementList = ProductService.instance.products!;

@@ -6,6 +6,8 @@ import 'package:unitrade/screens/home/viewmodels/product_card_viewmodel.dart';
 import 'package:unitrade/screens/home/views/nav_bar_view.dart';
 import 'package:unitrade/utils/app_colors.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:unitrade/screens/favorite/viewmodels/favorite_viewmodel.dart';
 
 class ProductDetailView extends StatelessWidget {
   final ProductModel product;
@@ -13,13 +15,16 @@ class ProductDetailView extends StatelessWidget {
   final String selectedCategory;
   final ConnectivityService _connectivityService = ConnectivityService();
   final List<String> userFavoriteProducts;
+  final String lastScreen;
 
-  ProductDetailView(
-      {super.key,
-      required this.product,
-      required this.currentConnection,
-      required this.selectedCategory,
-      required this.userFavoriteProducts});
+  ProductDetailView({
+    super.key,
+    required this.product,
+    required this.currentConnection,
+    required this.selectedCategory,
+    required this.userFavoriteProducts,
+    required this.lastScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,34 +57,45 @@ class ProductDetailView extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(16.0),
-                            child:
-                                product.imageUrl.isNotEmpty && currentConnection
-                                    ? Image.network(
-                                        product.imageUrl,
-                                        height: 300,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : Container(
-                                        height: 300,
-                                        width: double.infinity,
-                                        color: Colors.grey[300],
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.image,
-                                            size: 40,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
+                            child: product.imageUrl.isNotEmpty
+                                ? CachedNetworkImage(
+                                    imageUrl: product.imageUrl,
+                                    height: 300,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) => const Center(
+                                        child: CircularProgressIndicator()),
+                                    errorWidget: (context, url, error) =>
+                                        const Center(child: Icon(Icons.error)),
+                                  )
+                                : Container(
+                                    height: 300,
+                                    width: double.infinity,
+                                    color: Colors.grey[300],
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.image,
+                                        size: 40,
+                                        color: Colors.black54,
                                       ),
+                                    ),
+                                  ),
                           ),
                           Positioned(
                             top: 8,
                             right: 8,
                             child: GestureDetector(
                               onTap: () {
-                                productViewModel.toggleFavorite(product,
-                                    selectedCategory, currentConnection, userFavoriteProducts);
+                                productViewModel.toggleFavorite(
+                                    product,
+                                    selectedCategory,
+                                    currentConnection,
+                                    userFavoriteProducts,
+                                    () {
+                                      //
+                                    },
+                                    lastScreen,
+                                );
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(4.0),
@@ -233,7 +249,7 @@ class ProductDetailView extends StatelessWidget {
                                     } else {
                                       // Si hay conexión, llama a buyProduct
                                       productViewModel.buyProduct(
-                                          product, context);
+                                          product, context, lastScreen);
                                     }
                                   },
                             style: ButtonStyle(
