@@ -10,6 +10,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 class MyOrdersViewmodel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
   final FirebaseAuth _firebase = FirebaseService.instance.auth;
+  final ConnectivityService _connectivityService = ConnectivityService();
 
   List<ProductModel> products = [];
   bool isLoading = true;
@@ -20,13 +21,18 @@ class MyOrdersViewmodel extends ChangeNotifier {
     fetchProducts();
   }
 
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
+  }
+
   Future<void> fetchProducts() async {
     isLoading = true;
     isOfflineData = false;
     notifyListeners();
     try {
-      var connectivity = ConnectivityService();
-      hasConnection = await connectivity.checkConnectivity();
+      hasConnection = await _connectivityService.checkConnectivity();
 
       if (hasConnection) {
         await _fetchProductsFromFirebase();
@@ -105,9 +111,11 @@ class MyOrdersViewmodel extends ChangeNotifier {
       print("Saving products to Hive");
       final box = await Hive.openBox<ProductModel>('myOrders');
       await box.clear();
-      for (var product in products) {
+      for (int i = 0; i < products.length; i++) {
+        final product = products[i];
         box.put(product.id, product);
       }
+
       print("Box content after save: ${box.toMap()}");
     } catch (e) {
       print("Error saving products to Hive: $e");
