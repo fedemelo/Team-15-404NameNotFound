@@ -51,6 +51,7 @@ class FavoritesService {
   }
 
   static Future<void> _fetchFavoritesInIsolate(List<dynamic> args) async {
+    try {
     final SendPort sendPort = args[0];
     final RootIsolateToken rootIsolateToken = args[1];
     final String userId = args[2];
@@ -63,7 +64,7 @@ class FavoritesService {
 
     List<ProductModel> favoriteProducts = [];
 
-    try {
+
       final FirebaseFirestore firestore = FirebaseService.instance.firestore;
 
       final DocumentSnapshot userDoc =
@@ -108,7 +109,5 @@ class FavoritesService {
     } catch (e) {
       print("Error fetching favorite products: $e");
     }
-
-    sendPort.send(favoriteProducts);
   }
 }

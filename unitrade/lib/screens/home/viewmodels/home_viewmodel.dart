@@ -199,12 +199,6 @@ class HomeViewModel extends ChangeNotifier {
         fetchFavorites(),
       ]);
 
-      int retries = 0;
-      while (ProductService.instance.products == null && retries < 5) {
-        await Future.delayed(Duration(milliseconds: 500));
-        retries++;
-      }
-
       if (ProductService.instance.products != null) {
         productElementList = ProductService.instance.products!;
       } else {

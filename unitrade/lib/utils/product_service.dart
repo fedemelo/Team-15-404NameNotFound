@@ -17,6 +17,7 @@ class ProductService {
   List<ProductModel>? get products => _products;
 
   Future<void> loadProductsInBackground() async {
+    try {
     if (_products == null) {
       final receivePort = ReceivePort();
       final rootIsolateToken = RootIsolateToken.instance;
@@ -35,45 +36,54 @@ class ProductService {
       });
 
       _products = await completer.future;
+
+      }
+    } catch (e) {
+      print("Error loading products: $e");
     }
   }
 
   static Future<void> _fetchProductsInIsolate(List<dynamic> args) async {
-    final SendPort sendPort = args[0];
-    final RootIsolateToken rootIsolateToken = args[1];
+    try {
+      final SendPort sendPort = args[0];
+      final RootIsolateToken rootIsolateToken = args[1];
 
-    BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
+      BackgroundIsolateBinaryMessenger.ensureInitialized(rootIsolateToken);
 
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-
-    final FirebaseFirestore firestore = FirebaseService.instance.firestore;
-
-    final QuerySnapshot productsSnapshot =
-        await firestore.collection('products').get(); // .where('in_stock', isEqualTo: true).get();
-
-    List<ProductModel> products = productsSnapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      return ProductModel(
-        id: doc.id,
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        price: double.tryParse(data['price'].toString()) ?? 0.0,
-        categories: List<String>.from(
-          (data['categories'] ?? []).map((category) {
-            String lowerCased = category.toLowerCase();
-            return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
-          }),
-        ),
-        userId: data['user_id'] ?? '',
-        type: data['type'] ?? '',
-        imageUrl: data['image_url'] ?? '',
-        condition: data['condition'] ?? '',
-        rentalPeriod: data['rental_period'] ?? '',
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
       );
-    }).toList();
 
-    sendPort.send(products);
+      final FirebaseFirestore firestore = FirebaseService.instance.firestore;
+
+      final QuerySnapshot productsSnapshot = await firestore
+          .collection('products')
+          .get(); // .where('in_stock', isEqualTo: true).get();
+
+      List<ProductModel> products = productsSnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        return ProductModel(
+          id: doc.id,
+          name: data['name'] ?? '',
+          description: data['description'] ?? '',
+          price: double.tryParse(data['price'].toString()) ?? 0.0,
+          categories: List<String>.from(
+            (data['categories'] ?? []).map((category) {
+              String lowerCased = category.toLowerCase();
+              return '${lowerCased[0].toUpperCase()}${lowerCased.substring(1)}';
+            }),
+          ),
+          userId: data['user_id'] ?? '',
+          type: data['type'] ?? '',
+          imageUrl: data['image_url'] ?? '',
+          condition: data['condition'] ?? '',
+          rentalPeriod: data['rental_period'] ?? '',
+        );
+      }).toList();
+
+      sendPort.send(products);
+    } catch (e) {
+      print("Error loading products: $e");
+    }
   }
 }
