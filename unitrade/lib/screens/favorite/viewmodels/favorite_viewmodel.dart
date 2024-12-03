@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:unitrade/screens/home/models/product_model.dart';
 import 'package:unitrade/utils/firebase_service.dart';
 import 'package:unitrade/utils/connectivity_service.dart';
+import 'package:unitrade/utils/favorites_service.dart';
 
 class FavoriteViewModel extends ChangeNotifier {
   final FirebaseFirestore _firestore = FirebaseService.instance.firestore;
@@ -73,6 +74,8 @@ class FavoriteViewModel extends ChangeNotifier {
         notifyListeners();
       }
 
+
+
       // Fetch favorites
       final favoritesDoc = await _firestore
           .collection('users')
@@ -81,6 +84,13 @@ class FavoriteViewModel extends ChangeNotifier {
 
       if (favoritesDoc.exists) {
         favoriteProducts = List<String>.from(favoritesDoc.data()?['favorites'] ?? []);
+      }
+
+      final favorteProductsThread = FavoritesService.instance.favoriteProducts;
+
+      if (favorteProductsThread != null) {
+        productElementList = favorteProductsThread;
+        notifyListeners();
       }
 
       // Fetch products based on favorites

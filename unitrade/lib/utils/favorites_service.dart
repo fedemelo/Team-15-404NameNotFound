@@ -18,24 +18,35 @@ class FavoritesService {
   List<ProductModel>? get favoriteProducts => _favoriteProducts;
 
   Future<void> loadFavoritesInBackground(String userId) async {
-    if (_favoriteProducts == null) {
-      final receivePort = ReceivePort();
-      final rootIsolateToken = RootIsolateToken.instance;
+    try {
+      final Completer<List<ProductModel>> _completer =
+          Completer<List<ProductModel>>();
+      if (_completer.isCompleted) return;
 
-      if (rootIsolateToken != null) {
-        await Isolate.spawn(_fetchFavoritesInIsolate,
-            [receivePort.sendPort, rootIsolateToken, userId]);
-      } else {
-        print("Error: RootIsolateToken is null.");
+      if (userId.isEmpty) {
         return;
       }
 
-      final completer = Completer<List<ProductModel>>();
-      receivePort.listen((data) {
-        completer.complete(data as List<ProductModel>);
-      });
+      if (_favoriteProducts == null) {
+        final receivePort = ReceivePort();
+        final rootIsolateToken = RootIsolateToken.instance;
 
-      _favoriteProducts = await completer.future;
+        if (rootIsolateToken != null) {
+          await Isolate.spawn(_fetchFavoritesInIsolate,
+              [receivePort.sendPort, rootIsolateToken, userId]);
+        } else {
+          return;
+        }
+
+        final completer = Completer<List<ProductModel>>();
+        receivePort.listen((data) {
+          completer.complete(data as List<ProductModel>);
+        });
+
+        _favoriteProducts = await completer.future;
+      }
+    } catch (e) {
+      print("Error loading favorite products: $e");
     }
   }
 
@@ -55,7 +66,6 @@ class FavoritesService {
     try {
       final FirebaseFirestore firestore = FirebaseService.instance.firestore;
 
-      // Fetch user's favorites list
       final DocumentSnapshot userDoc =
           await firestore.collection('users').doc(userId).get();
 
@@ -65,9 +75,9 @@ class FavoritesService {
             (userDoc.data() as Map<String, dynamic>)['favorites'] ?? []);
       }
 
-      // Fetch products based on the favorite IDs
       final QuerySnapshot productsSnapshot =
           await firestore.collection('products').get();
+
       favoriteProducts = productsSnapshot.docs
           .map((doc) {
             Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -93,6 +103,7 @@ class FavoritesService {
           })
           .where((product) => favoriteProductIds.contains(product.id))
           .toList();
+
       sendPort.send(favoriteProducts);
     } catch (e) {
       print("Error fetching favorite products: $e");
